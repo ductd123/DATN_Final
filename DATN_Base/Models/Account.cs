@@ -1,11 +1,13 @@
-﻿namespace DATN_Base.Models
-{
-    public class Account
+﻿
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+public class Account
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+    [Key]
+        public Guid Id { get; set; }
+        public string UserName { get; set; }
         public string PhoneNo { get; set; }
         public string Address { get; set; }
-        public int IsActive { get; set; }
+        public string Password { get; set; }
     }
-}

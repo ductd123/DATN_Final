@@ -17,44 +17,79 @@ export default function Registration() {
     }
     const handleSave = async () => {
         const data = {
-            Name: name,
-            PhoneNp: phoneNo,
-            Address: address,
-            IsActive: 1
+            id: 0,
+            userName: "string",
+            phoneNo: "string",
+            address: "string",
+            password: "string"
         };
-        const url = 'test/Registration';
-        axios.post(url, data).then((result) => {
-            console.log(result.data);
-        }).catch((error) => {
-            alert(error);
-        })
-        // const response = await fetch('https://localhost:44494/test/Registration');
-        // const data = await response.json();
-        // console.log(response);
-
-    }
-    const fetchData = async (e) => {
-        e.preventDefault();
-        this.handleSave();
-        // const response = await fetch('test/Registration');
-        // // const response = await fetch('weatherforecast');
-        // const data = await response.json();
-        // this.setState({ forecasts: data, loading: false });
-        // const data = {
-        //     Name: name,
-        //     PhoneNp: phoneNo,
-        //     Address: address,
-        //     IsActive: 1
-        // };
-        // const url = 'https://localhost:44494/api/v1/Registration';
+        // const url = 'Account/Registration';
         // axios.post(url, data).then((result) => {
         //     console.log(result.data);
         // }).catch((error) => {
         //     alert(error);
         // })
-        // const response = await fetch('https://localhost:44494/test/Registration');
+        // const response = await fetch('Account/Registration');
         // const data = await response.json();
         // console.log(response);
+
+        fetch('https://localhost:7139/Account/Registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                // Xử lý phản hồi từ máy chủ
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error: ' + response.status);
+                }
+            })
+            .then(data => {
+                // Xử lý dữ liệu trả về từ máy chủ
+                console.log(data);
+            })
+            .catch(error => {
+                // Xử lý lỗi nếu có
+                console.error(error);
+            });
+
+    }
+    const fetchData = async (e) => {
+        e.preventDefault();
+        const data = {
+            id: 0,
+            userName: "string",
+            phoneNo: "string",
+            address: "string",
+            password: "string"
+        };
+        fetch('https://localhost:7139/Account/Registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                // Xử lý phản hồi từ máy chủ
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error: ' + response.status);
+                }
+            })
+            .then(data => {
+                // Xử lý dữ liệu trả về từ máy chủ
+                console.log(data);
+            })
+            .catch(error => {
+                // Xử lý lỗi nếu có
+                console.error(error);
+            });
     };
     return (
         <div className="form-container sign-in-container">
@@ -70,7 +105,7 @@ export default function Registration() {
                 <input type="text" placeholder="Số đt???" onChange={(e) => handlePhoneNoChange(e.target.value)} />
                 <input type="text" placeholder="Em ở đâu em ơi??" onChange={(e) => handleAddressChange(e.target.value)} />
                 {/* <input type="password" placeholder="Password" /> */}
-                <button onClick={(e) => handleSave()}>Sign Up</button>
+                <button onClick={(e) => fetchData(e)}>Sign Up</button>
             </form>
         </div>
     )
