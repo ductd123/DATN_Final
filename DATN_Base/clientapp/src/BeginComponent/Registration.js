@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export default function Registration() {
     const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
     const [phoneNo, setPhoneNo] = useState('');
     const [address, setAddress] = useState('');
 
@@ -15,6 +16,10 @@ export default function Registration() {
     const handleAddressChange = (value) => {
         setAddress(value)
     }
+    const handlePasswordChange = (value) => {
+        setPassword(value)
+    }
+    
     const handleSave = async () => {
         const data = {
             id: 0,
@@ -101,7 +106,8 @@ export default function Registration() {
                     <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your email for registration</span>
-                <input type="text" placeholder="Xưng danh đi" onChange={(e) => handleNameChange(e.target.value)} />
+                <input type="text" placeholder="Tên đăng nhập?" onChange={(e) => handleNameChange(e.target.value)} />
+                <input type="text" placeholder="Mật khẩu?" onChange={(e) => handlePasswordChange(e.target.value)} />
                 <input type="text" placeholder="Số đt???" onChange={(e) => handlePhoneNoChange(e.target.value)} />
                 <input type="text" placeholder="Em ở đâu em ơi??" onChange={(e) => handleAddressChange(e.target.value)} />
                 {/* <input type="password" placeholder="Password" /> */}
