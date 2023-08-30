@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\oliver.cao\\Documents\\DATN-FINAL\\DATN_Base\\DATN_Base.csproj": {}
+    "C:\\Users\\oliver.cao\\Documents\\DATN_Final\\DATN_Base\\DATN_Base.csproj": {}
   },
   "projects": {
-    "C:\\Users\\oliver.cao\\Documents\\DATN-FINAL\\DATN_Base\\DATN_Base.csproj": {
+    "C:\\Users\\oliver.cao\\Documents\\DATN_Final\\DATN_Base\\DATN_Base.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\oliver.cao\\Documents\\DATN-FINAL\\DATN_Base\\DATN_Base.csproj",
+        "projectUniqueName": "C:\\Users\\oliver.cao\\Documents\\DATN_Final\\DATN_Base\\DATN_Base.csproj",
         "projectName": "DATN_Base",
-        "projectPath": "C:\\Users\\oliver.cao\\Documents\\DATN-FINAL\\DATN_Base\\DATN_Base.csproj",
+        "projectPath": "C:\\Users\\oliver.cao\\Documents\\DATN_Final\\DATN_Base\\DATN_Base.csproj",
         "packagesPath": "C:\\Users\\oliver.cao\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\oliver.cao\\Documents\\DATN-FINAL\\DATN_Base\\obj\\",
+        "outputPath": "C:\\Users\\oliver.cao\\Documents\\DATN_Final\\DATN_Base\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -48,6 +48,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
             }
           },
           "imports": [
