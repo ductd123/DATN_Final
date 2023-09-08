@@ -11,16 +11,6 @@ namespace DATN_Base.Context
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("server=.\\OLIVER;database=DATN;Integrated Security=true;TrustServerCertificate=true");
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<IdentityUser>()
-                .ToTable("AspNetUsers", t => t.ExcludeFromMigrations());
-        }
     }
 }
 
