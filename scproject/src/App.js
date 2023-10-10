@@ -1,11 +1,17 @@
-import logo from './logo.svg';
+
 import './App.css';
 import Login from './LoginRegisterComponent/Login';
+import {Route,Routes} from "react-router-dom"
+import HomePage from './Component/HomePage';
 
 function App() {
   return (
     <div className="App">
-      <Login></Login>
+      <Routes>
+      <Route path='login' element={<Login/>}/>
+      <Route path='home' element={<HomePage/>}/>
+      </Routes>
+      
     </div>
   );
 }
