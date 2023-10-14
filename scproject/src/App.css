@@ -32,18 +32,21 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
 
-.left-login img{
+.left-login img {
   transition: all 0.3s ease-in-out;
-  
+
 }
-.left-login:hover img{
+
+.left-login:hover img {
   transform: rotateX(30deg);
   transform: rotateY(30deg);
   transform: scale(1.1);
 }
+
