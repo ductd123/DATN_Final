@@ -1,0 +1,79 @@
+.login-body {
+    background: linear-gradient(45deg, #00417a, #79bde5);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+}
+
+.login-img {
+    display: flex;
+    align-items: center;
+    margin: 40px;
+}
+
+.login-img img {
+    height: 300px;
+}
+
+.login-container {
+    background-color: white;
+    display: flex;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    height: 80%;
+}
+
+.login-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-right: 40px;
+}
+
+.login-input {
+    height: 50px;
+    align-items: center;
+    display: flex;
+    border: 1px solid black;
+    border-radius: 25px;
+    width: 300px;
+    margin: 15px;
+    background-color: #e6e7e8;
+}
+
+.login-input i {
+    padding: 15px;
+}
+
+.login-input input {
+    background-color: #e6e7e8;
+}
+
+input:focus {
+    outline: none;
+}
+
+.login-title {
+    position: relative;
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: xx-large;
+}
+
+.buttoni {
+    background-color: #5b9cd3  !important;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+}
+.login-forgot a{
+    color: blue;
+}
