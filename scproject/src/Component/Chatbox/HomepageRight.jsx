@@ -1,4 +1,4 @@
-import anh from "../image/zl1.png"
+import anh from "../../image/zl1.png"
 export default function HomepageRight(){
     return <div className="w-[1081px]">
         <div className="flex">

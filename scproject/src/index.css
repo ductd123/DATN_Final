@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
+
 }
 
 code {
@@ -13,3 +13,9 @@ code {
     monospace;
 }
 
+.invalid {
+  display: flex;
+  color: red;
+  position: relative;
+  left: 30px;
+}
