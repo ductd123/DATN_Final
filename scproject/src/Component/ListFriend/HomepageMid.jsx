@@ -1,6 +1,6 @@
 import { useState } from "react"
-import anh from "../image/rosie.png"
-import anh1 from "../image/zl.png"
+import anh from "../../image/rosie.png"
+import anh1 from "../../image/zl.png"
 export default function HomepageMid(){
     let [active,setactive] = useState(false)
     let [search,setsearch] = useState(false)
