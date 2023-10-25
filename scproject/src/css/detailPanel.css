@@ -1,0 +1,41 @@
+.detail-panel{
+    width: 343px;
+    height: 100vh;
+}
+.icon-add-searchbox{
+    padding: 10px;
+}
+.time-chat{
+    position: absolute;
+    right: 0;
+    font-size: 12px;
+    padding: 5px;
+    font-weight: 500;
+    color: #666666;
+}
+.list-chat-avatar{
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+.list-chat-container{
+    padding: 10px;
+}
+.nav-panel-switch{
+    cursor: pointer;
+}
+.menu-panel{
+    height: 100vh;
+    width: 56px;
+    background: #0091ff;
+}
+.text-card{
+    max-width: 200px;
+    white-space: nowrap;
+    /* word-break: break-all; */
+    overflow: hidden;;
+}

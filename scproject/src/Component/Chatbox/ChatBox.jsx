@@ -1,6 +1,10 @@
 import anh from "../../image/zl1.png"
-export default function HomepageRight(){
-    return <div className="w-[1081px]">
+import React, { Component } from 'react'
+
+export default class ChatBox extends Component {
+  render() {
+    return (
+      <div className="w-[1081px]">
         <div className="flex">
             <div className="w-[2px] h-[100vh] bg-[#eaedf0]"></div>
             <div className="items-center mx-auto mt-[100px] items-center">
@@ -10,4 +14,7 @@ export default function HomepageRight(){
         </div>
         
     </div>
-    }
+    )
+  }
+}
+

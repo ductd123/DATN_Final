@@ -15,35 +15,35 @@ class Register extends Component {
                     <div className="login-title">Register account</div>
                     <div className="login-detail">
                         <div className="flex">
-                            <div class="login-input login-name">
-                                <i class="fa fa-user"></i>
-                                <input class="" onBlur={this.handleChangeEmail} type="email" placeholder="First name" />
+                            <div className="login-input login-name">
+                                <i className="fa fa-user"></i>
+                                <input className="" onBlur={this.handleChangeEmail} type="email" placeholder="First name" />
                             </div>
-                            <div class="login-input  login-name">
+                            <div className="login-input  login-name">
                                 <i ></i>
-                                <input class="" onBlur={this.handleChangeEmail} type="email" placeholder="Last name" />
+                                <input className="" onBlur={this.handleChangeEmail} type="email" placeholder="Last name" />
                             </div>
                         </div>
                         {this.state.invalidEmail && <div className="invalid">Enter your name</div>}
-                        <div class="login-input ">
-                            <i class="fa-solid fa-envelope"></i>
-                            <input class="login-user" onBlur={this.handleChangeEmail} type="email" placeholder="Email" />
+                        <div className="login-input ">
+                            <i className="fa-solid fa-envelope"></i>
+                            <input className="login-user" onBlur={this.handleChangeEmail} type="email" placeholder="Email" />
                         </div>
                         {this.state.invalidEmail && <div className="invalid">Invalid Email</div>}
-                        <div class="login-input ">
-                            <i class="fa fa-phone"></i>
-                            <input class="login-user" onBlur={this.handleChangeEmail} type="email" placeholder="Phone Number" />
+                        <div className="login-input ">
+                            <i className="fa fa-phone"></i>
+                            <input className="login-user" onBlur={this.handleChangeEmail} type="email" placeholder="Phone Number" />
                         </div>
                         {this.state.invalidEmail && <div className="invalid">Invalid number phone</div>}
-                        <div class="login-input ">
-                            <i class="fa-solid fa-lock"></i>
-                            <input class="login-user" onBlur={this.handleChangeEmail} type="email" placeholder="Password" />
+                        <div className="login-input ">
+                            <i className="fa-solid fa-lock"></i>
+                            <input className="login-user" onBlur={this.handleChangeEmail} type="email" placeholder="Password" />
                         </div>
                         {this.state.invalidEmail && <div className="invalid">Invalid Email</div>}
 
-                        <div class="login-input ">
-                            <i class="fa-solid fa-lock"></i>
-                            <input class="login-pass" onChange={this.handleChangePassword} type="password" name="" placeholder="Retype password" />
+                        <div className="login-input ">
+                            <i className="fa-solid fa-lock"></i>
+                            <input className="login-pass" onChange={this.handleChangePassword} type="password" name="" placeholder="Retype password" />
                         </div>
                         {this.state.invalidPass && <div className="invalid">Enter your password</div>}
                         <div className="login-button">'
