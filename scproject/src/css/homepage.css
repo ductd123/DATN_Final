@@ -1,5 +1,5 @@
 .hoversearch:hover {
-    background-color: aquamarine; 
+    background-color: rgb(88, 170, 252); 
     width: 67px;
     height: 32px;
     border-radius: 5px;
@@ -9,4 +9,7 @@
     color: white;
     height: 20px;
     font-size: 1.65rem;
+}
+.setting-button{
+    cursor: pointer;
 }

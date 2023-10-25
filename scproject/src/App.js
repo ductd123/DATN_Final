@@ -1,10 +1,13 @@
 
-import './App.css';
+import './css/App.css';
+import './css/homepage.css';
+import './css/detailPanel.css'
 import Login from './LoginRegisterComponent/Login';
 import { Route, Routes } from "react-router-dom"
-import HomePage from './Component/HomePage';
 import Register from './LoginRegisterComponent/Register';
-import Index from './Component/Index';
+import HomePageChat from './Component/HomePageChat';
+import HomePageAddFriends from './Component/HomePageAddFriend';
+import HomePageForVolunteer from './Component/HomePageForVolunteer';
 
 function App() {
   return (
@@ -12,10 +15,10 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/register' element={<Register />} />
-        <Routes path='/home' element={<HomePage />}>
-        </Routes>
+        <Route path='/home' element={<HomePageChat />}/>
+        <Route path='/friends' element={<HomePageAddFriends />}/>
+        <Route path='/volunteers' element={<HomePageForVolunteer />}/>
       </Routes>
-
     </div>
   );
 }
