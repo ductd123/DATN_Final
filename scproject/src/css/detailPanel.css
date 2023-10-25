@@ -1,41 +1,63 @@
-.detail-panel{
-    width: 343px;
-    height: 100vh;
+.detail-panel {
+  width: 343px;
+  height: 100vh;
+  border-right: 1px solid #b9b9b9;
 }
-.icon-add-searchbox{
-    padding: 10px;
+.icon-add-searchbox {
+  padding: 10px;
 }
-.time-chat{
-    position: absolute;
-    right: 0;
-    font-size: 12px;
-    padding: 5px;
-    font-weight: 500;
-    color: #666666;
+.time-chat {
+  position: absolute;
+  right: 0;
+  font-size: 12px;
+  padding: 5px;
+  font-weight: 500;
+  color: #666666;
 }
-.list-chat-avatar{
-    height: 48px;
-    width: 48px;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
+.list-chat-avatar {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
 }
-.list-chat-container{
-    padding: 10px;
+.list-chat-container {
+  padding: 10px;
 }
-.nav-panel-switch{
-    cursor: pointer;
+.nav-panel-switch {
+  cursor: pointer;
 }
-.menu-panel{
-    height: 100vh;
-    width: 56px;
-    background: #0091ff;
+.menu-panel {
+  height: 100vh;
+  width: 56px;
+  background: #0091ff;
 }
-.text-card{
-    max-width: 200px;
-    white-space: nowrap;
-    /* word-break: break-all; */
-    overflow: hidden;;
+.text-card {
+  max-width: 200px;
+  white-space: nowrap;
+  /* word-break: break-all; */
+  overflow: hidden;
+}
+.detail-panel-search {
+  border: 1px solid black;
+  border-radius: 6px;
+}
+.detail-panel-search-container input {
+  height: 32px;
+  border: 1px solid black;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  line-height: 32px;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 30px;
+}
+.detail-panel-search-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
 }

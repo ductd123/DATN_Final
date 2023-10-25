@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import UserList from "./UseList";
 import { Input } from 'antd';
 import { SearchOutlined, UserAddOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import Searchbox from "../Common/Searchbox";
 class HomepageMid extends Component {
     constructor(props) {
         super(props);
@@ -13,37 +14,20 @@ class HomepageMid extends Component {
             active: false,
         }
     }
+    handleactive = (e) => {
+        this.setState({
+            active: e ,
+        })
+    }
     handleOpenSearch = () => {
         this.setState({ search: true })
     }
     handleCloseSearch = () => {
         this.setState({ search: false })
     }
-    handleactive = (e) => {
-        this.setState({
-            active: e ,
-        })
-    }
-
     render() {
-        let suffix = (
-            <SearchOutlined
-                style={{
-                    fontSize: 16,
-                    color: '#1677ff',
-                }}
-            />
-        );
         return (<div className="detail-panel relative">
-            <div className="flex justify-center items-center mt-[20px] w-[343px]">
-                <Input placeholder="Tìm kiếm" onClick={this.handleOpenSearch} allowClear suffix={suffix} style={{ width: 250 }} />
-                {this.state.search ? <button className="hoversearch w-[67px] h-[32px] font-[600px] ml-[5px]  px-[15px]" onClick={this.handleCloseSearch} >Đóng</button> :
-                    <div className="">
-                        <UserAddOutlined style={{ padding: '0 15px' }} />
-                        <UsergroupAddOutlined />
-                    </div>
-                }
-            </div>
+            <Searchbox search={this.state.search} handleCloseSearch={this.handleCloseSearch} handleOpenSearch={this.handleOpenSearch}/>
 
             {this.state.search ? <div className="search absolute top-[65px] left-0 w-[343px] h-[670px] bg-[white] p-[15px]">
 

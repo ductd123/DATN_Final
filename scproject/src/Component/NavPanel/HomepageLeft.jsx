@@ -6,7 +6,7 @@ export default function HomepageLeft() {
             <img src={anh} alt="" />
         </div>
         <div className="flex flex-col justify-between h-[85%]">
-            <div className="flex flex-col ">
+            <div className="nav-link flex flex-col ">
                 <NavLink to='/home'>
                     <i className="icon-nav-panel fa-regular fa-comment-dots"></i>
                 </NavLink>
