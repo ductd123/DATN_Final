@@ -21,7 +21,7 @@ export default class Login extends Component {
     handleChangePassword = (e) => {
         this.setState({
             password: e.target.value,
-            invalidPass: e.target.value == '',
+            invalidPass: e.target.value === '',
         })
     }
 
@@ -47,7 +47,7 @@ export default class Login extends Component {
                     <div className="login-img">
                         <img src={anh} alt="" />
                     </div>
-                    <div className="login-right">
+                    <div className="login-right" style={{marginBottom:'20px'}}>
                         <div className="login-title">Member Login</div>
                         <div className="login-detail">
                             <div className="login-input ">

@@ -35,7 +35,8 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin: 40px;
+    margin: 20px 40px 0 40px;
+
 }
 
 .login-input {
@@ -64,7 +65,7 @@ input:focus {
 
 .login-title {
     position: relative;
-    margin-bottom: 20px;
+    margin: 15px;
     font-weight: 700;
     font-size: xx-large;
 }
@@ -91,4 +92,11 @@ input:focus {
     width: 140px;
     margin-right: 4px;
     margin-bottom: 0;
+}
+.icon-warning{
+    transform: translateX(40px);
+}
+
+.login-title-detail{
+    
 }
