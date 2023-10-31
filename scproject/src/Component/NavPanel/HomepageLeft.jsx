@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom"
-import anh from "../../image/img-01.webp"
+import anh from "../../assets/image/img-01.webp"
+import './HomePageLeft.scss'
 export default function HomepageLeft() {
     return <div className="menu-panel">
         <div className="mt-[25px]">
@@ -10,7 +11,7 @@ export default function HomepageLeft() {
                 <NavLink to='/home'>
                     <i className="icon-nav-panel fa-regular fa-comment-dots"></i>
                 </NavLink>
-                <NavLink to='/friends'>
+                <NavLink to='/contact'>
                     <i className="icon-nav-panel fa-regular fa-address-book"></i>
                 </NavLink>
                 <NavLink to='/volunteers'>

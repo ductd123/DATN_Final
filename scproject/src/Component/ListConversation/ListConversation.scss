@@ -1,0 +1,44 @@
+.conversation {
+  width: 100%;
+  &__title {
+    color: #434343;
+    padding: 10px;
+  }
+  &__link {
+    text-decoration: none;
+    color: #000;
+  }
+  &__img {
+    height: 44px;
+    width: 44px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.4s;
+    position: relative;
+    &:hover {
+      background-color: #efefef;
+    }
+  }
+  &__time {
+    color: #999999;
+    font-size: 13px;
+    font-weight: 300;
+  }
+  &__content {
+    display: flex;
+    align-items: center;
+  }
+  &__mess {
+    color: #999999;
+    font-size: 13px;
+    font-weight: 300;
+  }
+ 
+}

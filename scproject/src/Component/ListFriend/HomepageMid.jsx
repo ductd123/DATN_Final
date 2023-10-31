@@ -1,11 +1,11 @@
 import { useState } from "react"
-import anh from "../../image/rosie.png"
-import anh1 from "../../image/zl.png"
+import anh from "../../assets/image/rosie.png"
+import anh1 from "../../assets/image/zl.png"
 import React, { Component } from 'react'
 import UserList from "./UseList";
 import { Input } from 'antd';
 import { SearchOutlined, UserAddOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import Searchbox from "../Common/Searchbox";
+import Searchbox from "../Common/Searchbox/Searchbox";
 class HomepageMid extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +16,7 @@ class HomepageMid extends Component {
     }
     handleactive = (e) => {
         this.setState({
-            active: e ,
+            active: e,
         })
     }
     handleOpenSearch = () => {
@@ -27,7 +27,7 @@ class HomepageMid extends Component {
     }
     render() {
         return (<div className="detail-panel relative">
-            <Searchbox search={this.state.search} handleCloseSearch={this.handleCloseSearch} handleOpenSearch={this.handleOpenSearch}/>
+            <Searchbox search={this.state.search} handleCloseSearch={this.handleCloseSearch} handleOpenSearch={this.handleOpenSearch} />
 
             {this.state.search ? <div className="search absolute top-[65px] left-0 w-[343px] h-[670px] bg-[white] p-[15px]">
 
@@ -51,8 +51,8 @@ class HomepageMid extends Component {
                 <div className="">
                     <div className="flex ustify-center items-center mt-[20px] w-[100%] h-[32px]">
                         <div className="nav-panel-switch p-[15px] flex">
-                            <p style={this.state.active ? {} : { borderBottom: "2px solid #0091ff", color: "#0091ff" }} onClick={e=>this.handleactive(false)} className="mx-[5px] h-[32px] font-[600]">Ưu Tiên</p>
-                            <p style={this.state.active ? { borderBottom: "2px solid #0091ff", color: "#0091ff" } : {}} onClick={e=>this.handleactive(true)} className="mx-[15px] h-[32px] font-[600]">Khác</p>
+                            <p style={this.state.active ? {} : { borderBottom: "2px solid #0091ff", color: "#0091ff" }} onClick={e => this.handleactive(false)} className="mx-[5px] h-[32px] font-[600]">Ưu Tiên</p>
+                            <p style={this.state.active ? { borderBottom: "2px solid #0091ff", color: "#0091ff" } : {}} onClick={e => this.handleactive(true)} className="mx-[15px] h-[32px] font-[600]">Khác</p>
                         </div>
                     </div>
                     <div className="w-[343px] h-[1.5px] bg-[#eaedf0]"></div>

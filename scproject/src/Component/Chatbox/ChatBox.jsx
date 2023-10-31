@@ -1,4 +1,4 @@
-import anh from "../../image/zl1.png"
+import anh from "../../assets/image/zl1.png"
 import React, { Component } from 'react'
 
 export default class ChatBox extends Component {
@@ -6,13 +6,13 @@ export default class ChatBox extends Component {
     return (
       <div className="w-[1081px]">
         <div className="flex">
-            <div className="items-center mx-auto mt-[100px] items-center">
-                <span className="text-center w-[415spanx] h-[42px]"><b>Chào mừng bạn đến với WEB ZALO Fake</b>, <br /> hãy cùng nhau tạo nên nhưng cuộc trò chuyện thật gải tạo nào!</span>
-                <img className="mx-auto w-[380px] h-[230px]" src={anh} alt="" />
-            </div>
+          <div className="items-center mx-auto mt-[100px] items-center">
+            <span className="text-center w-[415spanx] h-[42px]"><b>Chào mừng bạn đến với WEB ZALO Fake</b>, <br /> hãy cùng nhau tạo nên nhưng cuộc trò chuyện thật giả tạo nào!</span>
+            <img className="mx-auto w-[380px] h-[230px]" src={anh} alt="" />
+          </div>
         </div>
-        
-    </div>
+
+      </div>
     )
   }
 }

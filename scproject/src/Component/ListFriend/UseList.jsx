@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import anh from "../../image/rosie.png"
+import anh from "../../assets/image/rosie.png"
 class UserList extends Component {
     constructor(props) {
         super(props);
@@ -7,7 +7,7 @@ class UserList extends Component {
     state = {}
     render() {
         return (
-            <div className="" style={{width:'100%'}}>
+            <div className="" style={{ width: '100%' }}>
                 <div className="flex list-chat-container">
                     {/* <img className="mx-[5px] w-[48px] h-[48px] border rounded-[50%]" src={anh} alt="" /> */}
                     <img className="list-chat-avatar" src={anh} alt="" />
