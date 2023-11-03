@@ -1,4 +1,78 @@
 .contact {
-  background-color: #fafafc;
+  background-color: #f7f7f8;
   height: 100%;
+}
+.contact-panel {
+  &__header {
+    background-color: white;
+    border-bottom: 1px solid rgb(221, 221, 221);
+    .list-contact__selection {
+      justify-content: flex-start;
+      margin-left: 20px;
+    }
+  }
+  &__details {
+    padding: 20px;
+    height: calc(100vh - 45px);
+    overflow-y: auto;
+  }
+}
+.list-contact__all {
+  background-color: white;
+  border-radius: 10px;
+}
+.list-contact__length {
+  font-weight: 500;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+.card-invitation-list {
+  position: relative;
+}
+
+.card-wrapper {
+  width: 45%;
+  background: var(--layer-background);
+  border-radius: 6px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  padding: 16px;
+  position: relative;
+  cursor: pointer;
+}
+.contact_button {
+  height: 40px;
+  display: flex;
+  right: 0;
+  position: absolute;
+  &-deny {
+    box-sizing: border-box;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0 16px;
+    font-size: 1rem;
+    min-width: max-content;
+    background-color: #eaedf0;
+    color: #081c36;
+    width: calc(50% - 4px);
+    font-weight: 500;
+    line-height: 1.5;
+    height: 40px;
+    margin-left: 10px;
+  }
+  &-accept {
+    box-sizing: border-box;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0 16px;
+    font-size: 1rem;
+    min-width: max-content;
+    background-color: #e5efff;
+    color: #005ae0;
+    width: calc(50% - 4px);
+    font-weight: 500;
+    line-height: 1.5;
+    height: 40px;
+    margin-left: 10px;
+  }
 }

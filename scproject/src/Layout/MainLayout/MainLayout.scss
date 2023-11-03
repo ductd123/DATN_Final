@@ -3,11 +3,11 @@
     overflow: hidden;
     &__container {
         width: 100%;
-        display: grid;
-        grid-template-columns: 25% 75%;
+        display: flex;
+        // grid-template-columns: 25% 75%;
     }
     &__side-bar {
-        width: 100%;
+        width: 320px;
         height: 100vh;
         border-right: solid;
         display: flex;
@@ -23,7 +23,7 @@
     }
     &__content {
         flex: 1;
-        overflow: scroll;
+        overflow-y: auto;
     }
 }
 

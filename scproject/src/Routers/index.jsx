@@ -36,10 +36,28 @@ export default function Routers() {
                 }
             />
             <Route
-                path="/friends"
+                path="/friend"
                 element={
                     <PrivateRouter
-                        component={HomePageAddFriends}
+                        component={Contact}
+                        layout={MainLayout}
+                    />
+                }
+            />
+            <Route
+                path="/group"
+                element={
+                    <PrivateRouter
+                        component={Contact}
+                        layout={MainLayout}
+                    />
+                }
+            />
+            <Route
+                path="/add-request"
+                element={
+                    <PrivateRouter
+                        component={Contact}
                         layout={MainLayout}
                     />
                 }

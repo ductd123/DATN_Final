@@ -27,7 +27,7 @@ class HomepageMid extends Component {
     }
     render() {
         return (<div className="detail-panel relative">
-            <Searchbox search={this.state.search} handleCloseSearch={this.handleCloseSearch} handleOpenSearch={this.handleOpenSearch} />
+            {/* <Searchbox search={this.state.search} handleCloseSearch={this.handleCloseSearch} handleOpenSearch={this.handleOpenSearch} />
 
             {this.state.search ? <div className="search absolute top-[65px] left-0 w-[343px] h-[670px] bg-[white] p-[15px]">
 
@@ -70,7 +70,7 @@ class HomepageMid extends Component {
                         </div>
                     }
                 </div>
-            }
+            } */}
 
 
         </div>

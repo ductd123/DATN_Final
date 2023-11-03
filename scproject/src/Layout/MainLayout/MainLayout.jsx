@@ -29,14 +29,19 @@ export default function MainLayout({ children }) {
         <div className="main-layout">
             <Nav />
             <div className="main-layout__container">
-                <div className="main-layout__side-bar">
-                    <div className="main-layout__header-bar">
-                        <HeaderBar />
+                {pathName === "/volunteers" ?
+                    <div className="main-layout__side-bar">
+                        <HomepageMid />
+                    </div> :
+                    <div className="main-layout__side-bar">
+                        <div className="main-layout__header-bar">
+                            <HeaderBar />
+                        </div>
+                        <div className="main-layout__content">
+                            {pathName === "/contact"||pathName === "/friend"||pathName === "/group"||pathName === "/add-request" ? <ListContact /> : <ListConversation />}
+                        </div>
                     </div>
-                    <div className="main-layout__content">
-                        {pathName === "/contact" ? <ListContact /> : pathName === "/volunteers" ? <HomepageMid /> : <ListConversation />}
-                    </div>
-                </div>
+                }
                 <div className="main-layout__children">{children}</div>
             </div>
         </div>

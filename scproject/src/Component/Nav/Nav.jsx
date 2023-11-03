@@ -35,7 +35,7 @@ export default function Nav() {
       </div>
       <ul className="nav__ul">
         <NavLink to="/home" className="nav__link">
-          <li className={pathName === "/" ? "nav__li nav__li--choose" : "nav__li"} >
+          <li className={pathName === "/" || pathName === "/home" ? "nav__li nav__li--choose" : "nav__li"} >
             <MessageCircle />
           </li>
         </NavLink>
