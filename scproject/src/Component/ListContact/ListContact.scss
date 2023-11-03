@@ -1,26 +1,27 @@
 .list-contact {
-  &__img {
+  display: flex;
+  flex-direction: column;
+  &__selection {
     height: 44px;
-    width: 44px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  &__content {
-    display: flex;
+    width: 100%;
+    border-radius: 5px;
     align-items: center;
-    padding: 10px;
-    transition: all 0.4s;
-    cursor: pointer;
-    &:hover {
-      background-color: #efefef;
-    }
+    display: flex;
+    justify-content: center;
   }
-  &__name {
-    margin-bottom: 5px;
+  &__content{
+    width: 150px;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-weight: 500;
+    font-size: 15px;
+
   }
-  &__email {
-    font-size: 13px;
-    color: #999999;
-    font-weight: 300;
+  i{
+    width: 20px;
+    margin-left: 4px;
+  }
+  .active {
+    background: rgb(219, 219, 219);
   }
 }

@@ -225,7 +225,7 @@ class Register extends Component {
                             <div className="login-button flex" style={{ justifyContent: 'center' }}>
                                 <button className="login-input buttoni" onClick={this.checkAll}>Register</button>
                             </div>
-                            <div className="login-forgot" style={{ color: 'blue', marginBottom: '10px' }}>
+                            <div className="login-forgot flex" style={{ color: 'blue', marginBottom: '10px', justifyContent: 'center' }}>
                                 <Link to="/">Back to login</Link>
                             </div>
                         </div>
