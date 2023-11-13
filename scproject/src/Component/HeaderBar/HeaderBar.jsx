@@ -9,7 +9,7 @@ export default function HeaderBar() {
 
   return (
     <div className="header-bar">
-      <h4 className="header-bar__name">Zalo - {data.name}</h4>
+      <h4 className="header-bar__name">WeTalk - {data.name}</h4>
       <form className="header-bar__form">
         <input className="header-bar__input" placeholder="Search..." />
         <button className="header-bar__btn">
