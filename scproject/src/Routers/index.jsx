@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { HomePageChat, Login, Register, HomePageAddFriends, HomePageForVolunteer, Contact, Room } from "../Containers";
+import { HomePageChat, Login, Register, HomePageForVolunteer, Contact, Room } from "../Containers";
 import { MainLayout, BlankLayout } from "../Layout";
 import PublicRouter from "./PublicRouter";
 import PrivateRouter from "./PrivateRouter";

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { SUCCESS_All_USER } from "../constants";
+// import { SUCCESS_All_USER } from "../constants";
 
 const initialState = [];
 
