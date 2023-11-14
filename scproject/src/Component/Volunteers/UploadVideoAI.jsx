@@ -1,8 +1,4 @@
 import React, { Component } from 'react'
-import { HeaderBar, HomepageLeft, Searchbox } from '../../Component/index'
-
-import { Input } from 'antd';
-import { SearchOutlined, UserAddOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 
 export default class UploadVideoAI extends Component {
     constructor(props) {
@@ -20,6 +16,7 @@ export default class UploadVideoAI extends Component {
     render() {
         return (
             <div className="">
+            abc
             </div>
         )
     }
