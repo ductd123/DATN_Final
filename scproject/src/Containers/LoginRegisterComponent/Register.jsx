@@ -152,36 +152,36 @@ class Register extends Component {
                 {this.state.step1 &&
                     <div className="login-body">
                         <div className="login-container" style={{ background: '#f1f3f5', flexDirection: 'column' }}>
-                            <div className="login-title">Register account</div>
+                            <div className="login-title">Đăng ký tài khoản</div>
                             <div style={{ display: 'flex' }}>
                                 <div className="login-right">
                                     <div className="login-detail">
                                         <div className="login-input" style={this.state.invalidName ? { border: '2px solid red' } : {}}>
                                             <i className="fa fa-user"></i>
-                                            <input onBlur={this.handleChangeName} onChange={this.handleChangeName} value={this.state.fullName} type="text" placeholder="Full name" />
-                                            {this.state.invalidName && <Tooltip placement='top' title={"Enter your name"} color={'red'}>
+                                            <input onBlur={this.handleChangeName} onChange={this.handleChangeName} value={this.state.fullName} type="text" placeholder="Họ và tên" />
+                                            {this.state.invalidName && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
                                         <div className="login-input " style={this.state.invalidEmail ? { border: '2px solid red' } : {}}>
                                             <i className="fa-solid fa-envelope"></i>
                                             <input className="login-user" value={this.state.email} onBlur={this.handleChangeEmail} onChange={this.handleChangeEmail} type="email" placeholder="Email" />
-                                            {this.state.invalidEmail && <Tooltip placement='top' title={"Invalid Email"} color={'red'}>
+                                            {this.state.invalidEmail && <Tooltip placement='top' title={"Email không hợp lệ, vui lòng nhập đúng"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
                                         <div className="login-input " style={this.state.invalidPhoneNum ? { border: '2px solid red' } : {}}>
                                             <i className="fa fa-phone"></i>
-                                            <input className="login-user" value={this.state.phoneNumber} onBlur={this.handleChangePhoneNumber} onChange={this.handleChangePhoneNumber} type="email" placeholder="Phone Number" />
-                                            {this.state.invalidPhoneNum && <Tooltip placement='top' title={"Type your number phone"} color={'red'}>
+                                            <input className="login-user" value={this.state.phoneNumber} onBlur={this.handleChangePhoneNumber} onChange={this.handleChangePhoneNumber} type="email" placeholder="Số điện thoại" />
+                                            {this.state.invalidPhoneNum && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
                                         {/* {this.state.invalidEmail && <div className="invalid">Invalid number phone</div>} */}
                                         <div className="login-input " style={this.state.invalidAddress ? { border: '2px solid red' } : {}}>
                                             <i className="fa-solid fa-address-card"></i>
-                                            <input className="login-user" value={this.state.address} onBlur={this.handleChangeAddress} onChange={this.handleChangeAddress} type="email" placeholder="Address" />
-                                            {this.state.invalidAddress && <Tooltip placement='top' title={"Enter your address"} color={'red'}>
+                                            <input className="login-user" value={this.state.address} onBlur={this.handleChangeAddress} onChange={this.handleChangeAddress} type="email" placeholder="Địa chỉ" />
+                                            {this.state.invalidAddress && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
@@ -191,30 +191,30 @@ class Register extends Component {
                                     <div className="login-detail">
                                         <div className="login-input" style={this.state.invalidDate ? { border: '2px solid red' } : {}}>
                                             <i className="fa fa-calendar"></i>
-                                            <input onBlur={this.handleChangeBirthday} onChange={this.handleChangeBirthday} value={this.state.birthday} type="date" placeholder="Full name" />
-                                            {this.state.invalidDate && <Tooltip placement='top' title={"Enter your birthday"} color={'red'}>
+                                            <input onBlur={this.handleChangeBirthday} onChange={this.handleChangeBirthday} value={this.state.birthday} type="date" />
+                                            {this.state.invalidDate && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
                                         <div className="login-input " style={this.state.invalidGender ? { border: '2px solid red' } : {}}>
                                             <i className="fa-solid fa-transgender-alt"></i>
-                                            <input className="login-user" value={this.state.gender} onBlur={this.handleChangeGender} onChange={this.handleChangeGender} type="text" placeholder="Gender" />
-                                            {this.state.invalidGender && <Tooltip placement='top' title={"Enter your gender"} color={'red'}>
+                                            <input className="login-user" value={this.state.gender} onBlur={this.handleChangeGender} onChange={this.handleChangeGender} type="text" placeholder="Giới tính" />
+                                            {this.state.invalidGender && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
                                         <div className="login-input " style={this.state.invalidPass ? { border: '2px solid red' } : {}}>
                                             <i className="fa-solid fa-lock"></i>
-                                            <input className="login-user" value={this.state.password} onBlur={this.handleChangePassword} onChange={this.handleChangePassword} type="password" placeholder="Password" />
-                                            {this.state.invalidPass && <Tooltip placement='top' title={"Password cannot be empty, must be at least 8 characters and must contain both upper and lower case characters"} color={'red'}>
+                                            <input className="login-user" value={this.state.password} onBlur={this.handleChangePassword} onChange={this.handleChangePassword} type="password" placeholder="Mật khẩu" />
+                                            {this.state.invalidPass && <Tooltip placement='top' title={"Mật khẩu không được để trống, ít nhất 8 ký tự, bao gồm chữ thường, chữ in hoa và chữ số."} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
 
                                         <div className="login-input " style={this.state.failRetypePass ? { border: '2px solid red' } : {}}>
                                             <i className="fa-solid fa-lock"></i>
-                                            <input className="login-pass" onChange={this.checkRetypePassword} type="password" required name="" placeholder="Retype password" />
-                                            {this.state.failRetypePass && <Tooltip placement='top' title={"Password does not match"} color={'red'}>
+                                            <input className="login-pass" onChange={this.checkRetypePassword} type="password" required name="" placeholder="Nhập lại mật khẩu" />
+                                            {this.state.failRetypePass && <Tooltip placement='top' title={"Mật khẩu không khớp"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
@@ -223,43 +223,43 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="login-button flex" style={{ justifyContent: 'center' }}>
-                                <button className="login-input buttoni" onClick={this.checkAll}>Register</button>
+                                <button className="login-input buttoni" onClick={this.checkAll}>Đăng ký</button>
                             </div>
                             <div className="login-forgot flex" style={{ color: 'blue', marginBottom: '10px', justifyContent: 'center' }}>
-                                <Link to="/">Back to login</Link>
+                                <Link to="/">Trở về trang đăng nhập</Link>
                             </div>
                         </div>
 
                     </div>}
                 {!this.state.step1 && <div className="login-body">
                     <div className="login-container" style={{ background: '#f1f3f5', flexDirection: 'column' }}>
-                        <div className="login-title">Register account</div>
-                        <div className="login-title-detail">OTP code authentication</div>
+                        <div className="login-title">Đăng ký tài khoản</div>
+                        <div className="login-title-detail">Xác nhận mã OTP</div>
                         <div style={{ display: 'flex' }}>
                             <div className="login-right">
                                 <div className="login-detail">
                                     <div className="login-input">
                                         <i className="fa fa-user"></i>
-                                        <input type="text" disabled value={this.state.email} placeholder="Full name" />
+                                        <input type="text" disabled value={this.state.email} />
                                     </div>
                                     <div className="login-input " style={this.state.invalidOTP ? { border: '2px solid red' } : {}}>
                                         <i className="fa fa-cog"></i>
-                                        <input className="login-user" onBlur={this.handleChangeOTP} onChange={this.handleChangeOTP} type="text" placeholder="OTP Code" />
-                                        {this.state.invalidOTP && <Tooltip placement='top' title={"Enter OTP code"} color={'red'}>
+                                        <input className="login-user" onBlur={this.handleChangeOTP} onChange={this.handleChangeOTP} type="text" placeholder="Mã OTP" />
+                                        {this.state.invalidOTP && <Tooltip placement='top' title={"Vui lòng nhập mã OTP"} color={'red'}>
                                             <WarningTwoTone className='icon-warning' />
                                         </Tooltip>}
                                     </div>
-                                    <div className="login-forgot" onClick={this.checkAll}>
-                                        <button>Back to login</button>
-                                    </div>
+                                    {/* <div className="login-forgot" onClick={this.checkAll}>
+                                        <button>Trở về trang đăng nhập</button>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
                         <div className="login-button flex" onClick={this.checkAuthen} style={{ justifyContent: 'center' }}>
-                            <button className="login-input buttoni">Register</button>
+                            <button className="login-input buttoni">Đăng ký</button>
                         </div>
                         <div className="login-forgot" style={{ color: 'blue', marginBottom: '10px' }}>
-                            <button onClick={this.onCancle}>Cancel</button>
+                            <button onClick={this.onCancle}>Hủy bỏ</button>
                         </div>
                     </div>
 
