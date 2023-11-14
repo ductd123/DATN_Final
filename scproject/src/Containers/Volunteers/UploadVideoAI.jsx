@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-
-import { HomepageLeft, Searchbox } from '../../Component/index'
+import { HeaderBar, HomepageLeft, Searchbox } from '../../Component/index'
 
 import { Input } from 'antd';
 import { SearchOutlined, UserAddOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 
-export default class HomePageForVolunteer extends Component {
+export default class UploadVideoAI extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,9 +19,7 @@ export default class HomePageForVolunteer extends Component {
     }
     render() {
         return (
-            <div className='flex'>
-                {/* <HomepageLeft />
-                <Searchbox search={this.state.search} handleCloseSearch={this.handleCloseSearch} handleOpenSearch={this.handleOpenSearch} /> */}
+            <div className="">
             </div>
         )
     }

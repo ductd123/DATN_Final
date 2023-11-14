@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import anh from "../../assets/image/img-01.webp"
+import anh from "../../assets/image/logoWetalk.png"
 import './Login.scss'
 import { Link } from 'react-router-dom'
+import { Tooltip } from 'antd';
+import { WarningTwoTone } from '@ant-design/icons';
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -48,30 +50,33 @@ export default class Login extends Component {
                         <img src={anh} alt="" />
                     </div>
                     <div className="login-right" style={{ marginBottom: '20px' }}>
-                        <div className="login-title">Member Login</div>
+                        <div className="login-title">Đăng nhập</div>
                         <div className="login-detail">
-                            <div className="login-input ">
+                            <div className="login-input" style={this.state.invalidEmail ? { border: '2px solid red' } : {}}>
                                 <i className="fa-solid fa-envelope"></i>
-                                <input className="login-user" onBlur={this.handleChangeEmail} type="email" placeholder="Email" />
+                                <input onBlur={this.handleChangeEmail} onChange={this.handleChangeEmail} value={this.state.fullName} type="text" placeholder="Email" />
+                                {this.state.invalidEmail && <Tooltip placement='top' title={"Vui lòng nhập đúng email của bạn"} color={'red'}>
+                                    <WarningTwoTone className='icon-warning' />
+                                </Tooltip>}
                             </div>
-                            {this.state.invalidEmail && <div className="invalid">Invalid Email</div>}
-
-                            <div className="login-input ">
-                                <i className="fa-solid fa-lock"></i>
-                                <input className="login-pass" onChange={this.handleChangePassword} type="password" name="" placeholder="Password" />
+                            <div className="login-input" style={this.state.invalidPass ? { border: '2px solid red' } : {}}>
+                            <i className="fa-solid fa-lock"></i>
+                                <input className="login-pass" onChange={this.handleChangePassword} type="password" name="" placeholder="Mật khẩu" />
+                                {this.state.invalidPass && <Tooltip placement='top' title={"Vui lòng nhập email của bạn"} color={'red'}>
+                                    <WarningTwoTone className='icon-warning' />
+                                </Tooltip>}
                             </div>
-                            {this.state.invalidPass && <div className="invalid">Enter your password</div>}
                             <div className="login-button">'
                                 {/* <button className="login-input buttoni" onClick={this.isEmail}>Login</button> */}
-                                <Link className="login-input buttoni" to='/home' >Login</Link>
+                                <Link className="login-input buttoni" to='/home' >Đăng nhập</Link>
                             </div>
                         </div>
                         <div className="login-more">
                             <div className="login-register">
-                                <Link to="/register">Create new account</Link>
+                                <Link to="/register">Đăng ký tài khoản mới</Link>
                             </div>
                             <div className="login-forgot">
-                                <Link to="/">Forgot password?</Link>
+                                <Link to="/">Quên mật khẩu</Link>
                             </div>
 
                         </div>
