@@ -1,15 +1,3 @@
-// import React from "react";
-// import HomePageLeft from "../../Component/NavPanel/HomepageLeft";
-
-// export default function MainLayout({ children }) {
-//     return (
-//         <>
-//             <HomePageLeft />
-//             {children}
-//         </>
-//     );
-// }
-
 import React from "react";
 import {
     Nav,
@@ -18,10 +6,10 @@ import {
     ListContact,
     HomepageMid,
 } from "../../Component/index";
-import "./MainLayout.scss";
+import "./SocialLayout.scss";
 import { useLocation } from "react-router-dom";
 
-export default function MainLayout({ children }) {
+export default function SocialLayout({ children }) {
     const location = useLocation();
     const pathName = location.pathname;
 

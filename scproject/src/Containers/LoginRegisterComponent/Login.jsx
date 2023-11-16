@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import anh from "../../assets/image/logoWetalk.png"
 import './Login.scss'
 import { Link } from 'react-router-dom'
-import { Tooltip } from 'antd';
+import { Spin, Tooltip } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
 export default class Login extends Component {
     constructor(props) {
@@ -60,7 +60,7 @@ export default class Login extends Component {
                                 </Tooltip>}
                             </div>
                             <div className="login-input" style={this.state.invalidPass ? { border: '2px solid red' } : {}}>
-                            <i className="fa-solid fa-lock"></i>
+                                <i className="fa-solid fa-lock"></i>
                                 <input className="login-pass" onChange={this.handleChangePassword} type="password" name="" placeholder="Mật khẩu" />
                                 {this.state.invalidPass && <Tooltip placement='top' title={"Vui lòng nhập email của bạn"} color={'red'}>
                                     <WarningTwoTone className='icon-warning' />
