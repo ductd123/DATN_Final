@@ -17,7 +17,7 @@ export default function ListConversation() {
   return (
     <div className="conversation">
       <HeaderList title="Conversation" />
-      {Array.from({ length: 10 }).map((item, i) => {
+      {Array.from({ length: 8 }).map((item, i) => {
         return (
           <Link to={`/room/${i}`} className="conversation__link" key={i}>
             <div className="conversation__container" key={i}>
