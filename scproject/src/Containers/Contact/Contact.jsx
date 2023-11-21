@@ -31,7 +31,7 @@ export default function Contact() {
   const sortedData = fakeData.slice().sort((a, b) => a.name.localeCompare(b.name));
 
   return (<>
-    {pathName === "/friend" ?
+    {pathName === "/friend" ||pathName === "/contact" ?
       <div className="contact">
         <div className="contact-panel__header">
           <div className="list-contact__selection">

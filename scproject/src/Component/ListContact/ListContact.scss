@@ -7,21 +7,36 @@
     border-radius: 5px;
     align-items: center;
     display: flex;
-    justify-content: center;
+    justify-content: center
   }
-  &__content{
+  &__menu{
+    height: 44px;
+    width: 100%;
+    border-radius: 5px;
+    align-items: center;
+    display: flex;
+    &>:first-child{
+      width: 30px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+  &__content {
     width: 150px;
     margin-right: 20px;
-    margin-left: 20px;
+    margin-left: 10px;
     font-weight: 500;
     font-size: 15px;
-
   }
-  i{
+  i {
     width: 20px;
     margin-left: 4px;
   }
-  .active {
-    background: rgb(219, 219, 219);
+  .ant-menu-item {
+    padding-left: 10px !important;
   }
+}
+
+.icon-ds-banbe {
+  font-size: 1.4rem;
 }
