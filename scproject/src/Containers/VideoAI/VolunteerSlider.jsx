@@ -36,7 +36,7 @@ let socket;
 const settings = {
     dots: true,
     infinite: true,
-    speed: 1000,
+    speed: 5000,
     slidesToShow: 3,
     slidesToScroll: 3,
 };
@@ -83,7 +83,7 @@ export default function VolunteerSlider() {
                 <Slider autoplay {...settings}>
                     {src.map((item, index) => {
                         return (
-                            <div>
+                            <div style={{cursor:'po'}}>
                                 <img src={item} key={index}></img>
                             </div>
                         )

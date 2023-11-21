@@ -2,7 +2,7 @@ export { default as HomePageChat } from "./Home/HomePageChat";
 export { default as Login } from "./LoginRegisterComponent/Login";
 export { default as Register } from "./LoginRegisterComponent/Register";
 export { default as HomePageAddFriends } from "./Friend/HomePageAddFriends";
-export { default as UploadVideoAI } from "../Component/Volunteers/UploadVideoAI";
+export { default as UploadVideoAI } from "../Component/Volunteers/StudyAI";
 export { default as VolunteerSlider } from "../Containers/VideoAI/VolunteerSlider" ;
 export { default as Contact } from "./Contact/Contact";
 export { default as Room } from "./Room/Room";
