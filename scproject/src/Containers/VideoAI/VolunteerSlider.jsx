@@ -36,43 +36,14 @@ let socket;
 const settings = {
     dots: true,
     infinite: true,
-    speed: 5000,
+    speed: 3000,
     slidesToShow: 3,
     slidesToScroll: 3,
 };
 export default function VolunteerSlider() {
-    const [messages, setMessages] = useState([]);
-    // const reduxUserData = useSelector((state) => state.reduxUserData);
     const params = useParams();
     const ENDPOINT = "http://localhost:3000/";
     const src = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
-    // useEffect(() => {
-    //   socket = io(ENDPOINT);
-    //   socket.emit("join", { ...params });
-    //   apiConversation
-    //     .getAllMessOfConversation(params.id)
-    //     .then((res) => setMessages(res));
-    //   return () => {
-    //     socket.emit("disconnect");
-    //     socket.off();
-    //   };
-    // ; [ENDPOINT, params]);
-
-    // useEffect(() => {
-    //   socket.on("mess", (mess) => {
-    //     console.log(mess);
-    //     setMessages([...messages, mess]);
-    //   });
-    // }, [messages]);
-
-    // const handleSendMess = (values, resetForm) => {
-    //   socket.emit("sendMess", {
-    //     userId: reduxUserData.data.id,
-    //     content: values.mes,
-    //     theaterId: params,
-    //   });
-    //   resetForm();
-    // };
 
     return (
         <div className="flex-center">
@@ -83,8 +54,10 @@ export default function VolunteerSlider() {
                 <Slider autoplay {...settings}>
                     {src.map((item, index) => {
                         return (
-                            <div style={{cursor:'po'}}>
-                                <img src={item} key={index}></img>
+                            <div>
+                                <div style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center' }}>
+                                    <img src={item} key={index}></img>
+                                </div>
                             </div>
                         )
                     })}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { HomepageLeft, HomepageMid } from '../../Component/index'
+import { HomepageLeft } from '../../Component/index'
 
 export default class HomePageAddFriends extends Component {
     render() {
