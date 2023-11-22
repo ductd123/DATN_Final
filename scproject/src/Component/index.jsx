@@ -2,7 +2,7 @@ export { default as Input } from "./Common/Input/Input";
 export { default as Button } from "./Common/Button/Button";
 export { default as Searchbox } from "./Common/Searchbox/Searchbox";
 export { default as ChatBox } from "./Chatbox/ChatBox";
-export { default as HomepageMid } from "./ListFriend/HomepageMid";
+export { default as LayoutMenuStudyAI } from "./ListFriend/LayoutMenuStudyAI";
 export { default as UseList } from "./ListFriend/UseList";
 export { default as HomepageLeft } from "./NavPanel/HomepageLeft";
 export { default as HeaderBar } from "./HeaderBar/HeaderBar";

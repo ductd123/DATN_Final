@@ -16,7 +16,7 @@ import {
     HeaderBar,
     ListConversation,
     ListContact,
-    HomepageMid,
+    LayoutMenuStudyAI,
 } from "../../Component/index";
 import "./MainLayout.scss";
 import { useLocation } from "react-router-dom";
@@ -31,7 +31,7 @@ export default function MainLayout({ children }) {
             <div className="main-layout__container">
                 {pathName === "/volunteers" ?
                     <div className="main-layout__side-bar">
-                        <HomepageMid />
+                        <LayoutMenuStudyAI />
                     </div> :
                     <div className="main-layout__side-bar">
                         <div className="main-layout__header-bar">

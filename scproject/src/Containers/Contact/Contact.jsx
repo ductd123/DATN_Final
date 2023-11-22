@@ -1,6 +1,6 @@
 import React from "react";
 import "./Contact.scss";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Users } from "react-feather";
 import { render } from "react-dom";
 export default function Contact() {
@@ -45,7 +45,8 @@ export default function Contact() {
           </div>
           <div className="list-contact__all">
             {
-              sortedData.map((item, index) => (<><div className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
+              sortedData.map((item, index) => (<>
+              <Link to={`/room/${item.id}`} className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
                 <div className="conversation__content">
                   <img
                     src={item.avt}
@@ -57,8 +58,9 @@ export default function Contact() {
                   </div>
                 </div>
 
-              </div>
-                <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr></>
+              </Link>
+                <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr>
+                </>
 
               ))
             }
@@ -82,7 +84,7 @@ export default function Contact() {
             <div className="list-contact__all">
               {
                 sortedData.map((item, index) => (<><div className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
-                  <div className="conversation__content">
+                  <Link to={`/room/${item.id}`} className="conversation__content">
                     <img
                       src={item.avt}
                       alt=""
@@ -92,7 +94,7 @@ export default function Contact() {
                       <h4 className="conversation__name">{item.name}</h4>
                       <h4 className="conversation__member" style={{ fontSize: '13px', color: '#8b8b8b' }}>{sortedData.length} thành viên</h4>
                     </div>
-                  </div>
+                  </Link>
 
                 </div>
                   <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr></>

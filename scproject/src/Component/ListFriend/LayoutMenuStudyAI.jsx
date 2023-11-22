@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import HeaderBar from "../HeaderBar/HeaderBar";
-import { UploadVideoAI } from "../../Containers";
-class HomepageMid extends Component {
+import { MenuStudyAI } from "../../Containers";
+class LayoutMenuStudyAI extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +16,7 @@ class HomepageMid extends Component {
                 <HeaderBar />
             </div>
             <div className="main-layout__content">
-                <UploadVideoAI/>
+                <MenuStudyAI onUploadVideo={this.props.onUploadVideo} openPanelHistory={this.props.openPanelHistory} />
             </div>
         </>
 
@@ -25,4 +25,4 @@ class HomepageMid extends Component {
     }
 }
 
-export default HomepageMid;
+export default LayoutMenuStudyAI;

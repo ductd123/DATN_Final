@@ -4,6 +4,7 @@ import { HomePageChat, Login, Register, VolunteerSlider, Contact, Room } from ".
 import { MainLayout, BlankLayout } from "../Layout";
 import PublicRouter from "./PublicRouter";
 import PrivateRouter from "./PrivateRouter";
+import LearningRouter from "./LearningRouter";
 
 export default function Routers() {
     return (
@@ -65,10 +66,7 @@ export default function Routers() {
             <Route
                 path="/volunteers"
                 element={
-                    <PrivateRouter
-                        component={VolunteerSlider}
-                        layout={MainLayout}
-                    />
+                    <LearningRouter/>
                 }
             />
             <Route
