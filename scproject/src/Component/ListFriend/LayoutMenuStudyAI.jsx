@@ -5,8 +5,7 @@ class LayoutMenuStudyAI extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            search: false,
-            active: false,
+
         }
     }
 
@@ -16,7 +15,7 @@ class LayoutMenuStudyAI extends Component {
                 <HeaderBar />
             </div>
             <div className="main-layout__content">
-                <MenuStudyAI onUploadVideo={this.props.onUploadVideo} openPanelHistory={this.props.openPanelHistory} />
+                <MenuStudyAI onUploadVideo={this.props.onUploadVideo} openPanelHistory={this.props.openPanelHistory} handleClickMenu={this.props.handleClickMenu} />
             </div>
         </>
 

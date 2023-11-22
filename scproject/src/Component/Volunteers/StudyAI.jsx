@@ -27,7 +27,7 @@ const itemabc = [
         getItem('Lịch sử đóng góp', 'History', <HistoryOutlined style={{ fontSize: '1rem' }} />),
     ]),
 ];
-const MenuStudyAI = ({ onUploadVideo, openPanelHistory }) => {
+const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu,  }) => {
     const [search, setSearch] = useState(false);
     const [items, setItems] = useState(itemabc);
     const handleOpenSearch = () => {
@@ -47,6 +47,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory }) => {
                 onUploadVideo();
                 break;
             default:
+                handleClickMenu();
                 break;
         }
     };

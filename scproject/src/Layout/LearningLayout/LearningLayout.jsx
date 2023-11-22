@@ -10,6 +10,7 @@ import StudyContainer from "../../Containers/StudyContainer/StudyContainer";
 import { Button, Drawer, Modal, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
+import TextArea from "antd/es/input/TextArea";
 
 export default function LearningLayout() {
     const location = useLocation();
@@ -75,7 +76,7 @@ export default function LearningLayout() {
 
                     <Modal
                         open={showPopupUploadVideo}
-                        title="Tải lên tài liệu của bạn"
+                        title="Bổ sung thư viện ngôn ngữ ký hiệu"
                         onOk={handleOk}
                         onCancel={handleCancel}
                         footer={[
@@ -93,8 +94,9 @@ export default function LearningLayout() {
                             </Button>,
                         ]}
                     >
-                        <br />
-                        <br />
+                        <p className="ant-upload-text" style={{ margin: '25px 0 10px 0' }}>Ngôn ngữ văn bản:</p>
+                        <TextArea placeholder="Lưu ý viết đúng chính tả và viết thường" autoSize onChange={(e)=>console.log(e.target.value)}/>
+                        <p className="ant-upload-text" style={{ margin: '10px 0 10px 0' }}>Ngôn ngữ ký hiệu:</p>
                         <Dragger {...props}>
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />

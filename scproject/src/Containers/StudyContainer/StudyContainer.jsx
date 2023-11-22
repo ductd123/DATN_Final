@@ -1,11 +1,4 @@
 import React from "react";
-import {
-    Nav,
-    HeaderBar,
-    ListConversation,
-    ListContact,
-    LayoutMenuStudyAI,
-} from "../../Component/index";
 import "./StudyContainer.scss";
 import { useLocation } from "react-router-dom";
 import VolunteerSlider from "../VideoAI/VolunteerSlider";

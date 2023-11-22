@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "react-router-dom";
 import { doCheckLogin } from "../Redux/actions";
 import { ERROR } from "../Redux/constants";
-import { LayoutMenuStudyAI, Nav } from "../Component";
 import LearningLayout from "../Layout/LearningLayout/LearningLayout";
 
 export default function LearningRouter() {
