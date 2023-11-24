@@ -1,5 +1,5 @@
-import { FileAddOutlined, FileImageOutlined, FileWordOutlined, HistoryOutlined, UploadOutlined, } from '@ant-design/icons';
-import { Menu } from 'antd';
+import { FileAddOutlined, FileImageOutlined, FileWordOutlined, HistoryOutlined, SearchOutlined, UploadOutlined, } from '@ant-design/icons';
+import { Input, Menu } from 'antd';
 import React, { useState } from 'react'
 import './StudyAI.scss';
 
@@ -12,24 +12,26 @@ function getItem(label, key, icon, children, type) {
         type,
     };
 }
-const itemabc = [
-    getItem('Học tập theo chữ cái', 'sub1', <FileWordOutlined style={{ fontSize: '1.25rem' }} />, [
-        getItem('A', "A",),
-        getItem('B', "B",),
-    ]),
-    getItem('Học tập theo chủ đề', 'sub2', <FileImageOutlined style={{ fontSize: '1.25rem' }} />, [
-        getItem('Option 5', '5'),
-        getItem('Option 6', '6'),
-        getItem('Submenu', 'sub3',),
-    ]),
-    getItem('Đóng góp tài liệu học tập', 'sub4', <FileAddOutlined style={{ fontSize: '1.25rem' }} />, [
-        getItem('Đóng góp video cá nhân', 'Upload', <UploadOutlined style={{ fontSize: '1rem' }} />),
-        getItem('Lịch sử đóng góp', 'History', <HistoryOutlined style={{ fontSize: '1rem' }} />),
-    ]),
-];
-const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu,  }) => {
+
+const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleSearch, openSearchWord}) => {
     const [search, setSearch] = useState(false);
-    const [items, setItems] = useState(itemabc);
+    const [items, setItems] = useState([
+        getItem('Học tập theo chữ cái', 'sub1', <FileWordOutlined style={{ fontSize: '1.25rem' }} />, [
+            getItem('A', "A",),
+            getItem('B', "B",),
+        ]),
+        getItem('Học tập theo chủ đề', 'sub2', <FileImageOutlined style={{ fontSize: '1.25rem' }} />, [
+            getItem('Option 5', '5'),
+            getItem('Option 6', '6'),
+            getItem('Submenu', 'sub3',),
+        ]),
+        getItem('Từ điển ngôn ngữ ký hiệu', 'sub4', <FileAddOutlined style={{ fontSize: '1.25rem' }} />, [
+            getItem(<Input onChange={(e)=>handleSearch(e)} placeholder="Nhập từ ngữ muốn tìm?" />, 'Search', <SearchOutlined style={{ fontSize: '1rem' }} />),
+            getItem('Bổ sung từ điển ký hiệu', 'Upload', <UploadOutlined style={{ fontSize: '1rem' }} />),
+            getItem('Lịch sử đóng góp', 'History', <HistoryOutlined style={{ fontSize: '1rem' }} />),
+        ]),
+    ]);
+    
     const handleOpenSearch = () => {
         setSearch(true);
     }
@@ -38,13 +40,16 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu,  }) => 
         setSearch(false);
     }
     const onClick = (e) => {
-        console.log("click" , e);
+        console.log("click");
         switch (e.key) {
             case 'History':
                 openPanelHistory();
                 break;
             case 'Upload':
                 onUploadVideo();
+                break;
+            case 'Search':
+                openSearchWord();
                 break;
             default:
                 handleClickMenu();
