@@ -1,10 +1,9 @@
 import { NavLink } from "react-router-dom"
-import anh from "../../assets/image/img-01.webp"
 import './HomePageLeft.scss'
 export default function HomepageLeft() {
     return <div className="menu-panel">
         <div className="mt-[25px]">
-            <img src={anh} alt="" />
+            {/* <img src={anh} alt="" /> */}
         </div>
         <div className="flex flex-col justify-between h-[85%]">
             <div className="nav-link flex flex-col ">

@@ -4,8 +4,6 @@ import "./VolunteerSlider.scss";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import so from "../../assets/image/sotunhien.png";
-import BangChuCai from "../../assets/image/123.png";
 import A from "../../assets/image/A.webp";
 import B from "../../assets/image/B.webp";
 import C from "../../assets/image/C.webp";

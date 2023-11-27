@@ -5,6 +5,7 @@ import { MainLayout, BlankLayout } from "../Layout";
 import PublicRouter from "./PublicRouter";
 import PrivateRouter from "./PrivateRouter";
 import LearningRouter from "./LearningRouter";
+import LearningLayout from "../Layout/LearningLayout/LearningLayout";
 
 export default function Routers() {
     return (
@@ -66,7 +67,9 @@ export default function Routers() {
             <Route
                 path="/volunteers"
                 element={
-                    <LearningRouter/>
+                    <LearningRouter
+                        layout={LearningLayout}
+                    />
                 }
             />
             <Route
@@ -75,6 +78,14 @@ export default function Routers() {
                     <PrivateRouter
                         component={Contact}
                         layout={MainLayout}
+                    />
+                }
+            />
+            <Route
+                path="/exam"
+                element={
+                    <LearningRouter
+                        layout={LearningLayout}
                     />
                 }
             />

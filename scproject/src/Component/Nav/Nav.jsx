@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "./Nav.scss";
-import { MessageCircle, Book, LogOut, Video } from "react-feather";
+import { MessageCircle, Book, LogOut, Video, BookOpen } from "react-feather";
 import { useSelector } from "react-redux";
 import MenuProfile from "./MenuProfile/MenuProfile";
 import HelperLogOut from "../../helpers/Logout";
+import { BookOutlined, CommentOutlined, LaptopOutlined, UnderlineOutlined, UnorderedListOutlined } from "@ant-design/icons";
 // import moment from "moment";
 
 export default function Nav() {
@@ -36,17 +37,22 @@ export default function Nav() {
       <ul className="nav__ul">
         <NavLink to="/home" className="nav__link">
           <li className={pathName === "/" || pathName === "/home" ? "nav__li nav__li--choose" : "nav__li"} >
-            <MessageCircle />
+            <CommentOutlined  style={{fontSize:'1.5rem'}} />
           </li>
         </NavLink>
         <NavLink to="/contact" className="nav__link">
           <li className={pathName === "/contact" ? "nav__li nav__li--choose" : "nav__li"}>
-            <Book />
+            <UnorderedListOutlined  style={{fontSize:'1.5rem'}} />
           </li>
         </NavLink>
         <NavLink to="/volunteers" className="nav__link">
           <li className={pathName === "/volunteers" ? "nav__li nav__li--choose" : "nav__li"} >
-            <Video />
+            <Video  />
+          </li>
+        </NavLink>
+        <NavLink to="/exam" className="nav__link">
+          <li className={pathName === "/exam" ? "nav__li nav__li--choose" : "nav__li"} >
+            <LaptopOutlined style={{fontSize:'1.5rem'}} />
           </li>
         </NavLink>
       </ul>
