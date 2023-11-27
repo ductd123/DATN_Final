@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
-import { Nav, LayoutMenuStudyAI, } from "../../Component/index";
+import { Nav, LearningSideBar, } from "../../Component/index";
 import "./LearningLayout.scss";
 import { useLocation } from "react-router-dom";
 import { VolunteerSlider } from "../../Containers";
-import StudyContainer from "../../Containers/StudyContainer/StudyContainer";
+import StudyContainer from "../../Component/StudyContainer/StudyContainer";
 import { Button, Drawer, Modal, Radio, Space, message } from "antd";
 import { EyeTwoTone, InboxOutlined, PlayCircleTwoTone } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
@@ -162,7 +162,7 @@ export default function LearningLayout() {
             <Nav />
             <div className="main-layout__container">
                 <div className="main-layout__side-bar">
-                    <LayoutMenuStudyAI
+                    <LearningSideBar
                         handleClickMenu={handleClickMenu}
                         openSearchWord={openSearchWord}
                         openPanelHistory={openPanelHistory}

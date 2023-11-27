@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import HeaderBar from "../HeaderBar/HeaderBar";
-import { MenuStudyAI } from "../../Containers";
-class LayoutMenuStudyAI extends Component {
+import HeaderBar from "../../Component/HeaderBar/HeaderBar";
+import { MenuStudyAI } from "..";
+export default class LearningSideBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,5 +23,3 @@ class LayoutMenuStudyAI extends Component {
         );
     }
 }
-
-export default LayoutMenuStudyAI;

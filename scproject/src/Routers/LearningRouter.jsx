@@ -5,7 +5,9 @@ import { doCheckLogin } from "../Redux/actions";
 import { ERROR } from "../Redux/constants";
 import LearningLayout from "../Layout/LearningLayout/LearningLayout";
 
-export default function LearningRouter() {
+export default function LearningRouter({
+    layout: Layout
+}) {
     const token = localStorage.getItem("token");
     const reduxUserData = useSelector((state) => state.userData);
     // const navigate = useNavigate();
@@ -22,6 +24,6 @@ export default function LearningRouter() {
     }
 
     return (
-        <LearningLayout/>
+        <Layout/>
     );
 }
