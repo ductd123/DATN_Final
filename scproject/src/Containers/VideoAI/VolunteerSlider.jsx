@@ -5,7 +5,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import so from "../../assets/image/sotunhien.png";
-import BangChuCai from "../../assets/image/bangchucai.png";
+import BangChuCai from "../../assets/image/123.png";
 import A from "../../assets/image/A.webp";
 import B from "../../assets/image/B.webp";
 import C from "../../assets/image/C.webp";
@@ -43,13 +43,13 @@ const settings = {
 export default function VolunteerSlider() {
     const params = useParams();
     const ENDPOINT = "http://localhost:3000/";
-    const src = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
+    const src = [A, B, C, D, E, F, G, H, I, K, L, M, N, O, P, Q, R, S, T, U, V, X, Y]
 
     return (
         <div className="flex-center">
             <div className="volunteer-room" style={{ width: "calc(100vw - 325px)" }}>
                 <div className="volunteer__header">
-                    <div className="volunteer__content">Bảng chữ cái ngôn ngữ ký hiệu tiếng anh</div>
+                    <div className="volunteer__content">Bảng chữ cái ngôn ngữ ký hiệu tiếng Việt</div>
                 </div>
                 <Slider autoplay {...settings}>
                     {src.map((item, index) => {

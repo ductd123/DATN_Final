@@ -16,9 +16,10 @@ function getItem(label, key, icon, children, type) {
 const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleSearch, openSearchWord}) => {
     const [search, setSearch] = useState(false);
     const [items, setItems] = useState([
-        getItem('Học tập theo chữ cái', 'sub1', <FileWordOutlined style={{ fontSize: '1.25rem' }} />, [
-            getItem('A', "A",),
-            getItem('B', "B",),
+        getItem('Học tập theo bảng chữ cái', 'sub1', <FileWordOutlined style={{ fontSize: '1.25rem' }} />, [
+            getItem('Theo chữ cái', "chucai",),
+            getItem('Theo chữ số', "chuso",),
+            getItem('Theo dấu', "dau",),
         ]),
         getItem('Học tập theo chủ đề', 'sub2', <FileImageOutlined style={{ fontSize: '1.25rem' }} />, [
             getItem('Option 5', '5'),
