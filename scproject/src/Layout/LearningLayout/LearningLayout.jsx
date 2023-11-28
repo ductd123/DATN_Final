@@ -27,6 +27,8 @@ const fileType = {
     img: 1,
     video: 2,
 }
+
+
 export default function LearningLayout() {
     const videoRef = useRef(null);
     const location = useLocation();
@@ -38,10 +40,10 @@ export default function LearningLayout() {
     const [showSearchWord, setshowSearchWord] = useState(false);
     const [loading, setLoading] = useState(false);
     const [confirmStudy, setConfirmStudy] = useState(false);
-    const [value, setValue] = useState(1);
+    const [valueOptions, setValueOptions] = useState([]);
     const [showDetail, setShowDetail] = useState({});
     const [searchText, setSearchText] = useState("");
-    
+
     const handleClickMenu = () => {
         setConfirmStudy(true)
     }
@@ -50,13 +52,6 @@ export default function LearningLayout() {
         console.log(`Answer ${index + 1} selected. Correct: ${isCorrect}`);
         setSelectedAnswers([...selectedAnswers, { index, isCorrect }]);
     };
-    const onOpenExam = () => {
-        setConfirmStudy(false)
-        setShowSlider(false);
-        setshowLearningComponent(true);
-        setshowSearchWord(false);
-        setShowSlider(false);
-    }
     const openPanelHistory = () => {
         setshowHistoryPanel(true);
     }
@@ -81,6 +76,15 @@ export default function LearningLayout() {
         { name: "asss", size: "12122", preview: "https://picsum.photos/200", type: 1 },
         { name: "video", size: "12122", preview: videoSrc, type: 2 },
         { name: "video1", size: "12122", preview: noiay, type: 2 },
+        { name: "anh 2", size: "12122", preview: "https://picsum.photos/204", type: 1 },
+        { name: "Anh 4", size: "12122", preview: "https://picsum.photos/203", type: 1 },
+        { name: "Anh 6", size: "12122", preview: "https://picsum.photos/207", type: 1 },
+        { name: "asss", size: "12122", preview: "https://picsum.photos/200", type: 1 },
+        { name: "video", size: "12122", preview: videoSrc, type: 2 },
+        { name: "video1", size: "12122", preview: noiay, type: 2 },
+        { name: "anh 2", size: "12122", preview: "https://picsum.photos/204", type: 1 },
+        { name: "Anh 4", size: "12122", preview: "https://picsum.photos/203", type: 1 },
+        { name: "Anh 6", size: "12122", preview: "https://picsum.photos/207", type: 1 },
     ]);
     const stopVideo = () => {
         if (videoRef.current) {
@@ -91,29 +95,29 @@ export default function LearningLayout() {
         setShowImage(!showImage);
     };
     const cancleStudy = () => {
-        setValue(1);
         setConfirmStudy(false);
     };
     const openSearchWord = () => {
+        cancleStudy();
         setshowSearchWord(true);
         setshowLearningComponent(false);
         setShowSlider(false);
     }
-    const onChangeRadio = (e) => {
-        console.log('radio checked', e.target.value);
-        setValue(e.target.value);
-    };
 
     const handleSearch = (e) => {
-        setSearchText(e.target.value);
-        console.log('tìm', e.target.value);
+        setSearchText(e);
+        openSearchWord()
+        console.log('tìm', e);
     }
 
     const handleOpenDetailFile = (file) => {
         setShowDetail(file);
         setShowImage(!showImage);
     }
-
+    const handleClickOptions = (item) => {
+        setSearchText(item);
+        openSearchWord();
+    }
     const ImageCard = ({ file }) => {
 
         return (
@@ -168,6 +172,7 @@ export default function LearningLayout() {
                         openPanelHistory={openPanelHistory}
                         onUploadVideo={onUploadVideo}
                         handleSearch={handleSearch}
+                        setValueOptions={setValueOptions}
                     />
                 </div>
                 <div className="main-layout__children flex-center">
@@ -179,7 +184,6 @@ export default function LearningLayout() {
                         answers={q.answers}
                         correctAnswerIndex={q.correctAnswerIndex}
                         onAnswerSelected={(isCorrect) => handleAnswerSelected(1, isCorrect)}
-
                     />}
                     {showSearchWord && <SearchWord files={files} searchText={searchText} />}
                     <Modal
@@ -220,7 +224,7 @@ export default function LearningLayout() {
 
                     </Modal>
 
-                    <Drawer title="Lịch sử đóng góp" placement="right" onClose={onCloseHistoryPanel} open={showHistoryPanel}>
+                    <Drawer title="Lịch sử đăng tải" placement="right" onClose={onCloseHistoryPanel} open={showHistoryPanel}>
                         {files.map((item, i) => {
                             return (
                                 <ImageCard file={item} key={i}></ImageCard>
@@ -246,28 +250,23 @@ export default function LearningLayout() {
                     <Modal
                         open={confirmStudy}
                         footer={[
-                            <Button key="back" onClick={cancleStudy}>
-                                Hủy bỏ
-                            </Button>,
-                            <Button
-                                type="primary"
-                                onClick={onOpenExam}
-                            >
-                                Bắt đầu thi
-                            </Button>,
+                            // <Button key="back" onClick={cancleStudy}>
+                            //     Hủy bỏ
+                            // </Button>,
+                            // <Button
+                            //     type="primary"
+                            //     onClick={onOpenExam}
+                            // >
+                            //     Tìm kiếm
+                            // </Button>,
                         ]}
                         onCancel={cancleStudy}
-                        title="Lựa chọn mức độ câu hỏi"
                     >
-                        <p className="ant-upload-text" style={{ margin: '25px 0 10px 0', fontSize: '16px', fontWeight: 500 }}>Bạn sẽ trả lời liên tục 10 câu hỏi liên quan đến chủ đề đã chọn với mức độ :</p>
-                        <Radio.Group onChange={onChangeRadio} value={value}>
-                            <Space direction="vertical">
-                                <Radio value={1}>Dễ</Radio>
-                                <Radio value={2}>Trung bình</Radio>
-                                <Radio value={3}>Khó</Radio>
-                                <Radio value={4}>Từ dễ đến khó</Radio>
-                            </Space>
-                        </Radio.Group>
+                        {valueOptions.map((item, index) => {
+                            return (
+                                <Button key={index} style={{ minWidth: '45px' }} onClick={() => handleClickOptions(item)}>{item}</Button>
+                            )
+                        })}
                     </Modal>
                 </div>
             </div>

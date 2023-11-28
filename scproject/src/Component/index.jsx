@@ -12,3 +12,4 @@ export { default as ListConversation } from "./ListConversation/ListConversation
 export { default as ContentMessage } from "./Room/ContentMessage/ContentMessage";
 export { default as FormRoom } from "./Room/FormRoom/FormRoom";
 export { default as HeaderRoom } from "./Room/HeaderRoom/HeaderRoom";
+export { default as MenuTakingExam} from "./TakingExam/MenuExamTaking";
