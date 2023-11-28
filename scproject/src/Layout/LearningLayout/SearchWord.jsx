@@ -1,8 +1,19 @@
 import { EyeTwoTone, PlayCircleTwoTone, SearchOutlined } from '@ant-design/icons';
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
+import defaultvideo from '../../assets/image/defaultvideo.png'
+import { Modal } from 'antd';
 const SearchWord = ({ searchText, files }) => {
     const [listFile, setListFile] = useState(files);
+    const [fileShow, setFileShow] = useState({});
+    const [showFileDetail, setShowFileDetail] = useState(false);
+    const videoRef = useRef(null);
+    const handleViewDetail = (file) => {
+        setShowFileDetail(true);
+        setFileShow(file);
+    }
+    const onCloseDetail =()=>{
+
+    }
     return (<div className="searchWord">
         <div className="searchWord-header flex-center">
             <SearchOutlined style={{ fontSize: '1.25rem' }} />
@@ -10,31 +21,54 @@ const SearchWord = ({ searchText, files }) => {
             <span className="searchWord-header-value">"{searchText}"</span>
         </div>
         <div className='searchWord-container'>
-            {listFile.map((file, i) => {
+            {listFile.map((item, i) => {
                 return (
-                    <div key={i} className='searchWord-item'>
-                        {file.type == 1 ?
-
-                            <div className='searchWord-container-show flex-center' >
-                                <img src={file.preview} alt={file.preview} />
+                    <div key={i} style={{ height: 'max-content' }}>
+                        {item.type == 1 ?
+                            <div key={i} className='searchWord-item' style={{ backgroundImage: `url(${item.preview})`, backgroundSize: 'cover', backgroundPosition: 'center', }}>
+                                <div className='searchWord-item-detail'>
+                                    <p style={{ fontWeight: '600', fontSize: '28px ' }}>{item.name}</p>
+                                    <p style={{ fontSize: '14px' }}>Tác giả: {item.name}</p>
+                                    <p style={{ fontSize: '14px' }}>Ngày đăng: {item.size}</p>
+                                </div>
+                                <button className='searchWord-item-play' onClick={() => handleViewDetail(item)}>
+                                    Bấm để xem!!!
+                                </button>
                             </div>
                             :
-                            <div className='searchWord-container-show flex-center'>
-                                <PlayCircleTwoTone />
+                            <div key={i} className='searchWord-item' style={{ backgroundImage: `url(${defaultvideo})`, backgroundSize: 'cover', backgroundPosition: 'center', }}>
+                                <div className='searchWord-item-detail'>
+                                    <p style={{ fontWeight: '600', fontSize: '28px ' }}>{item.name}</p>
+                                    <p style={{ fontSize: '14px' }}>Tác giả: {item.name}</p>
+                                    <p style={{ fontSize: '14px' }}>Ngày đăng: {item.size}</p>
+                                </div>
+                                <button className='searchWord-item-play' onClick={() => handleViewDetail(item)}>
+                                    Bấm để xem!!!
+                                </button>
                             </div>
                         }
-                        <div>
-                            <p style={{ fontWeight: '500' }}>{file.name}</p>
-                            <p style={{ fontSize: '12px' }}>Tác giả: {file.name}</p>
-                            <p style={{ fontSize: '12px' }}>Ngày đăng: {file.size}</p>
-                        </div>
-                        <button>
-                            <EyeTwoTone/>
-                        </button>
+
                     </div>
+
                 );
             })}
         </div>
+        <Modal
+            open={showFileDetail}
+            footer={[]}
+            onCancel={() => setShowFileDetail(false)}
+            style={{ top: 20 }}
+            title={fileShow.name}
+            key={fileShow.preview}
+        >
+            {fileShow.type == 1 ?
+                <img src={fileShow.preview} alt="Uploaded" style={{ width: '100%', height: 'auto', marginTop: '30px', }} />
+                :
+                <video ref={videoRef} controls style={{ width: '100%', height: 'auto', marginTop: '30px', }}>
+                    <source src={fileShow.preview} type="video/mp4" />
+                </video>
+            }
+        </Modal>
     </div>
     );
 }
