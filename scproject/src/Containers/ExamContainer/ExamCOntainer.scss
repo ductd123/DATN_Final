@@ -5,6 +5,7 @@
   &-title {
     font-size: 24px;
     font-weight: 600;
+    margin-bottom: 20px;
     text-align: center;
   }
   &-more {
@@ -15,30 +16,35 @@
   &-container {
     display: flex;
     width: 100%;
-    height: max-content;
-    margin-top: 20px;
+    height: 100%;
+    margin-top: -20px;
+    align-items: center;
     &-left {
       display: flex;
       flex-direction: column;
       width: 100%;
       margin-right: 8px;
+      height: max-content;
       &-item {
         display: flex;
         align-items: flex-start;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         &-content {
-            &-title {
-              font-size: 16px;
-              font-weight: 500;
-            }
+          &-title {
+            font-size: 16px;
+            font-weight: 500;
           }
+        }
       }
-
     }
     &-right {
       width: 100%;
       align-items: center;
       display: flex;
+      img {
+        width: 100%;
+        height: auto;
+      }
     }
   }
 }

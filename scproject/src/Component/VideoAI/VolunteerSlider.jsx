@@ -52,7 +52,7 @@ export default function VolunteerSlider() {
                 <Slider autoplay {...settings}>
                     {src.map((item, index) => {
                         return (
-                            <div>
+                            <div key={index}>
                                 <div style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center' }}>
                                     <img src={item} key={index}></img>
                                 </div>
