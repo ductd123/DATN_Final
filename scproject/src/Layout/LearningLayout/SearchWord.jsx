@@ -12,7 +12,12 @@ const SearchWord = ({ searchText, files }) => {
         setFileShow(file);
     }
     const onCloseDetail =()=>{
-
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.currentTime = 0;
+        }
+        console.log(videoRef);
+        setShowFileDetail(false);
     }
     return (<div className="searchWord">
         <div className="searchWord-header flex-center">
@@ -56,7 +61,7 @@ const SearchWord = ({ searchText, files }) => {
         <Modal
             open={showFileDetail}
             footer={[]}
-            onCancel={() => setShowFileDetail(false)}
+            onCancel={onCloseDetail}
             style={{ top: 20 }}
             title={fileShow.name}
             key={fileShow.preview}

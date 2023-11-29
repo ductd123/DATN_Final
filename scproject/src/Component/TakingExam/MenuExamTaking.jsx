@@ -13,7 +13,7 @@ function getItem(label, key, icon, children, type) {
     };
 }
 
-const MenuTakingExam = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleSearch, openSearchWord }) => {
+const MenuTakingExam = ({ openConfirmExam }) => {
     const [search, setSearch] = useState(false);
     const [items, setItems] = useState([
         getItem('Kiểm tra theo bảng chữ cái', 'examABC', <BookOutlined style={{ fontSize: '1.25rem' }} />),
@@ -29,9 +29,14 @@ const MenuTakingExam = ({ onUploadVideo, openPanelHistory, handleClickMenu, hand
         setSearch(false);
     }
     const onClick = (e) => {
-        console.log("click", e);
         switch (e.key) {
-            case 'Search':
+            case 'examABC':
+                openConfirmExam();
+                break;
+            case 'exam123':
+                openConfirmExam();
+                break;
+            case 'addQA':
                 break;
             default:
                 break;

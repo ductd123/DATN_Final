@@ -16,10 +16,26 @@ const q = {
 };
 const Examlayout = () => {
     const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const [value, setValue] = useState(1);
+    const [confirmExam, setConfirmExam] = useState(false);
     const handleAnswerSelected = (index, isCorrect) => {
         console.log(`Answer ${index + 1} selected. Correct: ${isCorrect}`);
         setSelectedAnswers([...selectedAnswers, { index, isCorrect }]);
     };
+    const onChangeRadio = (e) => {
+        setValue(e.target.value)
+    }
+    const openConfirmExam = () => {
+        setConfirmExam(true);
+    }
+    const onConfirmExam = () => {
+        setConfirmExam(false);
+        setValue(1);
+    }
+    const cancleStudy = () => {
+        setValue(1);
+        setConfirmExam(false)
+    }
     return (<div className="main-layout">
         <Nav />
         <div className="main-layout__container">
@@ -28,7 +44,7 @@ const Examlayout = () => {
                     <HeaderBar />
                 </div>
                 <div className="main-layout__content">
-                    <MenuTakingExam />
+                    <MenuTakingExam openConfirmExam={openConfirmExam} />
                 </div>
             </div>
             <div className="main-layout__children flex-center">
@@ -40,20 +56,21 @@ const Examlayout = () => {
                     correctAnswerIndex={q.correctAnswerIndex}
                     onAnswerSelected={(isCorrect) => handleAnswerSelected(1, isCorrect)}
                 />
-                {/* <Modal
-                    open={confirmStudy}
-                    footer={[
-                        <Button key="back" onClick={cancleStudy}>
-                            Hủy bỏ
-                        </Button>,
-                        <Button
-                            type="primary"
-                            onClick={onOpenExam}
-                        >
-                            Bắt đầu thi
-                        </Button>,
-                    ]}
+                <Modal
+                    open={confirmExam}
+                    // footer={[
+                    //     <Button key="back" onClick={() => setConfirmExam(false)}>
+                    //         Hủy bỏ
+                    //     </Button>,
+                    //     <Button
+                    //         type="primary"
+                    //         // onClick={'onOpenExam'}
+                    //     >
+                    //         Bắt đầu thi
+                    //     </Button>,
+                    // ]}
                     onCancel={cancleStudy}
+                    onOk={onConfirmExam}
                     title="Lựa chọn mức độ câu hỏi"
                 >
                     <p className="ant-upload-text" style={{ margin: '25px 0 10px 0', fontSize: '16px', fontWeight: 500 }}>Bạn sẽ trả lời liên tục 10 câu hỏi liên quan đến chủ đề đã chọn với mức độ :</p>
@@ -65,7 +82,7 @@ const Examlayout = () => {
                             <Radio value={4}>Từ dễ đến khó</Radio>
                         </Space>
                     </Radio.Group>
-                </Modal> */}
+                </Modal>
             </div>
         </div>
     </div>);
