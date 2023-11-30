@@ -3,6 +3,7 @@ import './Login.scss'
 import { Link } from 'react-router-dom'
 import { Tooltip } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
+import axios from 'axios';
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -111,7 +112,7 @@ class Register extends Component {
         })
 
     }
-    onSubmit = () => {
+    onSubmit = async () => {
         let data = {
             name: this.state.fullName,
             email: this.state.email,
@@ -122,10 +123,23 @@ class Register extends Component {
             birthday: this.state.birthday,
             gender: this.state.gender,
         };
-        this.setState({
-            step1: false,
-        }, () => { });
-        console.log(data);
+        // this.setState({
+        //     step1: false,
+        // }, () => { });
+        // console.log(data);
+        try {
+            const response = await axios.post(
+                'http://14.225.255.146:8080/api/register/generateOtp',
+                data
+            );
+            this.setState({
+                step1: false,
+            }, () => { });
+            console.log('Server Response:', response.data);
+            // Thực hiện xử lý response tại đây nếu cần
+        } catch (error) {
+            console.error('Error during registration:', error);
+        }
     }
 
     checkAuthen = () => {
