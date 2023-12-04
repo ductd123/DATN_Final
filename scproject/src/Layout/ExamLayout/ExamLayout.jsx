@@ -1,46 +1,61 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, HeaderBar, MenuTakingExam, Nav } from "../../Component";
 import ExamContainer from "../../Containers/ExamContainer/ExamContainer";
 import { Modal, Radio, Space } from "antd";
-const q = {
-    id: '204',
-    question: 'Đây là gì?',
-    image: `https://picsum.photos/`,
-    answers: [
-        { value: 'a', check: true },
-        { value: 'b', check: false },
-        { value: 'c', check: false },
-        { value: 'd', check: false },
-    ],
-    correctAnswerIndex: 1,
-};
+import { LoadingOutlined } from "@ant-design/icons";
+import './ExamLayout.scss';
 const Examlayout = () => {
-    const [listQuestions, setListQuestions] = useState([]);
-    const [value, setValue] = useState(1);
-    const [valueOption, setValueOptions] = useState([]);
+    const [selectedAnswers, setSelectedAnswers] = useState([]);
     const [takingExam, setTakingExam] = useState(false);
-    const [confirmExam1, setConfirmExam1] = useState(false);
-    const [confirmExam2, setConfirmExam2] = useState(false);
-    const onChangeRadio = (e) => {
-        setValue(e.target.value)
-    }
+    const [countdown, setCountdown] = useState(3);
+    useEffect(() => {
+        if (countdown === 0) {
+            onConfirmExam();
+        }
+
+        if (countdown > 0) {
+            const intervalId = setInterval(() => {
+                setCountdown(prevCountdown => prevCountdown - 1);
+            }, 1000);
+
+            setTimeout(() => {
+                clearInterval(intervalId);
+            }, countdown * 1000);
+
+            return () => clearInterval(intervalId);
+        }
+    }, [countdown]);
+    const startCountdown = () => {
+        if (countdown > 0) {
+            const intervalId = setInterval(() => {
+                setCountdown(prevCountdown => prevCountdown - 1);
+            }, 1000);
+
+            setTimeout(() => {
+                clearInterval(intervalId);
+            }, countdown * 1000);
+        }
+    };
+
+    const [confirmExam, setConfirmExam] = useState(false);
+    const handleAnswerSelected = (index, isCorrect) => {
+        console.log(`Answer ${index + 1} selected. Correct: ${isCorrect}`);
+        setSelectedAnswers([...selectedAnswers, { index, isCorrect }]);
+    };
+
     const openConfirmExam = () => {
-        setConfirmExam1(true);
+        setConfirmExam(true);
+        setCountdown(3);
+        setTakingExam(false);
+        startCountdown();
     }
-    const onConfirmExam1 = () => {
-        setConfirmExam1(false);
-        setConfirmExam2(true);
-    }
-    const onConfirmExam2 = () => {
-        setConfirmExam2(false);
+    const onConfirmExam = () => {
+        setConfirmExam(false);
         setTakingExam(true);
-        setValue(1);
-        setListQuestions(q);
     }
-    const cancleExam = () => {
-        setValue(1);
-        setConfirmExam1(false);
-        setConfirmExam2(false);
+    const cancleStudy = () => {
+        setConfirmExam(false)
+        setCountdown(3);
     }
     return (<div className="main-layout">
         <Nav />
@@ -50,22 +65,34 @@ const Examlayout = () => {
                     <HeaderBar />
                 </div>
                 <div className="main-layout__content">
-                    <MenuTakingExam setConfirmExam1={setConfirmExam1} setValueOptions={setValueOptions} />
+                    <MenuTakingExam takingExam={takingExam} openConfirmExam={openConfirmExam} />
                 </div>
             </div>
-            <div className="main-layout__children flex-center">
+            <div className="main-layout__children flex-center" >
                 <ExamContainer
-                    confirmExam1={confirmExam1}
-                    confirmExam2={confirmExam2}
-                    cancleExam={cancleExam}
-                    onConfirmExam1={onConfirmExam1}
-                    onConfirmExam2={onConfirmExam2}
-                    onChangeRadio={onChangeRadio}
-                    value={value}
-                    listQuestions={listQuestions}
+                    onAnswerSelected={(isCorrect) => handleAnswerSelected(1, isCorrect)}
                     takingExam={takingExam}
-                    valueOption={valueOption}
                 />
+                <Modal
+                    open={confirmExam}
+                    footer={[]}
+                    onCancel={cancleStudy}
+                    onOk={onConfirmExam}
+                    closeIcon={false}
+
+                >
+                    <div className="modal-content">
+                        <p className="ant-upload-text flex-center" style={{ fontSize: '24px', fontWeight: 500, color: '#1677ff' }}>
+                            Bài thi sẽ bắt đầu sau:
+                        </p>
+                        <div className="ant-upload-text flex-center" style={{ margin: '40px 0', fontSize: '60px', fontWeight: 600 }}>
+                            <LoadingOutlined style={{ fontSize: '140px', color: '#1677ff' }} />
+                            <div style={{ position: 'absolute', width: '140px' }} >
+                                <p className="flex-center" style={{ justifyContent: 'center', color: '#1677ff' }}>{countdown}</p>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
             </div>
         </div>
     </div>);

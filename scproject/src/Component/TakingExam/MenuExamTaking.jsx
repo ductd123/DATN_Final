@@ -1,5 +1,5 @@
-import { BoldOutlined, BookOutlined, FileAddOutlined, FileImageOutlined, FileWordOutlined, FolderAddOutlined, HistoryOutlined, SearchOutlined, UploadOutlined, } from '@ant-design/icons';
-import { Input, Menu } from 'antd';
+import { BoldOutlined, BookOutlined, ExclamationCircleOutlined, FileAddOutlined, FileImageOutlined, FileWordOutlined, FolderAddOutlined, HistoryOutlined, SearchOutlined, UploadOutlined, } from '@ant-design/icons';
+import { Button, Modal, Space, Menu } from 'antd';
 import React, { useState } from 'react'
 import './ExamTakingMenu.scss';
 
@@ -13,11 +13,9 @@ function getItem(label, key, icon, children, type) {
     };
 }
 
-const MenuTakingExam = ({ setConfirmExam1, setValueOptions }) => {
-    const BangChuCai = ['A', 'Ă', 'Â', 'B', 'C', 'D', 'Đ', 'E', 'Ê', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'Ô', 'Ơ', 'P', 'Q', 'R', 'S', 'T', 'U', 'Ư', 'V', 'X', 'Y'];
-    const BangChuSo = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    const dau = ['Dấu sắc', 'Dấu huyền', 'Dấu hỏi', 'Dấu Ngã', 'Dấu nặng']
+const MenuTakingExam = ({ openConfirmExam, takingExam }) => {
     const [search, setSearch] = useState(false);
+    const [modal, contextHolder] = Modal.useModal();
     const [items, setItems] = useState([
         getItem('Kiểm tra theo bảng chữ cái', 'examABC', <BookOutlined style={{ fontSize: '1.25rem' }} />, [
             getItem('Theo chữ cái', "chucai",),
@@ -40,22 +38,34 @@ const MenuTakingExam = ({ setConfirmExam1, setValueOptions }) => {
         console.log(e);
         switch (e.key) {
             case 'examABC':
-                openConfirmExam();
+                if (takingExam) {
+                    modal.confirm({
+                        title: 'Cảnh báo',
+                        icon: <ExclamationCircleOutlined />,
+                        content: 'Bạn đang trong 1 bài kiểm tra. Bạn muốn thoát ra và lựa chọn 1 bài kiểm tra khác?',
+                        okText: 'Xác nhận',
+                        cancelText: 'Làm tiếp',
+                        onOk: () => openConfirmExam(),
+                    });
+                }
+                else {
+                    openConfirmExam();
+                }
                 break;
             case 'exam123':
-                openConfirmExam();
-                break;
-            case 'dau':
-                setValueOptions(dau);
-                openConfirmExam();
-                break;
-            case 'chucai':
-                setValueOptions(BangChuCai);
-                openConfirmExam();
-                break;
-            case 'chuso':
-                setValueOptions(BangChuSo);
-                openConfirmExam();
+                if (takingExam) {
+                    modal.confirm({
+                        title: 'Cảnh báo',
+                        icon: <ExclamationCircleOutlined />,
+                        content: 'Bạn đang trong 1 bài kiểm tra. Bạn muốn thoát ra và lựa chọn 1 bài kiểm tra khác?',
+                        okText: 'Xác nhận',
+                        cancelText: 'Làm tiếp',
+                        onOk: () => openConfirmExam(),
+                    });
+                }
+                else {
+                    openConfirmExam();
+                }
                 break;
             case 'addQA':
                 break;
@@ -75,6 +85,7 @@ const MenuTakingExam = ({ setConfirmExam1, setValueOptions }) => {
                 mode="inline"
                 items={items}
             />
+            {contextHolder}
         </div>
     );
 }
