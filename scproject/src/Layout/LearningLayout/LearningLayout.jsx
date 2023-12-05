@@ -261,10 +261,11 @@ export default function LearningLayout() {
                             // </Button>,
                         ]}
                         onCancel={cancleStudy}
+                        closeIcon={false}
                     >
                         {valueOptions.map((item, index) => {
                             return (
-                                <Button key={index} style={{ minWidth: '45px' }} onClick={() => handleClickOptions(item)}>{item}</Button>
+                                <Button className="button-option" key={index} style={{ minWidth: '45px' }} onClick={() => handleClickOptions(item)}>{item}</Button>
                             )
                         })}
                     </Modal>

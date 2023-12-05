@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Tooltip } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
 import axios from 'axios';
+import logo from "../../assets/image/logo.png"
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -166,7 +167,7 @@ class Register extends Component {
                 {this.state.step1 &&
                     <div className="login-body">
                         <div className="login-container" style={{ background: '#f1f3f5', flexDirection: 'column' }}>
-                            <div className="login-title">Đăng ký tài khoản</div>
+                            <div className="login-title">Đăng ký tài khoản  <img src={logo} style={{ width: '50px', height: 'auto' }}></img></div>
                             <div style={{ display: 'flex' }}>
                                 <div className="login-right">
                                     <div className="login-detail">
