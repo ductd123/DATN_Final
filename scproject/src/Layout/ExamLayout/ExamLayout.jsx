@@ -70,10 +70,12 @@ const Examlayout = () => {
         setTakingExam(false);
         setIndexx(0);
         setConfirmExamStarted(false);
+        setCountdown(3);
     }
     const cancleStudy = () => {
         setConfirmExam(false)
         setCountdown(3);
+        setConfirmExamStarted(false);
     }
 
     return (<div className="main-layout">

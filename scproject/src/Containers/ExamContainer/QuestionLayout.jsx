@@ -1,9 +1,22 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import A from '../../assets/image/A.webp'
-const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point, setPoint, showPointResult }) => {
+const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point, setPoint, showPointResult, id }) => {
     const [indexSelected, setIndexSelected] = useState();
-
+    const videoRef = useRef(null);
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.load(); // Load video mới
+            videoRef.current.play(); // Chơi video mới
+        }
+    }, [indexx]);
+    const stopVideo = () => {
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.currentTime = 0;
+        }
+    };
     const handleChoose = (index, check) => {
+        stopVideo();
         setIndexSelected(index);
         if (check) {
             setPoint(point + 1)
@@ -13,7 +26,7 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
                 setIndexx(indexx + 1);
                 setIndexSelected();
             }
-            else{
+            else {
                 showPointResult();
             }
         }, 2000);
@@ -43,7 +56,7 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
                 {type === 1 ? (
                     <img src={src} alt="Lỗi" style={styles.media} />
                 ) : (
-                    <video controls width="100%" height="auto" style={styles.media}>
+                    <video key={id} ref={videoRef} controls width="100%" height="auto" style={styles.media}>
                         <source src={src} type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>

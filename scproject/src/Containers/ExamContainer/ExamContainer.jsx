@@ -18,7 +18,7 @@ const generateUniqueArray = (length, min, max) => {
 const isUnique = (arr, value) => arr.indexOf(value) === -1;
 const random = generateUniqueArray(10, 0, 19);
 
-export default function ExamContainer({ takingExam, point, setPoint, indexx, setIndexx, showPointResult  }) {
+export default function ExamContainer({ takingExam, point, setPoint, indexx, setIndexx, showPointResult }) {
     const location = useLocation();
     const pathName = location.pathname;
     const [q, setQuestion] = useState();
@@ -54,6 +54,7 @@ export default function ExamContainer({ takingExam, point, setPoint, indexx, set
                         type={q.type}
                         src={q.src}
                         answers={q.answers}
+                        id={q.id}
                         setIndexx={setIndexx}
                         indexx={indexx}
                         setPoint={setPoint}
