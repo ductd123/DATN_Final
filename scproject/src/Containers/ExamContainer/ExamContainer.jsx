@@ -5,11 +5,22 @@ import { CheckCircleTwoTone } from "@ant-design/icons";
 import ExamBlankPage from "./ExamBlankPage";
 import QuestionLayout from "./QuestionLayout";
 import { listQuestions } from "./listQuestion";
+const generateUniqueArray = (length, min, max) => {
+    const uniqueArray = [];
+    while (uniqueArray.length < length) {
+        const randomValue = Math.floor(Math.random() * (max - min + 1) + min);
+        if (isUnique(uniqueArray, randomValue)) {
+            uniqueArray.push(randomValue);
+        }
+    }
+    return uniqueArray;
+};
+const isUnique = (arr, value) => arr.indexOf(value) === -1;
+const random = generateUniqueArray(10, 0, 19);
 
-export default function ExamContainer({ src, type, answers, takingExam, onAnswerSelected }) {
+export default function ExamContainer({ takingExam, point, setPoint, indexx, setIndexx, showPointResult  }) {
     const location = useLocation();
     const pathName = location.pathname;
-    const [indexx, setIndexx] = useState(2);
     const [q, setQuestion] = useState();
 
     const shuffleArray = (array) => {
@@ -24,8 +35,14 @@ export default function ExamContainer({ src, type, answers, takingExam, onAnswer
     };
 
     useEffect(() => {
-        let newAnswers = shuffleArray(listQuestions[indexx].answers);
-        setQuestion({ ...listQuestions[indexx], answers: newAnswers });
+        let index = random[indexx];
+        if (indexx > 9) {
+            showPointResult();
+        }
+        else {
+            let newAnswers = shuffleArray(listQuestions[index].answers);
+            setQuestion({ ...listQuestions[index], answers: newAnswers });
+        }
     }, [indexx]);
 
     return (
@@ -37,6 +54,11 @@ export default function ExamContainer({ src, type, answers, takingExam, onAnswer
                         type={q.type}
                         src={q.src}
                         answers={q.answers}
+                        setIndexx={setIndexx}
+                        indexx={indexx}
+                        setPoint={setPoint}
+                        point={point}
+                        showPointResult={showPointResult}
                     />
                 </div>
                 :

@@ -1,10 +1,22 @@
 import React, { Fragment, useState } from "react";
 import A from '../../assets/image/A.webp'
-const QuestionLayout = ({ question, src, type, answers, handleAnswerSelect }) => {
+const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point, setPoint, showPointResult }) => {
     const [indexSelected, setIndexSelected] = useState();
 
-    const handleChoose = (index) => {
+    const handleChoose = (index, check) => {
         setIndexSelected(index);
+        if (check) {
+            setPoint(point + 1)
+        }
+        setTimeout(() => {
+            if (indexx < 9) {
+                setIndexx(indexx + 1);
+                setIndexSelected();
+            }
+            else{
+                showPointResult();
+            }
+        }, 2000);
     };
 
     const answerOptions = ({ answer, index }) => {
@@ -12,11 +24,11 @@ const QuestionLayout = ({ question, src, type, answers, handleAnswerSelect }) =>
             indexSelected !== index
                 ? "rgb(0, 152, 253)"
                 : answer.check
-                    ? "green"
+                    ? "#53d100"
                     : "red";
         return (
-            <div key={index} onClick={() => handleChoose(index)} className="answer-container" style={{ backgroundColor: color1 }}>
-                <button disabled={indexSelected == undefined ? false : true} onClick={() => handleChoose(index)} style={styles.answerLabel}>
+            <div key={index} className="answer-container" style={{ backgroundColor: color1 }}>
+                <button disabled={indexSelected == undefined ? false : true} onClick={() => handleChoose(index, answer.check)} style={styles.answerLabel}>
                     {answer.value}
                 </button>
             </div>
@@ -25,7 +37,7 @@ const QuestionLayout = ({ question, src, type, answers, handleAnswerSelect }) =>
 
     return (
         <Fragment>
-            <span style={{ fontWeight: '500', fontSize: '32px', padding: "0 0 10px 20px", position: 'absolute' }}>Câu 1:</span>
+            <span style={{ fontWeight: '500', fontSize: '32px', padding: "0 0 10px 20px", position: 'absolute' }}>Câu {indexx + 1}/10 </span>
             <div style={styles.questionContainer}>
                 <span style={{ fontWeight: '600', fontSize: '28px' }}>{question}</span>
                 {type === 1 ? (

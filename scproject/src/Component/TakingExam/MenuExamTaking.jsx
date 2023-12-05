@@ -1,5 +1,5 @@
-import { BoldOutlined, BookOutlined, ExclamationCircleOutlined, FileAddOutlined, FileImageOutlined, FileWordOutlined, FolderAddOutlined, HistoryOutlined, SearchOutlined, UploadOutlined, } from '@ant-design/icons';
-import { Button, Modal, Space, Menu } from 'antd';
+import { BookOutlined, ExclamationCircleOutlined, FolderAddOutlined } from '@ant-design/icons';
+import { Modal, Menu } from 'antd';
 import React, { useState } from 'react'
 import './ExamTakingMenu.scss';
 
@@ -14,26 +14,12 @@ function getItem(label, key, icon, children, type) {
 }
 
 const MenuTakingExam = ({ openConfirmExam, takingExam }) => {
-    const [search, setSearch] = useState(false);
     const [modal, contextHolder] = Modal.useModal();
     const [items, setItems] = useState([
-        getItem('Kiểm tra theo bảng chữ cái', 'examABC', <BookOutlined style={{ fontSize: '1.25rem' }} />, [
-            getItem('Theo chữ cái', "chucai",),
-            getItem('Theo chữ số', "chuso",),
-            getItem('Theo dấu', "dau",),
-        ]),
+        getItem('Kiểm tra theo bảng chữ cái', 'examABC', <BookOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Kiểm tra theo chủ đề', 'exam123', <BookOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Tạo câu hỏi', 'addQA', <FolderAddOutlined style={{ fontSize: '1.25rem' }} />),
     ]);
-
-    const openConfirmExam = () => {
-        setConfirmExam1(true);
-        
-    }
-
-    const handleCloseSearch = () => {
-        setSearch(false);
-    }
     const onClick = (e) => {
         console.log(e);
         switch (e.key) {
