@@ -16,13 +16,13 @@ const generateUniqueArray = (length, min, max) => {
     return uniqueArray;
 };
 const isUnique = (arr, value) => arr.indexOf(value) === -1;
-const random = generateUniqueArray(10, 0, 19);
+// let random = generateUniqueArray(10, 0, 19);
 
 export default function ExamContainer({ takingExam, point, setPoint, indexx, setIndexx, showPointResult }) {
     const location = useLocation();
     const pathName = location.pathname;
     const [q, setQuestion] = useState();
-
+    const [random, setRandom] = useState(generateUniqueArray(10, 0, listQuestions.length -1))
     const shuffleArray = (array) => {
         const shuffledArray = array.slice();
 
@@ -33,6 +33,9 @@ export default function ExamContainer({ takingExam, point, setPoint, indexx, set
 
         return shuffledArray;
     };
+    useEffect(() => {
+setRandom(generateUniqueArray(10, 0, listQuestions.length -1));
+    }, [takingExam]);
 
     useEffect(() => {
         let index = random[indexx];
