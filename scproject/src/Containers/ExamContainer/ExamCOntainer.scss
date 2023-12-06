@@ -88,8 +88,9 @@
   font-size: 32px;
   padding: 5px 20px;
   position: absolute;
+  right: 0;
   background-color: white;
-  border-radius: 0 0 15px 0;
+  border-radius: 0 0 0 15px;
   border-left: 2px solid rgb(112, 112, 112);
 }
 .question-title {
@@ -98,7 +99,7 @@
   background-color: white;
   border: 1px solid rgb(112, 112, 112);
   width: max-content;
-  max-width: 70vw;
+  max-width: 65%;
   min-width: 40%;
   margin-bottom: 10px;
   text-align: center;

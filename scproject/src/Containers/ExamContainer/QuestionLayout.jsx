@@ -21,7 +21,7 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
         setIndexSelected(index);
         if (check) {
             setPoint(point + 1)
-        }
+    }
         setTimeout(() => {
             if (indexx < 9) {
                 setIndexx(indexx + 1);
@@ -57,13 +57,13 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
                 {type === 1 ? (
                     <img src={src} alt="Lỗi" style={styles.media} />
                 ) : (
-                    <video key={id} ref={videoRef} controls width="100%" height="auto" style={styles.media}>
+                    <video key={id} ref={videoRef} loop playsinline controls width="100%" height="auto" style={styles.media}>
                         <source src={src} type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 )}
 
-                <div className="answer-box" style={{ width: '100%' }}>
+                <div className="answer-box" style={{ width: '100%', }}>
                     {answers.map((answer, index) => answerOptions({ answer, index, key: index }))}
                 </div>
             </div>
@@ -79,6 +79,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'space-between'
     },
     media: {
         height: '50vh',

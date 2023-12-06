@@ -56,6 +56,7 @@ const MenuTakingExam = ({ openConfirmExam, takingExam }) => {
             case 'addQA':
                 break;
             default:
+                window.director(`./${e.key}`)
                 break;
         }
     };

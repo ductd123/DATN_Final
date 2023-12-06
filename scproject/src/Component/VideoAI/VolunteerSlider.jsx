@@ -54,7 +54,7 @@ export default function VolunteerSlider() {
                         return (
                             <div key={index}>
                                 <div style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center' }}>
-                                    <img src={item} key={index}></img>
+                                    <img src={item} key={index} style={{width: '100%'}}></img>
                                 </div>
                             </div>
                         )
