@@ -9,6 +9,7 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
             videoRef.current.play(); // Chơi video mới
         }
     }, [indexx]);
+
     const stopVideo = () => {
         if (videoRef.current) {
             videoRef.current.pause();
@@ -50,9 +51,9 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
 
     return (
         <Fragment>
-            <span style={{ fontWeight: '500', fontSize: '32px', padding: "0 0 10px 20px", position: 'absolute' }}>Câu {indexx + 1}/10 </span>
+            <span className="question-number">Câu {indexx + 1}/10 </span>
             <div style={styles.questionContainer}>
-                <span style={{ fontWeight: '600', fontSize: '28px' }}>{question}</span>
+                <span className="question-title">{question}</span>
                 {type === 1 ? (
                     <img src={src} alt="Lỗi" style={styles.media} />
                 ) : (
@@ -64,7 +65,6 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
 
                 <div className="answer-box" style={{ width: '100%' }}>
                     {answers.map((answer, index) => answerOptions({ answer, index, key: index }))}
-
                 </div>
             </div>
         </Fragment>

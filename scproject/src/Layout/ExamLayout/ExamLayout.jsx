@@ -54,6 +54,7 @@ const Examlayout = () => {
         setCountdown(3);
         setTakingExam(false);
         startCountdown();
+        setIndexx(0);
     }
 
     const onConfirmExam = () => {

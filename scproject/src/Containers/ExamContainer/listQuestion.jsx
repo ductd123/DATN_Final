@@ -21,7 +21,34 @@ import U from "../../assets/image/U.jpg";
 import V from "../../assets/image/V.jpg";
 import X from "../../assets/image/X.jpg";
 import Y from "../../assets/image/Y.jpg";
+import video1 from "../../assets/video/doncoi.mp4";
+import video2 from "../../assets/video/noiaymemong.mp4";
 export const listQuestions = [
+    {
+        id: '001',
+        question: 'Đây là gì?',
+        src: video1,
+        answers: [
+            { value: 'A', check: true },
+            { value: 'B', check: false },
+            { value: 'C', check: false },
+            { value: 'D', check: false },
+        ],
+        type: 2,
+    },
+
+    {
+        id: '001',
+        question: 'Đây là gì?',
+        src: video2,
+        answers: [
+            { value: 'A', check: true },
+            { value: 'B', check: false },
+            { value: 'C', check: false },
+            { value: 'D', check: false },
+        ],
+        type: 2,
+    },
     {
         id: '001',
         question: 'Đây là gì?',

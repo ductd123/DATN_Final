@@ -51,8 +51,11 @@
 }
 .question-layout {
   width: 100%;
-  background-color: white;
   height: 100%;
+  background-image: url("../../assets/image/backgroundExam.jpg");
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
 }
 .answer-container {
   display: flex;
@@ -79,4 +82,27 @@
   flex-wrap: wrap;
   margin-bottom: 20px;
   justify-content: center;
+}
+.question-number {
+  font-weight: 500;
+  font-size: 32px;
+  padding: 5px 20px;
+  position: absolute;
+  background-color: white;
+  border-radius: 0 0 15px 0;
+  border-left: 2px solid rgb(112, 112, 112);
+}
+.question-title {
+  font-weight: 600;
+  font-size: 28px;
+  background-color: white;
+  border: 1px solid rgb(112, 112, 112);
+  width: max-content;
+  max-width: 70vw;
+  min-width: 40%;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 5px;
+  border-radius: 15px;
+  box-shadow: inset -1px -1px 5px 0px  black;
 }
