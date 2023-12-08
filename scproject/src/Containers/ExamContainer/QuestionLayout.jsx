@@ -3,12 +3,6 @@ import A from '../../assets/image/A.webp'
 const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point, setPoint, showPointResult, id }) => {
     const [indexSelected, setIndexSelected] = useState();
     const videoRef = useRef(null);
-    useEffect(() => {
-        if (videoRef.current) {
-            videoRef.current.load(); // Load video mới
-            videoRef.current.play(); // Chơi video mới
-        }
-    }, [indexx]);
 
     const stopVideo = () => {
         if (videoRef.current) {

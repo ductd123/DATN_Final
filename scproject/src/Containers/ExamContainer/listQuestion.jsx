@@ -3,7 +3,6 @@ import B from "../../assets/image/B.jpg";
 import C from "../../assets/image/C.jpg";
 import D from "../../assets/image/D.jpg";
 import E from "../../assets/image/E.jpg";
-import F from "../../assets/image/F.jpg";
 import G from "../../assets/image/G.jpg";
 import H from "../../assets/image/H.jpg";
 import I from "../../assets/image/I.jpg";
@@ -34,6 +33,7 @@ export const listQuestions = [
             { value: 'C', check: false },
             { value: 'D', check: false },
         ],
+        trueAnswer: 'A',
         type: 2,
     },
 
