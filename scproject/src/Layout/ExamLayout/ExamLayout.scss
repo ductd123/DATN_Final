@@ -5,3 +5,15 @@
     justify-content: center;
     text-align: center;
   }
+
+.radio-create-question{
+  .ant-radio{
+    bottom: 7px;
+  }
+  .ant-radio-group{
+    width: 100%;
+  }
+  .ant-space{
+    width: 50%;
+  }
+}

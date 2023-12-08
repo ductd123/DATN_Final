@@ -18,6 +18,7 @@ const Examlayout = () => {
     const [point, setPoint] = useState(0);
     const [indexx, setIndexx] = useState(0);
     const [showPoint, setshowPoint] = useState(false);
+    const [showCreateQuestions, setshowCreateQuestions] = useState(false);
     const [confirmExam, setConfirmExam] = useState(false);
     const [valueText, setValueText] = useState(["", "", "", ""]);
     const [valueChecked, setValueChecked] = useState(1);
@@ -93,6 +94,9 @@ const Examlayout = () => {
         setCountdown(3);
         setConfirmExamStarted(false);
     }
+    const onShowCreateQuestion = () => {
+        setshowCreateQuestions(true)
+    }
     const props = {
         name: 'file',
         action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
@@ -102,9 +106,9 @@ const Examlayout = () => {
                 console.log(info.file, info.fileList);
             }
             if (status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully.`);
+                message.success(`${info.file.name} tải lên thành công.`);
             } else if (status === 'error') {
-                message.error(`${info.file.name} file upload failed.`);
+                message.error(`${info.file.name} tải lên thất bại.`);
             }
         },
         onDrop(e) {
@@ -119,7 +123,7 @@ const Examlayout = () => {
                     <HeaderBar />
                 </div>
                 <div className="main-layout__content">
-                    <MenuTakingExam takingExam={takingExam} openConfirmExam={openConfirmExam} />
+                    <MenuTakingExam takingExam={takingExam} openConfirmExam={openConfirmExam} onShowCreateQuestion={onShowCreateQuestion} />
                 </div>
             </div>
             <div className="main-layout__children flex-center" >
@@ -189,13 +193,14 @@ const Examlayout = () => {
                     </div>
                 </Modal>
                 <Modal
-                    open={true}
+                    open={showCreateQuestions}
                     title="Bổ sung thư viện ngôn ngữ ký hiệu"
                     onOk={handleCreateQuestion}
-                    onCancel={''}
+                    onCancel={()=>setshowCreateQuestions(false)}
                     okText="Tải lên"
                     cancelText="Hủy bỏ"
                     style={{ top: 20 }}
+                    className="radio-create-question"
                 >
                     <p className="ant-upload-text" style={{ margin: '10px 0 10px 0', fontWeight: "500" }}>Câu hỏi</p>
                     <Dragger {...props}>
@@ -211,7 +216,7 @@ const Examlayout = () => {
                         </p>
                     </Dragger>
                     <p className="ant-upload-text" style={{ margin: '10px 0', fontWeight: "500" }}>Đáp án: </p>
-                    <p className="ant-upload-text" style={{ margin: '10px 0', color: 'red' }}>Lưu ý: tích vào đáp án đúng.</p>
+                    <p className="ant-upload-text" style={{ margin: '10px 0', color: '#a3a3a3' }}>Lưu ý: tích vào đáp án đúng.</p>
                     <Radio.Group onChange={onChange} value={valueChecked}>
                         <Space direction="vertical">
                             <Radio value={0}>
@@ -244,7 +249,7 @@ const Examlayout = () => {
                             </Radio>
 
                         </Space>
-                        <Space direction="vertical">
+                        <Space  direction="vertical">
                             <Radio value={2}>
                                 <Input
                                     style={{
@@ -259,7 +264,7 @@ const Examlayout = () => {
                                     }}
                                 />
                             </Radio>
-                            <Radio value={3}>
+                            <Radio  value={3}>
                                 <Input
                                     style={{
                                         width: "100%",

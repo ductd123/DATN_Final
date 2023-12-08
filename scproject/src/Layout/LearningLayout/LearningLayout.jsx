@@ -149,7 +149,7 @@ export default function LearningLayout() {
         onChange(info) {
             const { status } = info.file;
             if (status !== 'uploading') {
-                console.log(info.file, info.fileList);
+                console.log(info.file.response);
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
