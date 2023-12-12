@@ -51,7 +51,7 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
                 {type === 1 ? (
                     <img src={src} alt="Lỗi" style={styles.media} />
                 ) : (
-                    <video key={id} ref={videoRef} loop playsinline controls width="100%" height="auto" style={styles.media}>
+                    <video key={id} ref={videoRef} loop playsInline controls width="100%" height="auto" style={styles.media}>
                         <source src={src} type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>

@@ -1,17 +1,20 @@
 import axios from "axios";
 import queryString from "query-string";
 
-const token = localStorage.getItem("token");
+// const token = localStorage.getItem("token");
 // const URL_BE = process.env.REACT_APP_URL_BE;
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://14.225.255.146:8080/api/",
   headers: {
     "content-type": "application/json",
-    Authorization: `Bearer ${token}`,
+    // Authorization: `Bearer ${token}`,
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
+// axiosClient.interceptors.request.use(async (config)=>{
+//   return config;
+// })
 axiosClient.interceptors.response.use(
   (res) => {
     if (res && res.data) {

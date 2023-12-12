@@ -5,6 +5,8 @@ import { Tooltip } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
 import axios from 'axios';
 import logo from "../../assets/image/logo.png"
+import axiosClient from '../../Services/axiosClient';
+import apiSignUp from '../../Services/apiRegister';
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -129,10 +131,7 @@ class Register extends Component {
         // }, () => { });
         // console.log(data);
         try {
-            const response = await axios.post(
-                'http://14.225.255.146:8080/api/register/generateOtp',
-                data
-            );
+            const response = await apiSignUp.generateOtp(data)
             this.setState({
                 step1: false,
             }, () => { });
