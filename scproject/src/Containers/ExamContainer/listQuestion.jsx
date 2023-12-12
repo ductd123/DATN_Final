@@ -22,33 +22,18 @@ import X from "../../assets/image/X.jpg";
 import Y from "../../assets/image/Y.jpg";
 import video1 from "../../assets/video/doncoi.mp4";
 import video2 from "../../assets/video/noiaymemong.mp4";
-export const listQuestions = [
-    {
-        id: '001',
-        question: 'Đây là gì?',
-        src: video1,
-        answers: [
-            { value: 'A', check: true },
-            { value: 'B', check: false },
-            { value: 'C', check: false },
-            { value: 'D', check: false },
-        ],
-        trueAnswer: 'A',
-        type: 2,
-    },
+import khong from "../../assets/video/0.mp4";
+import mot from "../../assets/video/1.mp4";
+import hai from "../../assets/video/2.mp4";
+import ba from "../../assets/video/3.mp4";
+import bon from "../../assets/video/4.mp4";
+import nam from "../../assets/video/5.mp4";
+import sau from "../../assets/video/6.mp4";
+import bay from "../../assets/video/7.mp4";
+import tam from "../../assets/video/8.mp4";
+import chin from "../../assets/video/9.mp4";
 
-    {
-        id: '001',
-        question: 'Đây là gì?',
-        src: video2,
-        answers: [
-            { value: 'A', check: true },
-            { value: 'B', check: false },
-            { value: 'C', check: false },
-            { value: 'D', check: false },
-        ],
-        type: 2,
-    },
+export const listQuestions = [
     {
         id: '001',
         question: 'Đây là gì?',
@@ -313,4 +298,127 @@ export const listQuestions = [
         ],
         type: 1,
     },
+    {
+        id: '021',
+        question: 'Đây là gì?',
+        src: khong,
+        answers: [
+            { value: '0', check: true },
+            { value: '4', check: false },
+            { value: '3', check: false },
+            { value: '8', check: false },
+        ],
+        type: 2,
+    },
+
+    {
+        id: '022',
+        question: 'Đây là gì?',
+        src: mot,
+        answers: [
+            { value: '1', check: true },
+            { value: '0', check: false },
+            { value: '5', check: false },
+            { value: '3', check: false },
+        ],
+        type: 2,
+    },
+    {
+        id: '023',
+        question: 'Đây là gì?',
+        src: hai,
+        answers: [
+            { value: '2', check: true },
+            { value: '0', check: false },
+            { value: '4', check: false },
+            { value: '6', check: false },
+        ],
+        type: 2,
+    },
+
+    {
+        id: '024',
+        question: 'Đây là gì?',
+        src: ba,
+        answers: [
+            { value: '3', check: true },
+            { value: '5', check: false },
+            { value: '4', check: false },
+            { value: '6', check: false },
+        ],
+        type: 2,
+    },
+    {
+        id: '025',
+        question: 'Đây là gì?',
+        src: bon,
+        answers: [
+            { value: '4', check: true },
+            { value: '3', check: false },
+            { value: '6', check: false },
+            { value: '8', check: false },
+        ],
+        type: 2,
+    },
+    {
+        id: '026',
+        question: 'Đây là gì?',
+        src: nam,
+        answers: [
+            { value: '5', check: true },
+            { value: '3', check: false },
+            { value: '4', check: false },
+            { value: '7', check: false },
+        ],
+        type: 2,
+    },
+    {
+        id: '027',
+        question: 'Đây là gì?',
+        src: sau,
+        answers: [
+            { value: '6', check: true },
+            { value: '2', check: false },
+            { value: '4', check: false },
+            { value: '8', check: false },
+        ],
+        type: 2,
+    },
+    {
+        id: '028',
+        question: 'Đây là gì?',
+        src: bay,
+        answers: [
+            { value: '7', check: true },
+            { value: '8', check: false },
+            { value: '6', check: false },
+            { value: '9', check: false },
+        ],
+        type: 2,
+    },
+    {
+        id: '029',
+        question: 'Đây là gì?',
+        src: tam,
+        answers: [
+            { value: '8', check: true },
+            { value: '3', check: false },
+            { value: '6', check: false },
+            { value: '9', check: false },
+        ],
+        type: 2,
+    },
+    {
+        id: '030',
+        question: 'Đây là gì?',
+        src: chin,
+        answers: [
+            { value: '9', check: true },
+            { value: '0', check: false },
+            { value: '4', check: false },
+            { value: '7', check: false },
+        ],
+        type: 2,
+    },
+
 ]

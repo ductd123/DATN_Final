@@ -22,7 +22,7 @@ export default function ExamContainer({ takingExam, point, setPoint, indexx, set
     const location = useLocation();
     const pathName = location.pathname;
     const [q, setQuestion] = useState();
-    const [random, setRandom] = useState(generateUniqueArray(10, 0, listQuestions.length -1))
+    const [random, setRandom] = useState(generateUniqueArray(10, 0, listQuestions.length - 1))
     const shuffleArray = (array) => {
         const shuffledArray = array.slice();
 
@@ -34,7 +34,8 @@ export default function ExamContainer({ takingExam, point, setPoint, indexx, set
         return shuffledArray;
     };
     useEffect(() => {
-setRandom(generateUniqueArray(10, 0, listQuestions.length -1));
+        setRandom(generateUniqueArray(10, 0, listQuestions.length - 1));
+        console.log(random);
     }, [takingExam]);
 
     useEffect(() => {

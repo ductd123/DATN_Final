@@ -4,6 +4,7 @@ import './Login.scss'
 import { Link } from 'react-router-dom'
 import { Spin, Tooltip } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
+import apiLogin from '../../Services/apiLogin';
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +18,7 @@ export default class Login extends Component {
     handleChangeEmail = (e) => {
         this.setState({
             email: e.target.value,
-            invalidEmail: this.validateEmail(e.target.value),
+            invalidEmail: this.validateEmail(this.state.email),
         })
     }
     handleChangePassword = (e) => {
@@ -33,13 +34,16 @@ export default class Login extends Component {
         return !emailRegex.test(email);
     }
 
-    handleOnSubmit = () => {
+    handleOnSubmit = async () => {
         let data = {
             email: this.state.email,
             password: this.state.password
         }
-        if (data.password !== '') {
-            console.log('a');
+        try {
+            const response = await apiLogin.postLogin(data)
+            console.log('Server Response:', response.data);
+        } catch (error) {
+            console.error('Error during registration:', error);
         }
     }
     render() {
@@ -67,8 +71,7 @@ export default class Login extends Component {
                                 </Tooltip>}
                             </div>
                             <div className="login-button">'
-                                {/* <button className="login-input buttoni" onClick={this.isEmail}>Login</button> */}
-                                <Link className="login-input buttoni" to='/home' >Đăng nhập</Link>
+                                <button className="login-input buttoni" onClick={this.handleOnSubmit}>Login</button>
                             </div>
                         </div>
                         <div className="login-more">
