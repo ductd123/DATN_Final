@@ -18,8 +18,6 @@ export default class ExamSideBar extends Component {
                 <MenuStudyAI openSearchWord={this.props.openSearchWord} onUploadVideo={this.props.onUploadVideo} openPanelHistory={this.props.openPanelHistory} handleClickMenu={this.props.handleClickMenu} handleSearch={this.props.handleSearch} />
             </div>
         </>
-
-
         );
     }
 }

@@ -9,5 +9,9 @@ const apiLogin = {
         const url = "auth";
         return axiosClient.get(url);
     },
+    tets: () => {
+        const url = "test";
+        return axiosClient.get(url);
+    },
 };
 export default apiLogin;

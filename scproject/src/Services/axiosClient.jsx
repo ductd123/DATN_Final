@@ -5,7 +5,7 @@ import queryString from "query-string";
 // const URL_BE = process.env.REACT_APP_URL_BE;
 
 const axiosClient = axios.create({
-  baseURL: "http://14.225.255.146:8080/api/",
+  baseURL: "http://202.191.56.11:8080/api/",
   headers: {
     "content-type": "application/json",
     // Authorization: `Bearer ${token}`,
