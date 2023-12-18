@@ -142,18 +142,37 @@ class Register extends Component {
         }
     }
 
-    checkAuthen = () => {
+    checkAuthen = async () => {
         this.setState({
             invalidOTP: this.state.otp === '',
-        }, () => {
-            if (!this.state.invalidOTP) {
-                let data = {
-                    email: this.state.email,
-                    otpNum: this.state.otp,
-                }
-                console.log(data);
+        }, () => { })
+        if (!this.state.invalidOTP) {
+            let data = {
+                email: this.state.email,
+                otpNum: this.state.otp,
             }
-        })
+            try {
+                const response = await apiSignUp.validateOtp(data)
+                this.setState({
+                    step1: false,
+                }, () => { });
+                console.log('Server Response:', response);
+                if (response.code === 200) {
+                    this.setState({
+                        step1: true,
+                    }, () => { });
+                }
+                else {
+                    this.setState({
+                        invalidOTP: false,
+                    })
+                }
+                // Thực hiện xử lý response tại đây nếu cần
+            } catch (error) {
+                console.error('Error during registration:', error);
+            }
+        }
+
     }
 
     onCancle = () => {
@@ -259,7 +278,7 @@ class Register extends Component {
                                     <div className="login-input " style={this.state.invalidOTP ? { border: '2px solid red' } : {}}>
                                         <i className="fa fa-cog"></i>
                                         <input className="login-user" onBlur={this.handleChangeOTP} onChange={this.handleChangeOTP} type="text" placeholder="Mã OTP" />
-                                        {this.state.invalidOTP && <Tooltip placement='top' title={"Vui lòng nhập mã OTP"} color={'red'}>
+                                        {this.state.invalidOTP && <Tooltip placement='top' title={"Vui lòng nhập đúng mã OTP"} color={'red'}>
                                             <WarningTwoTone className='icon-warning' />
                                         </Tooltip>}
                                     </div>

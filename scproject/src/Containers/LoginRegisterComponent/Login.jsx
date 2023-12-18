@@ -40,7 +40,8 @@ export default class Login extends Component {
             password: this.state.password
         }
         try {
-            const response = await apiLogin.postLogin(data)
+            // const response = await apiLogin.postLogin(data);
+            const response = await apiLogin.postLogin(data);
             console.log('Server Response:', response.data);
         } catch (error) {
             console.error('Error during registration:', error);
@@ -71,7 +72,7 @@ export default class Login extends Component {
                                 </Tooltip>}
                             </div>
                             <div className="login-button">'
-                                <button className="login-input buttoni" onClick={this.handleOnSubmit}>Login</button>
+                                <button className="login-input buttoni" onClick={this.handleOnSubmit}>Đăng nhập</button>
                             </div>
                         </div>
                         <div className="login-more">

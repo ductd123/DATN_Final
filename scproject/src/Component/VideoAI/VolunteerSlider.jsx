@@ -42,24 +42,64 @@ export default function VolunteerSlider() {
     const params = useParams();
     const ENDPOINT = "http://localhost:3000/";
     const src = [A, B, C, D, E, F, G, H, I, K, L, M, N, O, P, Q, R, S, T, U, V, X, Y]
-
+    const Carousel = ({ images, itemsToShow, itemsToScroll }) => {
+        const [startIndex, setStartIndex] = useState(0);
+      
+        const nextSlide = () => {
+          const newStartIndex = (startIndex + itemsToScroll) % images.length;
+          const remainingItems = images.length - newStartIndex;
+      
+          setStartIndex(
+            remainingItems >= itemsToShow ? newStartIndex : images.length - itemsToShow
+          );
+        };
+      
+        const prevSlide = () => {
+            let newStartIndex = (startIndex - itemsToScroll + images.length) % images.length;
+          
+            // Nếu startIndex là 0 và newStartIndex là số âm (do lệch giá trị), đặt lại startIndex cho hiển thị 6 thẻ đầu tiên.
+            if (startIndex === 0 & newStartIndex < 0) {
+              newStartIndex = 0;
+            }
+          
+            setStartIndex(0);
+          };
+      
+        const visibleImages = images.slice(startIndex, startIndex + itemsToShow);
+      
+        return (
+          <div className="carousel">
+            <button onClick={prevSlide}>Previous</button>
+            <div className="slide-container">
+              {visibleImages.map((image, index) => (
+                <div key={index} className="slide">
+                  <img src={image} alt={`Slide ${index + 1}`} />
+                </div>
+              ))}
+            </div>
+            <button onClick={nextSlide}>Next</button>
+          </div>
+        );
+      };
+      
     return (
         <div className="flex-center">
             <div className="volunteer-room" style={{ width: "calc(100vw - 325px)" }}>
                 <div className="volunteer__header">
                     <div className="volunteer__content">Bảng chữ cái ngôn ngữ ký hiệu tiếng Việt</div>
                 </div>
-                <Slider autoplay {...settings}>
+                {/* <Slider autoplay {...settings}>
                     {src.map((item, index) => {
                         return (
                             <div key={index}>
                                 <div style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center' }}>
-                                    <img src={item} key={index} style={{width: '100%'}}></img>
+                                    <img src={item} key={index} style={{ width: '100%' }}></img>
                                 </div>
                             </div>
                         )
                     })}
-                </Slider>
+                </Slider> */}
+                <Carousel images={src} itemsToScroll={2} itemsToShow={6} />
             </div>
         </div>
     );
