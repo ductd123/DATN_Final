@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Nav, LearningSideBar, } from "../../Component/index";
 import "./LearningLayout.scss";
 import { useLocation } from "react-router-dom";
@@ -34,7 +34,6 @@ export default function LearningLayout() {
     const location = useLocation();
     const pathName = location.pathname;
     const [showSlider, setShowSlider] = useState(true);
-    const [showLearningComponent, setshowLearningComponent] = useState(false);
     const [showHistoryPanel, setshowHistoryPanel] = useState(false);
     const [showPopupUploadVideo, setshowPopupUploadVideo] = useState(false);
     const [showSearchWord, setshowSearchWord] = useState(false);
@@ -44,14 +43,14 @@ export default function LearningLayout() {
     const [showDetail, setShowDetail] = useState({});
     const [searchText, setSearchText] = useState("");
 
+    useEffect(() => {
+
+    }, [searchText]);
+
     const handleClickMenu = () => {
         setConfirmStudy(true)
     }
     const [selectedAnswers, setSelectedAnswers] = useState([]);
-    const handleAnswerSelected = (index, isCorrect) => {
-        console.log(`Answer ${index + 1} selected. Correct: ${isCorrect}`);
-        setSelectedAnswers([...selectedAnswers, { index, isCorrect }]);
-    };
     const openPanelHistory = () => {
         setshowHistoryPanel(true);
     }
@@ -100,7 +99,6 @@ export default function LearningLayout() {
     const openSearchWord = () => {
         cancleStudy();
         setshowSearchWord(true);
-        setshowLearningComponent(false);
         setShowSlider(false);
     }
 
@@ -177,14 +175,6 @@ export default function LearningLayout() {
                 </div>
                 <div className="main-layout__children flex-center">
                     {showSlider && <VolunteerSlider />}
-                    {showLearningComponent && <StudyContainer
-                        question={q.question}
-                        image={`${q.image}${q.id}`}
-                        video={q.video}
-                        answers={q.answers}
-                        correctAnswerIndex={q.correctAnswerIndex}
-                        onAnswerSelected={(isCorrect) => handleAnswerSelected(1, isCorrect)}
-                    />}
                     {showSearchWord && <SearchWord files={files} searchText={searchText} />}
                     <Modal
                         open={showPopupUploadVideo}

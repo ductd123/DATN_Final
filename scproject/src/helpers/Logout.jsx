@@ -1,4 +1,5 @@
 export default async function LogOut() {
-  localStorage.removeItem("token");
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
   window.location.replace("/");
 }
