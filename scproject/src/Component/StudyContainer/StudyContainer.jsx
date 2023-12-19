@@ -1,19 +1,6 @@
 import React, { useState } from "react";
 import "./StudyContainer.scss";
 import { useLocation } from "react-router-dom";
-import VolunteerSlider from "../VideoAI/VolunteerSlider";
-const questions = {
-    id: '004',
-    question: 'Đây là gì?',
-    image: `https://picsum.photos/`,
-    answers: [
-        { value: 'a', check: true },
-        { value: 'b', check: false },
-        { value: 'c', check: false },
-        { value: 'd', check: false },
-    ],
-    correctAnswerIndex: 1,
-};
 
 export default function StudyContainer({ question, image, video, answers, correctAnswerIndex, onAnswerSelected }) {
     const location = useLocation();
