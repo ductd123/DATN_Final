@@ -1,6 +1,7 @@
 import React from "react";
 import "./MenuProfile.scss";
 import { Edit, LogOut } from "react-feather";
+import HelperLogOut from "../../../helpers/Logout";
 
 export default function MenuProfile() {
   return (
@@ -10,7 +11,7 @@ export default function MenuProfile() {
           <Edit className="menu-profile__icon" /> Cập nhật thông tin
         </li>
         <li className="menu-profile__list">
-          <LogOut className="menu-profile__icon" /> Đăng xuất
+          <LogOut className="menu-profile__icon" onClick={()=>HelperLogOut()}/> Đăng xuất
         </li>
       </ul>
     </div>

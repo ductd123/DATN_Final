@@ -1,17 +1,17 @@
-import axiosClient from "./axiosClient";
+import { axiosLoginClient } from "./axiosClient";
 
 const apiLogin = {
     postLogin: (data) => {
         const url = "auth/login";
-        return axiosClient.post(url, data);
+        return axiosLoginClient.post(url, data);
     },
     getCheckLogin: () => {
         const url = "auth";
-        return axiosClient.get(url);
+        return axiosLoginClient.get(url);
     },
-    tets: () => {
+    test: () => {
         const url = "test";
-        return axiosClient.get(url);
+        return axiosLoginClient.get(url);
     },
 };
 export default apiLogin;

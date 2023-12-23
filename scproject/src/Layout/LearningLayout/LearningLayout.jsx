@@ -11,6 +11,8 @@ import TextArea from "antd/es/input/TextArea";
 import SearchWord from "./SearchWord";
 import videoSrc from "../../assets/video/doncoi.mp4";
 import noiay from "../../assets/video/noiaymemong.mp4";
+import { axiosLearningClient } from "../../Services/axiosClient";
+import { apiLearning } from "../../Services/apiLearning";
 const q = {
     id: '204',
     question: 'Đây là gì?',
@@ -31,6 +33,8 @@ const fileType = {
 
 export default function LearningLayout() {
     const videoRef = useRef(null);
+    const [linkFile, setLinkFile] = useState('');
+    const [content, setContent] = useState('');
     const location = useLocation();
     const pathName = location.pathname;
     const [showSlider, setShowSlider] = useState(true);
@@ -50,19 +54,33 @@ export default function LearningLayout() {
     const handleClickMenu = () => {
         setConfirmStudy(true)
     }
-    const [selectedAnswers, setSelectedAnswers] = useState([]);
     const openPanelHistory = () => {
         setshowHistoryPanel(true);
     }
     const onUploadVideo = () => {
         setshowPopupUploadVideo(true);
     }
-    const handleOk = () => {
+    const handleOk = async () => {
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            setshowPopupUploadVideo(false);
-        }, 3000);
+        let data = {
+            content: content,
+            imageLocation: linkFile,
+        }
+        let response = await apiLearning.themTuDien(data);
+        if (response.code === 200) {
+            setTimeout(() => {
+                setLoading(false);
+                setshowPopupUploadVideo(false);
+                message.success(`File ${data.content} đăng tải thành công.`);
+            }, 3000);
+        }
+        else {
+            setTimeout(() => {
+                setLoading(false);
+                setshowPopupUploadVideo(false);
+                message.error(`File ${data.content} đăng tải thất bại. Vui lòng thử lại!!!`);
+            }, 3000);
+        }
     };
     const handleCancel = () => {
         setshowPopupUploadVideo(false);
@@ -120,7 +138,7 @@ export default function LearningLayout() {
 
         return (
             <div style={styles.card}>
-                {file.type == 1 ?
+                {file.type === 1 ?
 
                     <div className='flex-center' style={{ width: '76px', justifyContent: "center" }}>
                         <img src={file.preview} alt="Uploaded" style={styles.image} />
@@ -143,16 +161,18 @@ export default function LearningLayout() {
     };
     const props = {
         name: 'file',
-        action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
+        action: 'http://202.191.56.11:8090/api/upload',
         onChange(info) {
             const { status } = info.file;
             if (status !== 'uploading') {
-                console.log(info.file.response);
+                console.log(info.file.name);
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
+                setLinkFile(info.file.response);
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
+                setLinkFile('');
             }
         },
         onDrop(e) {
@@ -187,7 +207,6 @@ export default function LearningLayout() {
                             </Button>,
                             <Button
                                 key="link"
-                                href="/"
                                 type="primary"
                                 loading={loading}
                                 onClick={handleOk}
@@ -197,7 +216,7 @@ export default function LearningLayout() {
                         ]}
                     >
                         <p className="ant-upload-text" style={{ margin: '25px 0 10px 0' }}>Ngôn ngữ văn bản:</p>
-                        <TextArea placeholder="Lưu ý viết đúng chính tả và viết thường" autoSize onChange={(e) => console.log(e.target.value)} />
+                        <TextArea placeholder="Lưu ý viết đúng chính tả và viết thường" autoSize onChange={(e) => setContent(e.target.value)} />
                         <p className="ant-upload-text" style={{ margin: '10px 0 10px 0' }}>Ngôn ngữ ký hiệu:</p>
                         <Dragger {...props}>
                             <p className="ant-upload-drag-icon">
@@ -230,7 +249,7 @@ export default function LearningLayout() {
                         title={showDetail.name}
                         key={showDetail.preview}
                     >
-                        {showDetail.type == 1 ?
+                        {showDetail.type === 1 ?
                             <img src={showDetail.preview} alt="Uploaded" style={styles.largeImage} />
                             :
                             <video ref={videoRef} controls style={styles.largeImage}>

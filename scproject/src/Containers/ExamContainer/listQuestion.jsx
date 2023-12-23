@@ -20,8 +20,6 @@ import U from "../../assets/image/U.jpg";
 import V from "../../assets/image/V.jpg";
 import X from "../../assets/image/X.jpg";
 import Y from "../../assets/image/Y.jpg";
-import video1 from "../../assets/video/doncoi.mp4";
-import video2 from "../../assets/video/noiaymemong.mp4";
 import khong from "../../assets/video/0.mp4";
 import mot from "../../assets/video/1.mp4";
 import hai from "../../assets/video/2.mp4";
