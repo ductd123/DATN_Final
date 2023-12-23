@@ -7,6 +7,7 @@ import './ExamLayout.scss';
 import { getTwoToneColor, setTwoToneColor } from '@ant-design/icons';
 import Dragger from "antd/es/upload/Dragger";
 import TextArea from "antd/es/input/TextArea";
+import { apiLearning } from "../../Services/apiLearning";
 
 
 
@@ -44,13 +45,30 @@ const Examlayout = () => {
         }
 
     }, [countdown, confirmExamStarted]);
-    const handleCreateQuestion = () => {
+    const handleCreateQuestion = async() => {
         console.log([
             { value: valueText[0], checked: valueChecked == 0 },
             { value: valueText[1], checked: valueChecked == 1 },
             { value: valueText[2], checked: valueChecked == 2 },
             { value: valueText[3], checked: valueChecked == 3 },
         ]);
+        let data = {
+            "content": "string",
+            "explanation": "string",
+            "imageLocation": "string",
+            "videoLocation": "string",
+            "topic_id": 0,
+            "answerDTOS": [
+              {
+                "content": "string",
+                "imageLocation": "string",
+                "videoLocation": "string",
+                "correct": true
+              }
+            ]
+          }
+        let response= await apiLearning.addQuestion(data);
+        console.log(response);
     }
     const startCountdown = () => {
         if (countdown > 0) {
