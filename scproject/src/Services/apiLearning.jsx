@@ -17,6 +17,10 @@ export const apiLearning = {
         const url = `topics`;
         return axiosLearningClient.get(url);
     },
+    addTopic:(data)=>{
+        const url = `topics`;
+        return axiosLearningClient.post(url, data);
+    },
     createTopic:(data)=>{
         const url = `topics`;
         return axiosLearningClient.post(url, data);
@@ -24,10 +28,6 @@ export const apiLearning = {
     addQuestion:(data)=>{
         const url = `questions`;
         return axiosLearningClient.post(url, data);
-    },
-    addQuestion:(data)=>{
-        const url = `questions`;
-        return axiosLearningClient.get(url, data);
     },
 };
 

@@ -15,7 +15,7 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
         setIndexSelected(index);
         if (check) {
             setPoint(point + 1)
-    }
+        }
         setTimeout(() => {
             if (indexx < 9) {
                 setIndexx(indexx + 1);
@@ -28,12 +28,21 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
     };
 
     const answerOptions = ({ answer, index }) => {
-        const color1 =
-            indexSelected !== index
-                ? "rgb(0, 152, 253)"
-                : answer.check
-                    ? "#53d100"
-                    : "red";
+        let color1 = "";
+        // indexSelected !== index
+        //     ? answer.check ? "#53d100" : "rgb(0, 152, 253)"
+        //     : answer.check
+        //         ? "#53d100"
+        //         : "red";
+        if (indexSelected == undefined) {
+            color1 = "rgb(0, 152, 253)";
+        }
+        else if (indexSelected !== index) {
+            color1 = answer.check ? "#53d100" : "rgb(0, 152, 253)";
+        }
+        else {
+            color1 = answer.check ? "#53d100" : "red";
+        }
         return (
             <div key={index} className="answer-container" style={{ backgroundColor: color1 }}>
                 <button disabled={indexSelected == undefined ? false : true} onClick={() => handleChoose(index, answer.check)} style={styles.answerLabel}>
