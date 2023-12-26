@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button, HeaderBar, Input, MenuTakingExam, Nav } from "../../Component";
 import ExamContainer from "../../Containers/ExamContainer/ExamContainer";
-import { Modal, Radio, Space, message } from "antd";
+import { Modal, Radio, Select, Space, Upload, message } from "antd";
 import { FrownOutlined, FrownTwoTone, InboxOutlined, LoadingOutlined, MehOutlined, MehTwoTone, SmileOutlined } from "@ant-design/icons";
 import './ExamLayout.scss';
 import { getTwoToneColor, setTwoToneColor } from '@ant-design/icons';
@@ -12,21 +12,46 @@ import { apiLearning } from "../../Services/apiLearning";
 
 
 const Examlayout = () => {
-    const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const [contentQuestion, setContentQuestion] = useState([]);
     const [takingExam, setTakingExam] = useState(false);
+    const [linkFile, setLinkFile] = useState('');
+    const [isImage, setIsImage] = useState(true);
     const [countdown, setCountdown] = useState(3);
     const [confirmExamStarted, setConfirmExamStarted] = useState(false);
     const [point, setPoint] = useState(0);
+    const [topicChose, setTopicChose] = useState();
+    const [topicInit, setTopicInit] = useState([]);
     const [indexx, setIndexx] = useState(0);
     const [showPoint, setshowPoint] = useState(false);
     const [showCreateQuestions, setshowCreateQuestions] = useState(false);
     const [confirmExam, setConfirmExam] = useState(false);
     const [valueText, setValueText] = useState(["", "", "", ""]);
-    const [valueChecked, setValueChecked] = useState(1);
-    const [bodyQuestion, setBodyQuestion] = useState();
+    const [valueChecked, setValueChecked] = useState(0);
+    const [loading, setLoading] = useState(false);
     const onChange = (e) => {
         setValueChecked(e.target.value);
     };
+    useEffect(() => {
+        async function fetchData() {
+            let response = await apiLearning.getTopic();
+            const items = [];
+            response.data.forEach((element, index) => {
+                items.push({
+                    id: element.id,
+                    value: element.id,
+                    label: element.content,
+                })
+            });
+            setTopicInit(items);
+        }
+        fetchData()
+    }, []);
+    useEffect(() => {
+        setContentQuestion('');
+        setValueChecked(0);
+        setTopicChose({});
+
+    }, []);
     useEffect(() => {
         if (confirmExamStarted && countdown < 1) {
             onConfirmExam();
@@ -45,7 +70,7 @@ const Examlayout = () => {
         }
 
     }, [countdown, confirmExamStarted]);
-    const handleCreateQuestion = async() => {
+    const handleCreateQuestion = async () => {
         console.log([
             { value: valueText[0], checked: valueChecked == 0 },
             { value: valueText[1], checked: valueChecked == 1 },
@@ -53,22 +78,94 @@ const Examlayout = () => {
             { value: valueText[3], checked: valueChecked == 3 },
         ]);
         let data = {
-            "content": "string",
-            "explanation": "string",
-            "imageLocation": "string",
-            "videoLocation": "string",
-            "topic_id": 0,
-            "answerDTOS": [
-              {
-                "content": "string",
-                "imageLocation": "string",
-                "videoLocation": "string",
-                "correct": true
-              }
-            ]
-          }
-        let response= await apiLearning.addQuestion(data);
-        console.log(response);
+        }
+        if (isImage) {
+            data = {
+                content: "",
+                explanation: "",
+                imageLocation: linkFile,
+                videoLocation: "",
+                topic_id: topicChose,
+                answerDTOS: [
+                    {
+                        content: valueText[0],
+                        imageLocation: "",
+                        videoLocation: "",
+                        correct: valueChecked == 0,
+                    },
+
+                    {
+                        content: valueText[1],
+                        imageLocation: "",
+                        videoLocation: "",
+                        correct: valueChecked == 1,
+                    },
+                    {
+                        content: valueText[2],
+                        imageLocation: "",
+                        videoLocation: "",
+                        correct: valueChecked == 2,
+                    },
+                    {
+                        content: valueText[3],
+                        imageLocation: "",
+                        videoLocation: "",
+                        correct: valueChecked == 3,
+                    },
+                ]
+            }
+        }
+        else {
+            data = {
+                content: "",
+                explanation: "",
+                imageLocation: '',
+                videoLocation: linkFile,
+                topic_id: topicChose,
+                answerDTOS: [
+                    {
+                        content: valueText[0],
+                        imageLocation: "",
+                        videoLocation: "",
+                        correct: valueChecked == 0,
+                    },
+
+                    {
+                        content: valueText[1],
+                        imageLocation: "",
+                        videoLocation: "",
+                        correct: valueChecked == 1,
+                    },
+                    {
+                        content: valueText[2],
+                        imageLocation: "",
+                        videoLocation: "",
+                        correct: valueChecked == 2,
+                    },
+                    {
+                        content: valueText[3],
+                        imageLocation: "",
+                        videoLocation: "",
+                        correct: valueChecked == 3,
+                    },
+                ]
+            }
+        }
+        let response = await apiLearning.addQuestion(data);
+        if (response.code === 200) {
+            setTimeout(() => {
+                setLoading(false);
+                setshowCreateQuestions(false);
+                message.success(`Tạo câu hỏi thành công.`);
+            }, 3000);
+        }
+        else {
+            setTimeout(() => {
+                setLoading(false);
+                setshowCreateQuestions(false);
+                message.error(`Tạo câu hỏi thất bại. Vui lòng thử lại!!!`);
+            }, 3000);
+        }
     }
     const startCountdown = () => {
         if (countdown > 0) {
@@ -100,6 +197,9 @@ const Examlayout = () => {
     const showPointResult = () => {
         setshowPoint(true);
     }
+    const handleChoseTopic = (e) => {
+        setTopicChose(e)
+    }
     const confirmPoint = () => {
         setshowPoint(false);
         setTakingExam(false);
@@ -116,21 +216,26 @@ const Examlayout = () => {
         setshowCreateQuestions(true)
     }
     const props = {
+        multiple: false,
         name: 'file',
-        action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
+        action: 'http://202.191.56.11:8090/api/upload',
         onChange(info) {
             const { status } = info.file;
             if (status !== 'uploading') {
-                console.log(info.file, info.fileList);
+                console.log(info.file);
             }
             if (status === 'done') {
-                message.success(`${info.file.name} tải lên thành công.`);
+                message.success(`File ${info.file.name} sẵn sàng.`);
+                setLinkFile(info.file.response);
+                let fileType = info.file.type.toString();
+                setIsImage(fileType.includes('image'))
             } else if (status === 'error') {
-                message.error(`${info.file.name} tải lên thất bại.`);
+                message.error(`FIle ${info.file.name} lỗi, vui lòng xóa ${info.file.name} và thử lại.`);
+                setLinkFile('');
             }
         },
         onDrop(e) {
-            console.log('Dropped files', e.dataTransfer.files);
+            console.log('Dropped files', e);
         },
     };
     return (<div className="main-layout">
@@ -161,7 +266,7 @@ const Examlayout = () => {
                 >
                     <div className="modal-content">
                         <p className="ant-upload-text flex-center" style={{ fontSize: '24px', fontWeight: 500, color: '#1677ff' }}>
-                            Bài thi sẽ bắt đầu sau:
+                            Bài kiểm tra sẽ bắt đầu sau:
                         </p>
                         <div className="ant-upload-text flex-center" style={{ margin: '40px 0', fontSize: '60px', fontWeight: 600 }}>
                             <LoadingOutlined style={{ fontSize: '140px', color: '#1677ff' }} />
@@ -212,25 +317,28 @@ const Examlayout = () => {
                 </Modal>
                 <Modal
                     open={showCreateQuestions}
-                    title="Bổ sung thư viện ngôn ngữ ký hiệu"
+                    title="Tạo câu hỏi kiểm tra"
                     onOk={handleCreateQuestion}
-                    onCancel={()=>setshowCreateQuestions(false)}
+                    onCancel={() => setshowCreateQuestions(false)}
                     okText="Tải lên"
                     cancelText="Hủy bỏ"
                     style={{ top: 20 }}
                     className="radio-create-question"
                 >
                     <p className="ant-upload-text" style={{ margin: '10px 0 10px 0', fontWeight: "500" }}>Câu hỏi</p>
+                    <TextArea
+                        style={{
+                            width: "100%",
+                        }}
+                        value={contentQuestion}
+                        onChange={(e) => {
+                            setContentQuestion(e.target.value);
+                        }}
+                    />
                     <Dragger {...props}>
-                        <p className="ant-upload-drag-icon">
-                            <InboxOutlined />
-                        </p>
                         <p className="ant-upload-text">Click hoặc thả file của bạn vào đây</p>
                         <p className="ant-upload-hint" style={{ color: 'red' }}>
                             Lưu ý: chỉ hỗ trợ các file ảnh và video.
-                        </p>
-                        <p className="ant-upload-hint">
-                            Bổ sung thư viện ngôn ngữ ký hiệu cùng WeTalk!!!
                         </p>
                     </Dragger>
                     <p className="ant-upload-text" style={{ margin: '10px 0', fontWeight: "500" }}>Đáp án: </p>
@@ -267,7 +375,7 @@ const Examlayout = () => {
                             </Radio>
 
                         </Space>
-                        <Space  direction="vertical">
+                        <Space direction="vertical">
                             <Radio value={2}>
                                 <Input
                                     style={{
@@ -282,7 +390,7 @@ const Examlayout = () => {
                                     }}
                                 />
                             </Radio>
-                            <Radio  value={3}>
+                            <Radio value={3}>
                                 <Input
                                     style={{
                                         width: "100%",
@@ -298,6 +406,12 @@ const Examlayout = () => {
                             </Radio>
                         </Space>
                     </Radio.Group>
+                    <p className="ant-upload-text" style={{ margin: '10px 0', fontWeight: "500" }}>Chủ đề liên quan:</p>
+                    <Select
+                        style={{ width: '100%' }}
+                        options={topicInit}
+                        onChange={(e) => { handleChoseTopic(e) }}
+                    />
                 </Modal>
             </div>
         </div>

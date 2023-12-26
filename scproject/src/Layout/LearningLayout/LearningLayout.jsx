@@ -4,7 +4,7 @@ import "./LearningLayout.scss";
 import { useLocation } from "react-router-dom";
 import { VolunteerSlider } from "../../Containers";
 import StudyContainer from "../../Component/StudyContainer/StudyContainer";
-import { Button, Drawer, Modal, Radio, Space, message } from "antd";
+import { Button, Drawer, Dropdown, Modal, Radio, Select, Space, message } from "antd";
 import { EyeTwoTone, InboxOutlined, PlayCircleTwoTone } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import TextArea from "antd/es/input/TextArea";
@@ -25,18 +25,25 @@ const q = {
     ],
     correctAnswerIndex: 1,
 };
-const fileType = {
-    img: 1,
-    video: 2,
-}
+const fileType = [
+    {
+        label: 'Ảnh',
+        value: 0
+    },
+    {
+        label: 'Video',
+        value: 1
+    }
+]
 
 
 export default function LearningLayout() {
     const videoRef = useRef(null);
     const [linkFile, setLinkFile] = useState('');
     const [content, setContent] = useState('');
-    const location = useLocation();
-    const pathName = location.pathname;
+    const [isImage, setIsImage] = useState(true);
+    const [topicInit, setTopicInit] = useState([]);
+    const [topicChose, setTopicChose] = useState();
     const [showSlider, setShowSlider] = useState(true);
     const [showHistoryPanel, setshowHistoryPanel] = useState(false);
     const [showPopupUploadVideo, setshowPopupUploadVideo] = useState(false);
@@ -48,11 +55,26 @@ export default function LearningLayout() {
     const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
-
-    }, [searchText]);
+        async function fetchData() {
+            let response = await apiLearning.getTopic();
+            const items = [];
+            response.data.forEach((element, index) => {
+                items.push({
+                    id: element.id,
+                    value: element.id,
+                    label: element.content,
+                })
+            });
+            setTopicInit(items);
+        }
+        fetchData()
+    }, []);
 
     const handleClickMenu = () => {
         setConfirmStudy(true)
+    }
+    const handleChoseTopic = (e) => {
+        setTopicChose(e)
     }
     const openPanelHistory = () => {
         setshowHistoryPanel(true);
@@ -62,23 +84,36 @@ export default function LearningLayout() {
     }
     const handleOk = async () => {
         setLoading(true);
-        let data = {
-            content: content,
-            imageLocation: linkFile,
+        let data = {}
+        if (isImage) {
+            data = {
+                content: content,
+                imageLocation: linkFile,
+                videoLocation: '',
+                topic_id: topicChose,
+            }
+        }
+        else {
+            data = {
+                content: content,
+                imageLocation: '',
+                videoLocation: linkFile,
+                topic_id: topicChose,
+            }
         }
         let response = await apiLearning.themTuDien(data);
         if (response.code === 200) {
             setTimeout(() => {
                 setLoading(false);
                 setshowPopupUploadVideo(false);
-                message.success(`File ${data.content} đăng tải thành công.`);
+                message.success(`Thêm ${data.content} lên thành công.`);
             }, 3000);
         }
         else {
             setTimeout(() => {
                 setLoading(false);
                 setshowPopupUploadVideo(false);
-                message.error(`File ${data.content} đăng tải thất bại. Vui lòng thử lại!!!`);
+                message.error(`Thêm ${data.content} thất bại. Vui lòng thử lại!!!`);
             }, 3000);
         }
     };
@@ -160,23 +195,26 @@ export default function LearningLayout() {
         );
     };
     const props = {
+        multiple: false,
         name: 'file',
         action: 'http://202.191.56.11:8090/api/upload',
         onChange(info) {
             const { status } = info.file;
             if (status !== 'uploading') {
-                console.log(info.file.name);
+                console.log(info.file);
             }
             if (status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully.`);
+                message.success(`File ${info.file.name} sẵn sàng.`);
                 setLinkFile(info.file.response);
+                let fileType = info.file.type.toString();
+                setIsImage(fileType.includes('image'))
             } else if (status === 'error') {
-                message.error(`${info.file.name} file upload failed.`);
+                message.error(`FIle ${info.file.name} lỗi, vui lòng xóa ${info.file.name} và thử lại.`);
                 setLinkFile('');
             }
         },
         onDrop(e) {
-            console.log('Dropped files', e.dataTransfer.files);
+            console.log('Dropped files', e);
         },
     };
     return (
@@ -191,6 +229,7 @@ export default function LearningLayout() {
                         onUploadVideo={onUploadVideo}
                         handleSearch={handleSearch}
                         setValueOptions={setValueOptions}
+                        listTopic={topicInit}
                     />
                 </div>
                 <div className="main-layout__children flex-center">
@@ -201,6 +240,7 @@ export default function LearningLayout() {
                         title="Bổ sung thư viện ngôn ngữ ký hiệu"
                         onOk={handleOk}
                         onCancel={handleCancel}
+                        style={{ top: 20 }}
                         footer={[
                             <Button key="back" onClick={handleCancel}>
                                 Hủy bỏ
@@ -230,7 +270,13 @@ export default function LearningLayout() {
                                 Bổ sung thư viện ngôn ngữ ký hiệu cùng WeTalk!!!
                             </p>
                         </Dragger>
-
+                        <p className="ant-upload-text" style={{ margin: '10px 0 10px 0' }}>Chủ đề liên quan:</p>
+                        <Select
+                            mode=""
+                            style={{ width: '100%' }}
+                            options={topicInit}
+                            onChange={(e) => { handleChoseTopic(e) }}
+                        ></Select>
                     </Modal>
 
                     <Drawer title="Lịch sử đăng tải" placement="right" onClose={onCloseHistoryPanel} open={showHistoryPanel}>

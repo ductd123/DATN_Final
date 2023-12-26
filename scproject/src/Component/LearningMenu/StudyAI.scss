@@ -2,13 +2,16 @@
   .ant-menu-submenu-title {
     padding-left: 10px !important;
   }
-  .ant-menu-title-content{
+  .ant-menu-title-content {
     font-weight: 500;
   }
-  .ant-menu-item{
+  .ant-menu-item {
     padding-left: 20px !important;
-    .ant-menu-title-content{
-        font-weight: 400;
-      }
+    .ant-menu-title-content {
+      font-weight: 400;
+    }
   }
+}
+.ant-drawer-footer {
+  text-align: end;
 }

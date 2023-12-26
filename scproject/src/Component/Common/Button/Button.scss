@@ -1,18 +1,59 @@
 @import "../../../assets/scss/variable.scss";
 
-.btn {
-  border: none;
-  height: 38px;
-  width: 100%;
+// .btn {
+//   border: none;
+//   height: 38px;
+//   width: 100%;
+//   cursor: pointer;
+//   border-radius: 5px;
+//   color: white;
+//   background-color: $primaryColor;
+//   transition: all 0.4s;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   &:hover {
+//     background-color: #1573ff;
+//   }
+// }
+
+.ant-btn .css-dev-only-do-not-override-xu9wm8 .ant-btn-default {
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+  background-color: #ffffff;
+  border-color: #d9d9d9;
+  color: rgba(0, 0, 0, 0.88);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+}
+
+.ant-btn {
+  font-size: 14px;
+  height: 32px;
+  padding: 4px 15px;
+  border-radius: 6px;
+  outline: none;
+  position: relative;
+  display: inline-block;
+  font-weight: 400;
+  white-space: nowrap;
+  text-align: center;
+  background-image: none;
+  background-color: transparent;
+  border: 1px solid transparent;
   cursor: pointer;
-  border-radius: 5px;
-  color: white;
-  background-color: $primaryColor;
-  transition: all 0.4s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &:hover {
-    background-color: #1573ff;
-  }
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  user-select: none;
+  touch-action: manipulation;
+  line-height: 1.5714285714285714;
+}
+
+.ant-btn-primary {
+  color: #fff;
+  background-color: #1677ff;
+  box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+}
+.ant-btn-default:hover {
+  color: #4096ff;
+  border-color: #4096ff;
 }
