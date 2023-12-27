@@ -15,7 +15,17 @@ export default class LearningSideBar extends Component {
                 <HeaderBar />
             </div>
             <div className="main-layout__content">
-                <MenuStudyAI openSearchWord={this.props.openSearchWord} onUploadVideo={this.props.onUploadVideo} openPanelHistory={this.props.openPanelHistory} handleClickMenu={this.props.handleClickMenu} handleSearch={this.props.handleSearch} setValueOptions={this.props.setValueOptions} listTopic={this.props.listTopic} />
+                <MenuStudyAI
+                    openSearchWord={this.props.openSearchWord}
+                    onUploadVideo={this.props.onUploadVideo}
+                    openPanelHistory={this.props.openPanelHistory}
+                    handleClickMenu={this.props.handleClickMenu}
+                    handleSearch={this.props.handleSearch}
+                    setValueOptions={this.props.setValueOptions}
+                    listTopic={this.props.listTopic}
+                    fetchData={this.props.fetchData}
+                    setIdTopic={this.props.setIdTopic}
+                />
             </div>
         </>
 

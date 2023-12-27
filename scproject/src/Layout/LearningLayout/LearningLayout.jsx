@@ -13,6 +13,7 @@ import videoSrc from "../../assets/video/doncoi.mp4";
 import noiay from "../../assets/video/noiaymemong.mp4";
 import { axiosLearningClient } from "../../Services/axiosClient";
 import { apiLearning } from "../../Services/apiLearning";
+import LoadingComponent from "../../Component/Loading/Loading";
 const q = {
     id: '204',
     question: 'Đây là gì?',
@@ -41,6 +42,7 @@ export default function LearningLayout() {
     const videoRef = useRef(null);
     const [linkFile, setLinkFile] = useState('');
     const [content, setContent] = useState('');
+    const [idTopic, setIdTopic] = useState(0);
     const [isImage, setIsImage] = useState(true);
     const [topicInit, setTopicInit] = useState([]);
     const [topicChose, setTopicChose] = useState();
@@ -55,21 +57,23 @@ export default function LearningLayout() {
     const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
-        async function fetchData() {
-            let response = await apiLearning.getTopic();
-            const items = [];
-            response.data.forEach((element, index) => {
-                items.push({
-                    id: element.id,
-                    value: element.id,
-                    label: element.content,
-                })
-            });
-            setTopicInit(items);
-        }
-        fetchData()
+        fetchData();
     }, []);
-
+    useEffect(() => {
+        handleGetListFile();
+    }, [idTopic]);
+    const fetchData = async () => {
+        let response = await apiLearning.getTopic();
+        const items = [];
+        response.data.forEach((element, index) => {
+            items.push({
+                id: element.id,
+                value: element.id,
+                label: element.content,
+            })
+        });
+        setTopicInit(items);
+    }
     const handleClickMenu = () => {
         setConfirmStudy(true)
     }
@@ -117,6 +121,29 @@ export default function LearningLayout() {
             }, 3000);
         }
     };
+    const handleGetListFile = async () => {
+        setLoading(true);
+        let response = await apiLearning.getTuDien(idTopic);
+        if (response.code === 200) {
+            setTimeout(() => {
+                setLoading(false);
+                let listResponse = response.data.map(item => {
+                    return {
+                        content: item.content,
+                        type: item.videoLocation === "" ? 1 : 2,
+                        preview: item.videoLocation === "" ? item.imageLocation : item.videoLocation,
+                    }
+                });
+                setShowFile(listResponse);
+            }, 3000);
+        }
+        else {
+            setTimeout(() => {
+                setLoading(false);
+                message.error(`Tìm chủ đề thất bại. Vui lòng thử lại!!!`);
+            }, 3000);
+        }
+    }
     const handleCancel = () => {
         setshowPopupUploadVideo(false);
     };
@@ -184,9 +211,7 @@ export default function LearningLayout() {
                     </div>
                 }
                 <div style={styles.cardInfo}>
-                    <p style={{ fontWeight: '500' }}>{file.name}</p>
-                    <p style={{ fontSize: '12px' }}>Kích thước: {file.size} bytes</p>
-                    <p style={{ fontSize: '12px' }}>Ngày đăng: {file.size}</p>
+                    <p style={{ fontWeight: '500' }}>{file.content}</p>
                 </div>
                 <button onClick={() => handleOpenDetailFile(file)} style={styles.button}>
                     <EyeTwoTone style={{ fontSize: '1.25rem' }} />
@@ -219,6 +244,7 @@ export default function LearningLayout() {
     };
     return (
         <div className="main-layout">
+            <LoadingComponent loading={loading} />
             <Nav />
             <div className="main-layout__container">
                 <div className="main-layout__side-bar">
@@ -230,6 +256,8 @@ export default function LearningLayout() {
                         handleSearch={handleSearch}
                         setValueOptions={setValueOptions}
                         listTopic={topicInit}
+                        setIdTopic={setIdTopic}
+                        fetchData={fetchData}
                     />
                 </div>
                 <div className="main-layout__children flex-center">

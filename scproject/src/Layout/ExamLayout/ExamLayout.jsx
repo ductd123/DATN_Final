@@ -8,6 +8,7 @@ import { getTwoToneColor, setTwoToneColor } from '@ant-design/icons';
 import Dragger from "antd/es/upload/Dragger";
 import TextArea from "antd/es/input/TextArea";
 import { apiLearning } from "../../Services/apiLearning";
+import LoadingComponent from "../../Component/Loading/Loading";
 
 
 
@@ -71,6 +72,7 @@ const Examlayout = () => {
 
     }, [countdown, confirmExamStarted]);
     const handleCreateQuestion = async () => {
+        setLoading(true);
         console.log([
             { value: valueText[0], checked: valueChecked == 0 },
             { value: valueText[1], checked: valueChecked == 1 },
@@ -239,6 +241,7 @@ const Examlayout = () => {
         },
     };
     return (<div className="main-layout">
+        <LoadingComponent loading={loading} />
         <Nav />
         <div className="main-layout__container">
             <div className="main-layout__side-bar">
