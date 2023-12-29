@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { Button, HeaderBar, Input, MenuTakingExam, Nav } from "../../Component";
 import ExamContainer from "../../Containers/ExamContainer/ExamContainer";
-import { Modal, Radio, Select, Space, Upload, message } from "antd";
-import { FrownOutlined, FrownTwoTone, InboxOutlined, LoadingOutlined, MehOutlined, MehTwoTone, SmileOutlined } from "@ant-design/icons";
+import { Modal, Radio, Select, Space, message } from "antd";
+import { FrownOutlined, LoadingOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons";
 import './ExamLayout.scss';
-import { getTwoToneColor, setTwoToneColor } from '@ant-design/icons';
 import Dragger from "antd/es/upload/Dragger";
 import TextArea from "antd/es/input/TextArea";
 import { apiLearning } from "../../Services/apiLearning";
@@ -74,10 +73,10 @@ const Examlayout = () => {
     const handleCreateQuestion = async () => {
         setLoading(true);
         console.log([
-            { value: valueText[0], checked: valueChecked == 0 },
-            { value: valueText[1], checked: valueChecked == 1 },
-            { value: valueText[2], checked: valueChecked == 2 },
-            { value: valueText[3], checked: valueChecked == 3 },
+            { value: valueText[0], checked: valueChecked === 0 },
+            { value: valueText[1], checked: valueChecked === 1 },
+            { value: valueText[2], checked: valueChecked === 2 },
+            { value: valueText[3], checked: valueChecked === 3 },
         ]);
         let data = {
         }
@@ -93,26 +92,26 @@ const Examlayout = () => {
                         content: valueText[0],
                         imageLocation: "",
                         videoLocation: "",
-                        correct: valueChecked == 0,
+                        correct: valueChecked === 0,
                     },
 
                     {
                         content: valueText[1],
                         imageLocation: "",
                         videoLocation: "",
-                        correct: valueChecked == 1,
+                        correct: valueChecked === 1,
                     },
                     {
                         content: valueText[2],
                         imageLocation: "",
                         videoLocation: "",
-                        correct: valueChecked == 2,
+                        correct: valueChecked === 2,
                     },
                     {
                         content: valueText[3],
                         imageLocation: "",
                         videoLocation: "",
-                        correct: valueChecked == 3,
+                        correct: valueChecked === 3,
                     },
                 ]
             }
@@ -129,26 +128,26 @@ const Examlayout = () => {
                         content: valueText[0],
                         imageLocation: "",
                         videoLocation: "",
-                        correct: valueChecked == 0,
+                        correct: valueChecked === 0,
                     },
 
                     {
                         content: valueText[1],
                         imageLocation: "",
                         videoLocation: "",
-                        correct: valueChecked == 1,
+                        correct: valueChecked === 1,
                     },
                     {
                         content: valueText[2],
                         imageLocation: "",
                         videoLocation: "",
-                        correct: valueChecked == 2,
+                        correct: valueChecked === 2,
                     },
                     {
                         content: valueText[3],
                         imageLocation: "",
                         videoLocation: "",
-                        correct: valueChecked == 3,
+                        correct: valueChecked === 3,
                     },
                 ]
             }
@@ -217,6 +216,14 @@ const Examlayout = () => {
     const onShowCreateQuestion = () => {
         setshowCreateQuestions(true)
     }
+
+    const onCloseAddQuestion = () => {
+        setshowCreateQuestions(false);
+        setContentQuestion('');
+        setValueChecked(0);
+        setValueText(['', '', '', '']);
+        setTopicChose({});
+    }
     const props = {
         multiple: false,
         name: 'file',
@@ -239,7 +246,7 @@ const Examlayout = () => {
         onDrop(e) {
             console.log('Dropped files', e);
         },
-        
+
     };
     return (<div className="main-layout">
         <LoadingComponent loading={loading} />
@@ -323,7 +330,7 @@ const Examlayout = () => {
                     open={showCreateQuestions}
                     title="Tạo câu hỏi kiểm tra"
                     onOk={handleCreateQuestion}
-                    onCancel={() => setshowCreateQuestions(false)}
+                    onCancel={onCloseAddQuestion}
                     okText="Tải lên"
                     cancelText="Hủy bỏ"
                     style={{ top: 20 }}

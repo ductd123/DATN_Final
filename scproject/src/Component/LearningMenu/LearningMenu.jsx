@@ -1,4 +1,4 @@
-import { FileAddOutlined, FileImageOutlined, FileWordOutlined, HistoryOutlined, PlayCircleOutlined, PlusCircleOutlined, SearchOutlined, UploadOutlined, } from '@ant-design/icons';
+import { FileAddOutlined, FileImageOutlined, FileWordOutlined, HistoryOutlined, PlusCircleOutlined, SearchOutlined, UploadOutlined, } from '@ant-design/icons';
 import { Drawer, Input, Menu, Select, Space, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react'
 import './StudyAI.scss';
@@ -45,7 +45,6 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
             ]),
         ]);
     }, [topicItems]);
-    const [search, setSearch] = useState(false);
 
     const [items, setItems] = useState();
 
