@@ -33,7 +33,7 @@ export const apiLearning = {
 
 export const apiUploadFile = {
     uploadFile: (data) => {
-        const url = "auth/login";
+        const url = "api/upload";
         return axiosUploadVideoClient.post(url, data);
     },
 };

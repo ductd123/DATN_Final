@@ -159,7 +159,7 @@ const Examlayout = () => {
                 setLoading(false);
                 setshowCreateQuestions(false);
                 message.success(`Tạo câu hỏi thành công.`);
-            }, 3000);
+            }, 500);
         }
         else {
             setTimeout(() => {
@@ -239,6 +239,7 @@ const Examlayout = () => {
         onDrop(e) {
             console.log('Dropped files', e);
         },
+        
     };
     return (<div className="main-layout">
         <LoadingComponent loading={loading} />
@@ -337,7 +338,9 @@ const Examlayout = () => {
                         onChange={(e) => {
                             setContentQuestion(e.target.value);
                         }}
+                        placeholder="Nhập câu hỏi ở đây."
                     />
+                    <div style={{ height: '8px' }} />
                     <Dragger {...props}>
                         <p className="ant-upload-text">Click hoặc thả file của bạn vào đây</p>
                         <p className="ant-upload-hint" style={{ color: 'red' }}>

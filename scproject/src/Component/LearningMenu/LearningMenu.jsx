@@ -68,7 +68,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
                 });
                 setLoading(false);
                 setTopicItems(items);
-            }, 3000);
+            }, 500);
         }
         else {
             setTimeout(() => {
@@ -92,7 +92,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
                 message.success(`Thêm chủ đề ${data.content} thành công.`);
                 fetchData();
                 fetchData1();
-            }, 3000);
+            }, 500);
         }
         else {
             setTimeout(() => {

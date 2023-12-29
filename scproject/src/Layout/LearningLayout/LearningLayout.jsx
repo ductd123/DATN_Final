@@ -111,7 +111,7 @@ export default function LearningLayout() {
                 setLoading(false);
                 setshowPopupUploadVideo(false);
                 message.success(`Thêm ${data.content} lên thành công.`);
-            }, 3000);
+            }, 500);
         }
         else {
             setTimeout(() => {
@@ -135,7 +135,7 @@ export default function LearningLayout() {
                     }
                 });
                 setShowFile(listResponse);
-            }, 3000);
+            }, 500);
         }
         else {
             setTimeout(() => {
@@ -262,7 +262,7 @@ export default function LearningLayout() {
                 </div>
                 <div className="main-layout__children flex-center">
                     {showSlider && <VolunteerSlider />}
-                    {showSearchWord && <SearchWord files={files} searchText={searchText} />}
+                    {showSearchWord && <SearchWord searchText={searchText} files={files} />}
                     <Modal
                         open={showPopupUploadVideo}
                         title="Bổ sung thư viện ngôn ngữ ký hiệu"

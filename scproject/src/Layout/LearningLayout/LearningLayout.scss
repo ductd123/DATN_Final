@@ -1,27 +1,33 @@
 .ant-modal-title {
   font-size: 20px !important;
 }
+
 .ant-btn-primary {
   background-color: #1677ff;
 }
+
 .searchWord {
   width: 100%;
   height: 100%;
+
   &-container {
     background-color: #f7f7f8;
   }
+
   &-header {
     height: 44px;
-    background-color: rgb(255, 255, 255);
-    border-bottom: 1px solid rgb(221, 221, 221);
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
     color: #1677ff;
     padding: 0 15px;
+
     &-text {
       margin-left: 10px;
       margin-right: 5px;
       font-weight: 500;
       font-size: 15px;
     }
+
     &-value {
       font-weight: bold;
       font-size: 15px;
@@ -47,10 +53,6 @@
   height: auto;
 }
 
-.searchWord-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 .searchWord-item {
   box-sizing: border-box;
   height: 10rem;
@@ -64,6 +66,11 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
   &-detail {
     background-color: #f7f7f88f;
     top: 0;
@@ -74,48 +81,40 @@
     transform: translateX(0);
     transition: transform 0.5s ease;
   }
+
   &-play {
     width: 100%;
     position: absolute;
-    right: -100%; 
+    right: -100%;
     transition: right 0.5s ease;
     height: 100%;
   }
-}
-.searchWord-item:hover .searchWord-item-detail {
-  transform: translateX(
-    -100%
-  );
-}
 
-.searchWord-item:hover .searchWord-item-play {
-  right: 0; 
-}
-/* CSS cho hình ảnh trong card-item */
-.searchWord-container-show {
-  max-width: auto;
-  height: 10rem;
-}
+  &:hover .searchWord-item-detail {
+    transform: translateX(-100%);
+  }
 
-/* CSS cho nút trong card-item */
-.searchWord-item button {
-  background-color: #ffffff00;
-  color: #fff;
-  border: none;
-  padding: 8px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  text-align: justify;
-}
+  &:hover .searchWord-item-play {
+    right: 0;
+  }
 
-/* CSS cho các đoạn văn bản (thẻ <p>) */
-.searchWord-item p {
-  font-weight: 500;
-  font-size: 14px;
-  margin: 5px 0;
-}
+  /* CSS cho nút trong card-item */
+  button {
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: justify;
+    opacity: 0.5;
+  }
 
-/* CSS cho card-item khi hover */
-.searchWord-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* CSS cho các đoạn văn bản (thẻ <p>) */
+  p {
+    font-weight: 500;
+    font-size: 14px;
+    margin: 5px 0;
+  }
 }
