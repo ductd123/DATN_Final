@@ -1,9 +1,8 @@
-import { EyeTwoTone, PlayCircleTwoTone, SearchOutlined } from '@ant-design/icons';
-import React, { useState, useEffect, useRef } from 'react';
+import { SearchOutlined } from '@ant-design/icons';
+import React, { useState, useRef } from 'react';
 import defaultvideo from '../../assets/image/defaultvideo.png'
 import { Empty, Modal } from 'antd';
 const SearchWord = ({ searchText, files }) => {
-    const [listFile, setListFile] = useState(files);
     const [fileShow, setFileShow] = useState({});
     const [showFileDetail, setShowFileDetail] = useState(false);
     const videoRef = useRef(null);
@@ -30,7 +29,7 @@ const SearchWord = ({ searchText, files }) => {
                 {files.length !== 0 ? files.map((item, i) => {
                     return (
                         <div key={i} style={{ height: 'max-content' }}>
-                            {item.type == 1 ?
+                            {item.type === 1 ?
                                 <div key={i} className='searchWord-item' style={{ backgroundImage: `url(${item.preview})`, backgroundSize: 'cover', backgroundPosition: 'center', }}>
                                     <div className='searchWord-item-detail'>
                                         <p style={{ fontWeight: '600', fontSize: '28px', marginLeft: '10px' }}>{item.content}</p>
@@ -64,7 +63,7 @@ const SearchWord = ({ searchText, files }) => {
                 title={fileShow.content}
                 key={fileShow.preview}
             >
-                {fileShow.type == 1 ?
+                {fileShow.type === 1 ?
                     <img src={fileShow.preview} alt="Uploaded" style={{ width: '100%', height: 'auto', marginTop: '30px', }} />
                     :
                     <video ref={videoRef} controls style={{ width: '100%', height: 'auto', marginTop: '30px', }}>
