@@ -41,7 +41,7 @@ const settings = {
 export default function VolunteerSlider() {
     const params = useParams();
     const ENDPOINT = "http://localhost:3000/";
-    const src = [A, B, C, D, E, F, G, H, I, K, L, M, N, O, P, Q, R, S, T, U, V, X, Y]
+    const src = [A, B, C, D, E, G, H, I, K, L, M, N, O, P, Q, R, S, T, U, V, X, Y]
       
     return (
         <div className="flex-center">

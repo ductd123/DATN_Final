@@ -8,6 +8,7 @@ import { getTwoToneColor, setTwoToneColor } from '@ant-design/icons';
 import Dragger from "antd/es/upload/Dragger";
 import TextArea from "antd/es/input/TextArea";
 import { apiLearning } from "../../Services/apiLearning";
+import LoadingComponent from "../../Component/Loading/Loading";
 
 
 
@@ -71,6 +72,7 @@ const Examlayout = () => {
 
     }, [countdown, confirmExamStarted]);
     const handleCreateQuestion = async () => {
+        setLoading(true);
         console.log([
             { value: valueText[0], checked: valueChecked == 0 },
             { value: valueText[1], checked: valueChecked == 1 },
@@ -157,7 +159,7 @@ const Examlayout = () => {
                 setLoading(false);
                 setshowCreateQuestions(false);
                 message.success(`Tạo câu hỏi thành công.`);
-            }, 3000);
+            }, 500);
         }
         else {
             setTimeout(() => {
@@ -237,8 +239,10 @@ const Examlayout = () => {
         onDrop(e) {
             console.log('Dropped files', e);
         },
+        
     };
     return (<div className="main-layout">
+        <LoadingComponent loading={loading} />
         <Nav />
         <div className="main-layout__container">
             <div className="main-layout__side-bar">
@@ -334,7 +338,9 @@ const Examlayout = () => {
                         onChange={(e) => {
                             setContentQuestion(e.target.value);
                         }}
+                        placeholder="Nhập câu hỏi ở đây."
                     />
+                    <div style={{ height: '8px' }} />
                     <Dragger {...props}>
                         <p className="ant-upload-text">Click hoặc thả file của bạn vào đây</p>
                         <p className="ant-upload-hint" style={{ color: 'red' }}>

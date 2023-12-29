@@ -21,9 +21,9 @@ export  const axiosLoginClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 export  const axiosUploadVideoClient = axios.create({
-  baseURL: "http://202.191.56.11:8090/api/",
+  baseURL: "http://202.191.56.11:8090/",
   headers: {
-    "content-type": "application/json",
+    "content-type": 'multipart/form-data',
     // Authorization: `Bearer ${token}`,
   },
   paramsSerializer: (params) => queryString.stringify(params),
