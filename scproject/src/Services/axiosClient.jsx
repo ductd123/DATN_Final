@@ -3,12 +3,12 @@ import queryString from "query-string";
 
 // const token = localStorage.getItem("token");
 // const URL_BE = process.env.REACT_APP_URL_BE;
-
+let token = localStorage.getItem("access_token");
 export const axiosLearningClient = axios.create({
   baseURL: "http://202.191.56.11:8060/",
   headers: {
     "content-type": "application/json",
-    // Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
@@ -20,11 +20,19 @@ export  const axiosLoginClient = axios.create({
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
+export  const axiosUserClient = axios.create({
+  baseURL: "http://202.191.56.11:8080/",
+  headers: {
+    "content-type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  paramsSerializer: (params) => queryString.stringify(params),
+});
 export  const axiosUploadVideoClient = axios.create({
   baseURL: "http://202.191.56.11:8090/",
   headers: {
     "content-type": 'multipart/form-data',
-    // Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
@@ -32,6 +40,17 @@ export  const axiosUploadVideoClient = axios.create({
 //   return config;
 // })
 axiosLearningClient.interceptors.response.use(
+  (res) => {
+    if (res && res.data) {
+      return res.data;
+    }
+    return res;
+  },
+  (err) => {
+    throw err;
+  }
+);
+axiosUserClient.interceptors.response.use(
   (res) => {
     if (res && res.data) {
       return res.data;

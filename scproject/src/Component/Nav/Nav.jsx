@@ -1,16 +1,41 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "./Nav.scss";
-import { MessageCircle, Book, LogOut, Video, BookOpen } from "react-feather";
+import { MessageCircle, Book, LogOut, Video, BookOpen, Edit } from "react-feather";
 import { useSelector } from "react-redux";
 import MenuProfile from "./MenuProfile/MenuProfile";
 import HelperLogOut from "../../helpers/Logout";
-import { BookOutlined, CommentOutlined, LaptopOutlined, UnderlineOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { BookOutlined, CommentOutlined, LaptopOutlined, LoadingOutlined, PlusOutlined, UnderlineOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { Col, DatePicker, Drawer, Form, Input, Modal, Row, Select, Space, Upload, message } from "antd";
+import bg from "../../assets/image/wallhaven-o5762l_2560x1440.png"
+import Button from "../Common/Button/Button";
+import { Option } from "antd/es/mentions";
 // import moment from "moment";
+
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+};
+const beforeUpload = (file) => {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!');
+  }
+  const isLt2M = file.size / 1024 / 1024 < 8;
+  if (!isLt2M) {
+    message.error('Image must smaller than 8MB!');
+  }
+  return isJpgOrPng && isLt2M;
+};
 
 export default function Nav() {
   const location = useLocation();
   const pathName = location.pathname;
+  const [showInfo, setShowInfo] = useState(false);
+  const [showUpdateInfo, setShowUpdateInfo] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState()
   const reduxUserData = useSelector((state) => state.userData);
   const { data } = reduxUserData.data;
   // const time = moment(new Date(data.exp * 1000)).format(
@@ -23,6 +48,32 @@ export default function Nav() {
     setIsShowMenuProfile(!isShowMenuProfile);
   };
 
+  const onCloseInfo = () => {
+    setShowInfo(false);
+  }
+
+  const onCloseUpdateInfo = () => {
+    setShowUpdateInfo(false)
+  }
+  const openUpdateInfo = () => {
+    setShowInfo(false);
+    setShowUpdateInfo(true);
+  }
+
+  const handleChangeUpload = (info) => {
+    if (info.file.status === 'uploading') {
+      setLoading(true);
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (url) => {
+        setLoading(false);
+        setImageUrl(url);
+      });
+    }
+  };
+
   return (
     <nav className="nav">
       <div className="nav__profile">
@@ -32,31 +83,200 @@ export default function Nav() {
           className="nav__img"
           onClick={handleShowMenuProfile}
         />
-        {isShowMenuProfile && <MenuProfile />}
+        {isShowMenuProfile && <div className="menu-profile">
+          <ul className="menu-profile__menu">
+            <li onClick={() => { setShowInfo(true) }} className="menu-profile__list">
+              <Edit className="menu-profile__icon" /> Cập nhật thông tin
+            </li>
+            <li className="menu-profile__list">
+              <LogOut className="menu-profile__icon" onClick={() => HelperLogOut()} /> Đăng xuất
+            </li>
+          </ul>
+        </div>}
       </div>
       <ul className="nav__ul">
         <NavLink to="/home" className="nav__link">
           <li className={pathName === "/" || pathName === "/home" ? "nav__li nav__li--choose" : "nav__li"} >
-            <CommentOutlined  style={{fontSize:'1.5rem'}} />
+            <CommentOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
         <NavLink to="/contact" className="nav__link">
           <li className={pathName === "/contact" ? "nav__li nav__li--choose" : "nav__li"}>
-            <UnorderedListOutlined  style={{fontSize:'1.5rem'}} />
+            <UnorderedListOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
         <NavLink to="/volunteers" className="nav__link">
           <li className={pathName === "/volunteers" ? "nav__li nav__li--choose" : "nav__li"} >
-            <Video  />
+            <Video />
           </li>
         </NavLink>
         <NavLink to="/exam" className="nav__link">
           <li className={pathName === "/exam" ? "nav__li nav__li--choose" : "nav__li"} >
-            <LaptopOutlined style={{fontSize:'1.5rem'}} />
+            <LaptopOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
       </ul>
       <LogOut className="nav__logout" onClick={() => HelperLogOut()} />
+      <Modal
+        open={showInfo}
+        onOk={openUpdateInfo}
+        onCancel={onCloseInfo}
+        okText="Cập nhật thông tin"
+        cancelText="Đóng"
+        title="Thông tin cá nhân"
+        style={{ top: 20 }}
+      >
+        <div className="nav-userInfo-background">
+          <img src={bg}></img>
+        </div>
+        <div className="nav-userInfo-header">
+          <img src="https://picsum.photos/200" className="nav-userInfo-header-avt"></img>
+          <span className="nav-userInfo-header-name">Cao Minh Đức</span>
+        </div>
+        <div style={{ height: '8px', backgroundColor: '#efefef', borderRadius: '4px' }}></div>
+        <div className="nav-userInfo-detail">
+          <span className="nav-userInfo-detail-header">Thông tin cá nhân</span>
+          <div className="nav-userInfo-detail-items">
+            <span className="nav-userInfo-detail-items-title">Giới tính</span>
+            <span className="nav-userInfo-detail-items-content">Nam</span>
+          </div>
+          <div className="nav-userInfo-detail-items">
+            <span className="nav-userInfo-detail-items-title">Ngày sinh</span>
+            <span className="nav-userInfo-detail-items-content"></span>
+          </div>
+          <div className="nav-userInfo-detail-items">
+            <span className="nav-userInfo-detail-items-title">Điện thoại</span>
+            <span className="nav-userInfo-detail-items-content"></span>
+          </div>
+          <div className="nav-userInfo-detail-items">
+            <span className="nav-userInfo-detail-items-title">Email</span>
+            <span className="nav-userInfo-detail-items-content"></span>
+          </div>
+        </div>
+      </Modal>
+      <Drawer
+        title="Create a new account"
+        width={720}
+        onClose={onCloseUpdateInfo}
+        open={showUpdateInfo}
+        // styles={{
+        //   body: {
+        //     paddingBottom: 80,
+        //   },
+        // }}
+        extra={
+          <Space>
+            <Button onClick={onCloseUpdateInfo} className='ant-btn css-dev-only-do-not-override-xu9wm8 ant-btn-default'>Hủy</Button>
+            <Button onClick={onCloseUpdateInfo} className='ant-btn css-dev-only-do-not-override-xu9wm8 ant-btn-primary'>Cập nhật</Button>
+          </Space>
+        }
+      >
+        <Form layout="vertical" hideRequiredMark>
+
+          <Form.Item
+            name="Ảnh đại diện"
+            label="Ảnh đại diện"
+          >
+            <Upload
+              name="avatar"
+              listType="picture-circle"
+              className="avatar-uploader"
+              showUploadList={false}
+              action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+              beforeUpload={beforeUpload}
+              onChange={handleChangeUpload}
+            >
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="avatar"
+                  style={{
+                    width: '100%',
+                  }}
+                />
+              ) : (
+                <button
+                  style={{
+                    border: 0,
+                    background: 'none',
+                  }}
+                  type="button"
+                >
+                  {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                  <div
+                    style={{
+                      marginTop: 8,
+                    }}
+                  >
+                    Upload
+                  </div>
+                </button>
+              )}
+            </Upload>
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label="Tên"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter user name',
+              },
+            ]}
+          >
+            <Input placeholder="Nhập tên của bạn" />
+          </Form.Item>
+          <Form.Item
+            name="numberPhone"
+            label="Số điện thoại"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter user name',
+              },
+            ]}
+          >
+            <Input placeholder="Nhập tên của bạn" />
+          </Form.Item>
+
+          <Form.Item
+            name="birthday"
+            label="Ngày sinh"
+            rules={[
+              {
+                required: true,
+                message: 'Chọn ngày sinh của bạn',
+              },
+            ]}
+          >
+            <DatePicker
+              style={{
+                width: '100%',
+              }}
+              placeholder="Chọn ngày sinh của bạn"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="Giới tính"
+            label="Giới tính"
+            rules={[
+              {
+                required: true,
+                message: 'Chọn giới tính của bạn',
+              },
+            ]}
+          >
+            <Select placeholder="Chọn giới tính của bạn">
+              <Option value="Male">Nam</Option>
+              <Option value="Female">Nữ</Option>
+              <Option value="Other">Khác</Option>
+            </Select>
+          </Form.Item>
+
+
+        </Form>
+      </Drawer>
     </nav>
   );
 }

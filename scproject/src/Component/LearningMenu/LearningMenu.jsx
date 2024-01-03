@@ -143,7 +143,6 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
 
     const capture = () => {
         const imageSrc = webcamRef.current.getScreenshot();
-        // Xử lý ảnh được chụp (ví dụ: lưu trữ, hiển thị, xử lý tiếp, ...)
         console.log(imageSrc);
     };
 
