@@ -6,6 +6,7 @@ import Button from '../Common/Button/Button';
 import { apiLearning } from '../../Services/apiLearning';
 import LoadingComponent from '../Loading/Loading';
 import Webcam from 'react-webcam';
+import { apiLogin } from '../../Services';
 function getItem(label, key, icon, children, type) {
     return {
         key,
@@ -53,7 +54,8 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
         setContent('');
     };
     async function fetchData1() {
-        let response = await apiLearning.getTopic();
+        // let response = await apiLearning.getTopic();
+        let response = await apiLogin.getUserInfo();
         const items = [];
 
         if (response.code === 200) {
@@ -184,7 +186,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
                 }
             >
                 <p className="ant-upload-text" style={{ margin: '0 0 10px 0' }}>Nhập chủ đề muốn thêm:</p>
-                <Input autoSize value={content} onChange={(e) => setContent(e.target.value)} />
+                <Input value={content} onChange={(e) => setContent(e.target.value)} />
             </Drawer>
         </div>
     );
