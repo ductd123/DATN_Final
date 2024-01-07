@@ -1,4 +1,4 @@
-import { axiosLoginClient } from "./axiosClient";
+import { axiosLoginClient, axiosUserClient } from "./axiosClient";
 
 const apiLogin = {
     postLogin: (data) => {
@@ -15,7 +15,7 @@ const apiLogin = {
     },
     getUserInfo : ()=>{
         const url = "users/getUserInfor";
-        return axiosLoginClient.get(url);
+        return axiosUserClient.get(url);
     }
 };
 export default apiLogin;

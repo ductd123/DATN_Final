@@ -13,10 +13,9 @@ export const axiosLearningClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 export  const axiosLoginClient = axios.create({
-  baseURL: "http://202.191.56.11:8080/api/",
+  baseURL: "http://202.191.56.11:8080/",
   headers: {
     "content-type": "application/json",
-    // Authorization: `Bearer ${token}`,
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });

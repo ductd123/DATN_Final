@@ -38,11 +38,11 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
             getItem('Học tập theo chủ đề', 'sub2', <FileImageOutlined style={{ fontSize: '1.25rem' }} />,
                 [getItem(<Select placeholder="Chọn chủ đề" suffixIcon={null} style={{ width: '100%' }} mode="" options={topicItems} onChange={(e) => { setLabelForSelect(e) }} />, 'SearchTopic')]
             ),
-            getItem('Từ điển ngôn ngữ ký hiệu', 'sub4', <FileAddOutlined style={{ fontSize: '1.25rem' }} />, [
+            getItem('Học tập theo từ ngữ', 'sub4', <FileAddOutlined style={{ fontSize: '1.25rem' }} />, [
                 getItem(<Input onChange={(e) => handleSearch(e.target.value)} placeholder="Nhập từ ngữ muốn tìm?" />, 'Search', <SearchOutlined style={{ fontSize: '1rem' }} />),
-                getItem('Bổ sung từ điển ký hiệu', 'Upload', <UploadOutlined style={{ fontSize: '1rem' }} />),
-                getItem('Thêm chủ đề', 'AddTopic', <PlusCircleOutlined style={{ fontSize: '1rem' }} />),
-                getItem('Lịch sử đóng góp', 'History', <HistoryOutlined style={{ fontSize: '1rem' }} />),
+                // getItem('Bổ sung từ điển ký hiệu', 'Upload', <UploadOutlined style={{ fontSize: '1rem' }} />),
+                // getItem('Thêm chủ đề', 'AddTopic', <PlusCircleOutlined style={{ fontSize: '1rem' }} />),
+                // getItem('Lịch sử đóng góp', 'History', <HistoryOutlined style={{ fontSize: '1rem' }} />),
             ]),
         ]);
     }, [topicItems]);
@@ -54,8 +54,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
         setContent('');
     };
     async function fetchData1() {
-        // let response = await apiLearning.getTopic();
-        let response = await apiLogin.getUserInfo();
+        let response = await apiLearning.getTopic();
         const items = [];
 
         if (response.code === 200) {
