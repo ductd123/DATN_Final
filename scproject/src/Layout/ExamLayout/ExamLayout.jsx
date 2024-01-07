@@ -289,7 +289,7 @@ const Examlayout = () => {
                 </Modal>
                 <Modal
                     open={showPoint}
-                    footer={[<Button onClick={confirmPoint}>
+                    footer={[<Button type="primary" onClick={confirmPoint}>
                         Đóng
                     </Button>,]}
                     // onCancel={cancleStudy}
