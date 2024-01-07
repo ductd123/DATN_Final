@@ -102,14 +102,14 @@ class Register extends Component {
     checkAll = () => {
         this.setState({
             invalidName: this.state.fullName === '',
-            invalidAddress: this.state.address === '',
-            invalidDate: this.state.birthday === '',
+            // invalidAddress: this.state.address === '',
+            // invalidDate: this.state.birthday === '',
             invalidEmail: this.validateEmail(this.state.email),
-            invalidGender: this.state.gender === '',
+            // invalidGender: this.state.gender === '',
             invalidPass: this.state.password === '',
-            invalidPhoneNum: this.state.phoneNumber === '',
+            // invalidPhoneNum: this.state.phoneNumber === '',
         }, () => {
-            if (!this.state.invalidName && !this.state.invalidAddress && !this.state.invalidDate && !this.state.invalidEmail && !this.state.invalidGender && !this.state.invalidPass && !this.state.invalidPhoneNum) {
+            if (!this.state.invalidName && !this.state.invalidEmail  && !this.state.invalidPass ) {
                 this.onSubmit();
             }
         })
@@ -120,11 +120,7 @@ class Register extends Component {
             name: this.state.fullName,
             email: this.state.email,
             password: this.state.password,
-            phoneNumber: this.state.phoneNumber,
-            address: this.state.address,
             role: "USER",
-            birthday: this.state.birthday,
-            gender: this.state.gender,
         };
         // this.setState({
         //     step1: false,
@@ -203,26 +199,25 @@ class Register extends Component {
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
-                                        <div className="login-input " style={this.state.invalidPhoneNum ? { border: '2px solid red' } : {}}>
+                                        {/* <div className="login-input " style={this.state.invalidPhoneNum ? { border: '2px solid red' } : {}}>
                                             <i className="fa fa-phone"></i>
                                             <input className="login-user" value={this.state.phoneNumber} onBlur={this.handleChangePhoneNumber} onChange={this.handleChangePhoneNumber} type="email" placeholder="Số điện thoại" />
                                             {this.state.invalidPhoneNum && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
-                                        {/* {this.state.invalidEmail && <div className="invalid">Invalid number phone</div>} */}
                                         <div className="login-input " style={this.state.invalidAddress ? { border: '2px solid red' } : {}}>
                                             <i className="fa-solid fa-address-card"></i>
                                             <input className="login-user" value={this.state.address} onBlur={this.handleChangeAddress} onChange={this.handleChangeAddress} type="email" placeholder="Địa chỉ" />
                                             {this.state.invalidAddress && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                                 <div className="login-right">
                                     <div className="login-detail">
-                                        <div className="login-input" style={this.state.invalidDate ? { border: '2px solid red' } : {}}>
+                                        {/* <div className="login-input" style={this.state.invalidDate ? { border: '2px solid red' } : {}}>
                                             <i className="fa fa-calendar"></i>
                                             <input onBlur={this.handleChangeBirthday} onChange={this.handleChangeBirthday} value={this.state.birthday} type="date" />
                                             {this.state.invalidDate && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
@@ -235,7 +230,7 @@ class Register extends Component {
                                             {this.state.invalidGender && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
-                                        </div>
+                                        </div> */}
                                         <div className="login-input " style={this.state.invalidPass ? { border: '2px solid red' } : {}}>
                                             <i className="fa-solid fa-lock"></i>
                                             <input className="login-user" value={this.state.password} onBlur={this.handleChangePassword} onChange={this.handleChangePassword} type="password" placeholder="Mật khẩu" />
