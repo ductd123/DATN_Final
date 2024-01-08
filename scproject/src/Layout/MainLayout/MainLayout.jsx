@@ -1,14 +1,3 @@
-// import React from "react";
-// import HomePageLeft from "../../Component/NavPanel/HomepageLeft";
-
-// export default function MainLayout({ children }) {
-//     return (
-//         <>
-//             <HomePageLeft />
-//             {children}
-//         </>
-//     );
-// }
 
 import React from "react";
 import {

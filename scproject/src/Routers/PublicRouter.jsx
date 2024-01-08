@@ -9,7 +9,6 @@ export default function PublicRouter({
     ...rest
 }) {
     const token = localStorage.getItem("access_token");
-    const reduxUserData = useSelector((state) => state.userData);
     const navigate = useNavigate();
 
     const dispatch = useDispatch();

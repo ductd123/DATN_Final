@@ -3,10 +3,11 @@ import "./MenuProfile.scss";
 import { Edit, LogOut } from "react-feather";
 import HelperLogOut from "../../../helpers/Logout";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import {  DatePicker, Drawer, Form, Input, Modal, Select, Space, Upload, message } from "antd";
+import { DatePicker, Drawer, Form, Input, Modal, Select, Space, Upload, message } from "antd";
 import Button from "../../Common/Button/Button";
 import { Option } from "antd/es/mentions";
 import bg from '../../../assets/image/wallhaven-o5762l_2560x1440.png';
+import { useSelector } from "react-redux";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -26,8 +27,10 @@ const beforeUpload = (file) => {
 };
 
 export default function MenuProfile() {
+  const userData = useSelector((state) => state.userData.userData)
   const [showInfo, setShowInfo] = useState(false);
   const [showUpdateInfo, setShowUpdateInfo] = useState(false);
+  const [userInfoUpdate, setUserInfoUpdate] = useState({});
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState()
 
@@ -56,6 +59,13 @@ export default function MenuProfile() {
       });
     }
   };
+
+  const handleValueChange = (property, value) => {
+    setUserInfoUpdate({
+      ...userInfoUpdate,
+      [property]: value,
+    })
+  }
   return (
     <div className="menu-profile">
       <ul className="menu-profile__menu">
@@ -76,30 +86,30 @@ export default function MenuProfile() {
         style={{ top: 20 }}
       >
         <div className="nav-userInfo-background">
-          <img src={bg}></img>
+          <img style={{ width: '100%' }} src={bg}></img>
         </div>
         <div className="nav-userInfo-header">
           <img src="https://picsum.photos/200" className="nav-userInfo-header-avt"></img>
-          <span className="nav-userInfo-header-name">Cao Minh Đức</span>
+          <span className="nav-userInfo-header-name">{userData.name}</span>
         </div>
         <div style={{ height: '8px', backgroundColor: '#efefef', borderRadius: '4px' }}></div>
         <div className="nav-userInfo-detail">
           <span className="nav-userInfo-detail-header">Thông tin cá nhân</span>
           <div className="nav-userInfo-detail-items">
             <span className="nav-userInfo-detail-items-title">Giới tính</span>
-            <span className="nav-userInfo-detail-items-content">Nam</span>
+            <span className="nav-userInfo-detail-items-content">{userData?.gender || "Chưa có thông tin"}</span>
           </div>
           <div className="nav-userInfo-detail-items">
             <span className="nav-userInfo-detail-items-title">Ngày sinh</span>
-            <span className="nav-userInfo-detail-items-content"></span>
+            <span className="nav-userInfo-detail-items-content">{userData?.birthDay || "Chưa có thông tin"}</span>
           </div>
           <div className="nav-userInfo-detail-items">
             <span className="nav-userInfo-detail-items-title">Điện thoại</span>
-            <span className="nav-userInfo-detail-items-content"></span>
+            <span className="nav-userInfo-detail-items-content">{userData?.phoneNumber || "Chưa có thông tin"}</span>
           </div>
           <div className="nav-userInfo-detail-items">
             <span className="nav-userInfo-detail-items-title">Email</span>
-            <span className="nav-userInfo-detail-items-content"></span>
+            <span className="nav-userInfo-detail-items-content">{userData?.email || "Chưa có thông tin"}</span>
           </div>
         </div>
       </Modal>
@@ -173,7 +183,7 @@ export default function MenuProfile() {
               },
             ]}
           >
-            <Input placeholder="Nhập tên của bạn" />
+            <Input placeholder="Nhập tên của bạn" onChange={(e) => handleValueChange('name', e.target.value)} />
           </Form.Item>
           <Form.Item
             name="numberPhone"
@@ -202,7 +212,8 @@ export default function MenuProfile() {
               style={{
                 width: '100%',
               }}
-              placeholder="Chọn ngày sinh của bạn"
+              placeholder={userData?.birthDay || "Chọn ngày sinh của bạn"}
+              onChange={(e) => handleValueChange('birthDay', `${e.$D}-${e.$M + 1}-${e.$y}`)}
             />
           </Form.Item>
 

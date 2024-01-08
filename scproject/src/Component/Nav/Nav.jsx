@@ -2,26 +2,23 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "./Nav.scss";
 import { MessageCircle, Book, LogOut, Video, BookOpen, Edit } from "react-feather";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MenuProfile from "./MenuProfile/MenuProfile";
-import HelperLogOut from "../../helpers/Logout";
 import { BookOutlined, CommentOutlined, LaptopOutlined, LoadingOutlined, PlusOutlined, ReadOutlined, TeamOutlined, UnderlineOutlined, UnorderedListOutlined, UploadOutlined } from "@ant-design/icons";
-import { Col, DatePicker, Drawer, Form, Input, Modal, Row, Select, Space, Upload, message } from "antd";
-import bg from "../../assets/image/wallhaven-o5762l_2560x1440.png"
 
-import { apiLogin } from "../../Services";
 import LoadingComponent from "../Loading/Loading";
 import apiUser from "../../Services/apiUser";
+import { setDataUser } from "../../Redux/slice/userDataSlice";
 // import moment from "moment";
 
 
 
 export default function Nav() {
   const location = useLocation();
+  const dispatch = useDispatch();
   const pathName = location.pathname;
   const [loading, setLoading] = useState(false);
-  const reduxUserData = useSelector((state) => state.userData);
-  const { data } = reduxUserData.data;
+  const userData = useSelector((state) => state.user)
   // const time = moment(new Date(data.exp * 1000)).format(
   //   "MMMM Do YYYY, h:mm:ss a"
   // );
@@ -31,7 +28,7 @@ export default function Nav() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [dispatch]);
 
   const fetchData = async () => {
     let data ={
@@ -44,7 +41,7 @@ export default function Nav() {
     const items = [];
     setLoading(false)
     setTimeout(() => {
-      console.log(response);
+      dispatch(setDataUser(response))
       setLoading(false);
     }, 500);
   }
@@ -52,37 +49,37 @@ export default function Nav() {
     setIsShowMenuProfile(!isShowMenuProfile);
   };
 
-// const testRequest  = async () => {
-//   let data ={
-//     page: 1,
-//     size: 10,
-//     text: "Duc",
-//     ascending: true,
-//   }
-//   let response = await apiUser.requestAddFr(2);
-//   const items = [];
-//   setLoading(false)
-//   setTimeout(() => {
-//     console.log(response);
-//     setLoading(false);
-//   }, 500);
-// }
+const testRequest  = async () => {
+  let data ={
+    page: 1,
+    size: 10,
+    text: "Duc",
+    ascending: true,
+  }
+  let response = await apiUser.requestAddFr(1);
+  const items = [];
+  setLoading(false)
+  setTimeout(() => {
+    console.log(response);
+    setLoading(false);
+  }, 500);
+}
 
-// const testGet  = async () => {
-//   let data ={
-//     page: 1,
-//     size: 10,
-//     text: "Duc",
-//     ascending: true,
-//   }
-//   let response = await apiUser.listRequestAddFr(2);
-//   const items = [];
-//   setLoading(false)
-//   setTimeout(() => {
-//     console.log(response);
-//     setLoading(false);
-//   }, 500);
-// }
+const testGet  = async () => {
+  let data ={
+    page: 1,
+    size: 10,
+    text: "Duc",
+    ascending: true,
+  }
+  let response = await apiUser.listRequestAddFr();
+  const items = [];
+  setLoading(false)
+  setTimeout(() => {
+    console.log(response);
+    setLoading(false);
+  }, 500);
+}
 
   return (
     <nav className="nav">
@@ -124,7 +121,7 @@ export default function Nav() {
           </li>
         </NavLink>
       </ul>
-      <LogOut className="nav__logout" onClick={() => HelperLogOut()} />
+      <LogOut className="nav__logout" onClick={() => testGet()} />
     </nav>
   );
 }

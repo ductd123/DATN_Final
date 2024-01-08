@@ -17,8 +17,8 @@ const apiUser = {
         const url = `users/${id}`;
         return axiosUserClient.get(url);
     },
-    listRequestAddFr: (id) => {
-        const url = `friend-ship/pending/${id}`;
+    listRequestAddFr: () => {
+        const url = `friend-ship/pending`;
         return axiosUserClient.get(url);
     },
     requestAddFr: (id) => {

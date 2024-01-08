@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 let socket;
 export default function Room() {
   const [messages, setMessages] = useState([]);
-  // const reduxUserData = useSelector((state) => state.reduxUserData);
   const params = useParams();
   const ENDPOINT = "http://localhost:3000/";
 
