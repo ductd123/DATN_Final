@@ -4,7 +4,7 @@ export { default as Searchbox } from "./Common/Searchbox/Searchbox";
 export { default as ChatBox } from "./Chatbox/ChatBox";
 export { default as LearningSideBar } from "../Containers/LearningSideBar/LearningSideBar";
 export { default as UseList } from "../Containers/LearningSideBar/UseList";
-export { default as HomepageLeft } from "./NavPanel/HomepageLeft";
+// export { default as HomepageLeft } from "./NavPanel/HomepageLeft";
 export { default as HeaderBar } from "./HeaderBar/HeaderBar";
 export { default as Nav } from "./Nav/Nav";
 export { default as ListContact } from "./ListContact/ListContact";

@@ -6,8 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 export default function ListConversation() {
-  // const reduxConversation = useSelector((state) => state.reduxConversation);
-  // const reduxUserData = useSelector((state) => state.reduxUserData);
+
   const dispatch = useDispatch();
 
   // useEffect(() => {

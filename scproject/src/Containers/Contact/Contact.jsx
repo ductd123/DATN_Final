@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Contact.scss";
 import { Link, useLocation } from "react-router-dom";
 import { Users } from "react-feather";
 import { render } from "react-dom";
+import apiUser from "../../Services/apiUser";
+import LoadingComponent from "../../Component/Loading/Loading";
 export default function Contact() {
   const location = useLocation();
   const pathName = location.pathname;
+  const [loading, setLoading] = useState();
+  const [listRequest, setListRequest] = useState();
+  useEffect(() => {
+    fetchListAddFri();
+  }, []);
+  const fetchListAddFri = async () => {
+    let response = await apiUser.listRequestAddFr();
+    setLoading(true)
+    setTimeout(() => {
+      setListRequest(response.data)
+      setLoading(false);
+    }, 500);
+  }
   const fakeData = [
     { name: "Eva", avt: "https://picsum.photos/201" },
     { name: "Mia", avt: "https://picsum.photos/202" },
@@ -30,8 +45,25 @@ export default function Contact() {
   ];
   const sortedData = fakeData.slice().sort((a, b) => a.name.localeCompare(b.name));
 
+  const onCancleFriends = async (id) => {
+    let response = await apiUser.cancelRequestAddFr(id);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }
+
+  const onAcceptFriends = async (id) => {
+    let response = await apiUser.acceptRequestAddFr(id);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }
+
   return (<>
-    {pathName === "/friend" ||pathName === "/contact" ?
+    <LoadingComponent loading={loading} />
+    {pathName === "/friend" || pathName === "/contact" ?
       <div className="contact">
         <div className="contact-panel__header">
           <div className="list-contact__selection">
@@ -46,21 +78,21 @@ export default function Contact() {
           <div className="list-contact__all">
             {
               sortedData.map((item, index) => (<>
-              <Link to={`/room/${item.id}`} className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
-                <div className="conversation__content">
-                  <img
-                    src={item.avt}
-                    alt=""
-                    className="conversation__img"
-                  />
-                  <div className="conversation__main">
-                    <h4 className="conversation__name">{item.name}</h4>
+                <Link to={`/room/${item.id}`} className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
+                  <div className="conversation__content">
+                    <img
+                      src={item.avt}
+                      alt=""
+                      className="conversation__img"
+                    />
+                    <div className="conversation__main">
+                      <h4 className="conversation__name">{item.name}</h4>
+                    </div>
                   </div>
-                </div>
 
-              </Link>
+                </Link>
                 <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr>
-                </>
+              </>
 
               ))
             }
@@ -117,10 +149,10 @@ export default function Contact() {
             </div>
             <div className="card-invitation-list">
               {
-                sortedData.slice(0, 5).map((item, index) => (<><div className="card-wrapper" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
+                listRequest?.slice(0, 5).map((item, index) => (<><div className="card-wrapper" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
                   <div className="conversation__content">
                     <img
-                      src={item.avt}
+                      src="https://picsum.photos/230"
                       alt=""
                       className="conversation__img"
                     />
@@ -128,8 +160,8 @@ export default function Contact() {
                       <h4 className="conversation__name">{item.name}</h4>
                     </div>
                     <div className="contact_button">
-                      <button className="contact_button-deny">Từ chối</button>
-                      <button className="contact_button-accept">Đồng ý</button>
+                      <button className="contact_button-deny" onClick={() => { onCancleFriends(item.id) }}>Từ chối</button>
+                      <button className="contact_button-accept" onClick={() => { onAcceptFriends(item.id) }}>Đồng ý</button>
                     </div>
                   </div>
 

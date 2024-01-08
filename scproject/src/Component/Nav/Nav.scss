@@ -60,6 +60,9 @@
       height: 200px;
       width: 100%;
       overflow: hidden;
+      i{
+        width: 100%;
+      }
     }
     &-header {
       display: flex;

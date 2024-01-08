@@ -1,25 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { SUCCESS, ERROR } from "../constants";
 
-const initialState = {
-    type: "",
-    data: {},
-};
+// const initialState = {
+//     type: "",
+//     data: {},
+// };
 
 const userDataSlice = createSlice({
-    name: "userData",
-    initialState,
+    name: "user",
+    initialState:{
+        userData:null
+    },
     reducers: {
-        setDataSuccess: (state, action) => {
-            state.type = SUCCESS;
-            state.data = action.payload;
-        },
-        setDataError: (state, action) => {
-            state.type = ERROR;
-            state.data = action.payload;
+        setDataUser: (state, action) => {
+            state.userData = action.payload;
         },
     },
 });
 
-export const { setDataSuccess, setDataError } = userDataSlice.actions;
+export const { setDataUser } = userDataSlice.actions;
 export const userDataReducer = userDataSlice.reducer;

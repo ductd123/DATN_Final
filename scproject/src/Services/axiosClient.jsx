@@ -4,6 +4,11 @@ import queryString from "query-string";
 // const token = localStorage.getItem("token");
 // const URL_BE = process.env.REACT_APP_URL_BE;
 let token = localStorage.getItem("access_token");
+
+const updateToken = () => {
+  token = localStorage.getItem("access_token");
+};
+
 export const axiosLearningClient = axios.create({
   baseURL: "http://202.191.56.11:8060/",
   headers: {
@@ -38,6 +43,41 @@ export  const axiosUploadVideoClient = axios.create({
 // axiosClient.interceptors.request.use(async (config)=>{
 //   return config;
 // })
+
+axiosUserClient.interceptors.request.use(
+  (config) => {
+    updateToken();
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    // Handle request error
+    return Promise.reject(error);
+  }
+);
+axiosLearningClient.interceptors.request.use(
+  (config) => {
+    updateToken();
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    // Handle request error
+    return Promise.reject(error);
+  }
+);
+axiosUploadVideoClient.interceptors.request.use(
+  (config) => {
+    updateToken();
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    // Handle request error
+    return Promise.reject(error);
+  }
+);
+
 axiosLearningClient.interceptors.response.use(
   (res) => {
     if (res && res.data) {

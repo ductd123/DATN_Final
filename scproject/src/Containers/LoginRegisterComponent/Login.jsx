@@ -38,8 +38,9 @@ const Login = () => {
                 } else {
                     localStorage.setItem('access_token', response.access_token);
                     localStorage.setItem('refresh_token', response.refresh_token);
-                    navigate('/home');
-                    console.log('Server Response:', response);
+                    setTimeout(() => {
+                        navigate('/home');
+                    }, 500);
                 }
             }
         } catch (error) {
