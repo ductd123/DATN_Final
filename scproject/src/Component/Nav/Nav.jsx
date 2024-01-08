@@ -31,7 +31,7 @@ export default function Nav() {
   }, [dispatch]);
 
   const fetchData = async () => {
-    let data ={
+    let data = {
       page: 1,
       size: 10,
       text: "Duc",
@@ -49,38 +49,43 @@ export default function Nav() {
     setIsShowMenuProfile(!isShowMenuProfile);
   };
 
-const testRequest  = async () => {
-  let data ={
-    page: 1,
-    size: 10,
-    text: "Duc",
-    ascending: true,
+  const testRequest = async () => {
+    let data = {
+      page: 1,
+      size: 10,
+      text: "Duc",
+      ascending: true,
+    }
+    let response = await apiUser.requestAddFr(1);
+    const items = [];
+    setLoading(false)
+    setTimeout(() => {
+      console.log(response);
+      setLoading(false);
+    }, 500);
   }
-  let response = await apiUser.requestAddFr(1);
-  const items = [];
-  setLoading(false)
-  setTimeout(() => {
-    console.log(response);
-    setLoading(false);
-  }, 500);
-}
 
-const testGet  = async () => {
-  let data ={
-    page: 1,
-    size: 10,
-    text: "Duc",
-    ascending: true,
+  const testGet = async () => {
+    let data = {
+      page: 1,
+      size: 10,
+      text: "Duc",
+      ascending: true,
+    }
+    let response = await apiUser.listRequestAddFr();
+    const items = [];
+    setLoading(false)
+    setTimeout(() => {
+      console.log(response);
+      setLoading(false);
+    }, 500);
   }
-  let response = await apiUser.listRequestAddFr();
-  const items = [];
-  setLoading(false)
-  setTimeout(() => {
-    console.log(response);
-    setLoading(false);
-  }, 500);
-}
-
+  const logout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    window.location.replace("/");
+    
+  }
   return (
     <nav className="nav">
       <LoadingComponent loading={loading} />
@@ -101,12 +106,12 @@ const testGet  = async () => {
         </NavLink>
         <NavLink to="/contact" className="nav__link">
           <li className={pathName === "/contact" ? "nav__li nav__li--choose" : "nav__li"}>
-          <TeamOutlined style={{ fontSize: '1.5rem' }} />
+            <TeamOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
         <NavLink to="/volunteers" className="nav__link">
           <li className={pathName === "/volunteers" ? "nav__li nav__li--choose" : "nav__li"} >
-          <ReadOutlined style={{ fontSize: '1.5rem' }}/>
+            <ReadOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
         <NavLink to="/exam" className="nav__link">
@@ -114,14 +119,14 @@ const testGet  = async () => {
             <LaptopOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
-      
+
         <NavLink to="/admin" className="nav__link">
           <li className={pathName === "/admin" ? "nav__li nav__li--choose" : "nav__li"}>
             <UploadOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
       </ul>
-      <LogOut className="nav__logout" onClick={() => testGet()} />
+      <LogOut className="nav__logout" onClick={() => logout()} />
     </nav>
   );
 }

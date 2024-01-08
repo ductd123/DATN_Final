@@ -8,6 +8,8 @@ import Button from "../../Common/Button/Button";
 import { Option } from "antd/es/mentions";
 import bg from '../../../assets/image/wallhaven-o5762l_2560x1440.png';
 import { useSelector } from "react-redux";
+import apiUser from "../../../Services/apiUser";
+import dayjs from "dayjs";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -45,6 +47,31 @@ export default function MenuProfile() {
     setShowInfo(false);
     setShowUpdateInfo(true);
   }
+  const onUpdateInfo = async () => {
+    setLoading(true);
+    let data = {
+      name: userInfoUpdate.name,
+      address: userInfoUpdate.address,
+      phoneNumber: userInfoUpdate.phoneNumber,
+      gender: userInfoUpdate.gender,
+      birthDay: userInfoUpdate.birthDay,
+    }
+    try {
+      let response = await apiUser.updateUser(data);
+      setLoading(false)
+      setTimeout(() => {
+        console.log(response);
+        message.success('Cập nhật thông tin thành công.');
+        setUserInfoUpdate({});
+        setShowUpdateInfo(false);
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error('Đã xảy ra lỗi, vui lòng thử lại');
+    }
+  }
 
   const handleChangeUpload = (info) => {
     if (info.file.status === 'uploading') {
@@ -70,7 +97,7 @@ export default function MenuProfile() {
     <div className="menu-profile">
       <ul className="menu-profile__menu">
         <li onClick={() => { setShowInfo(true) }} className="menu-profile__list">
-          <Edit className="menu-profile__icon" /> Cập nhật thông tin
+          <Edit className="menu-profile__icon" />Thông tin cá nhân
         </li>
         <li className="menu-profile__list">
           <LogOut className="menu-profile__icon" onClick={() => HelperLogOut()} /> Đăng xuất
@@ -114,8 +141,7 @@ export default function MenuProfile() {
         </div>
       </Modal>
       <Drawer
-        title="Create a new account"
-        width={720}
+        title="Cập nhật thông tin"
         onClose={onCloseUpdateInfo}
         open={showUpdateInfo}
         // styles={{
@@ -126,7 +152,7 @@ export default function MenuProfile() {
         extra={
           <Space>
             <Button onClick={onCloseUpdateInfo} className='ant-btn css-dev-only-do-not-override-xu9wm8 ant-btn-default'>Hủy</Button>
-            <Button onClick={onCloseUpdateInfo} className='ant-btn css-dev-only-do-not-override-xu9wm8 ant-btn-primary'>Cập nhật</Button>
+            <Button onClick={onUpdateInfo} className='ant-btn css-dev-only-do-not-override-xu9wm8 ant-btn-primary'>Cập nhật</Button>
           </Space>
         }
       >
@@ -183,37 +209,28 @@ export default function MenuProfile() {
               },
             ]}
           >
-            <Input placeholder="Nhập tên của bạn" onChange={(e) => handleValueChange('name', e.target.value)} />
+            <Input value={userData.name} placeholder="Nhập tên của bạn" onChange={(e) => handleValueChange('name', e.target.value)} />
           </Form.Item>
           <Form.Item
             name="numberPhone"
             label="Số điện thoại"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter user name',
-              },
-            ]}
           >
-            <Input placeholder="Nhập tên của bạn" />
+            <Input placeholder="Nhập SĐT của bạn" onChange={(e) => handleValueChange('phoneNumber', e.target.value)}/>
           </Form.Item>
 
           <Form.Item
             name="birthday"
             label="Ngày sinh"
-            rules={[
-              {
-                required: true,
-                message: 'Chọn ngày sinh của bạn',
-              },
-            ]}
           >
             <DatePicker
               style={{
                 width: '100%',
               }}
+              format="DD/MM/YYYY"
+              defaultValue={dayjs(userData.birthDay || '01/01/2000', "DD/MM/YYYY")}
               placeholder={userData?.birthDay || "Chọn ngày sinh của bạn"}
-              onChange={(e) => handleValueChange('birthDay', `${e.$D}-${e.$M + 1}-${e.$y}`)}
+              // onChange={(e) => handleValueChange('birthDay', `${e.$D}/${e.$M + 1}/${e.$y}`)}
+              onChange={(e) => handleValueChange('birthDay', e.$d)}
             />
           </Form.Item>
 
@@ -227,14 +244,17 @@ export default function MenuProfile() {
               },
             ]}
           >
-            <Select placeholder="Chọn giới tính của bạn">
-              <Option value="Male">Nam</Option>
-              <Option value="Female">Nữ</Option>
-              <Option value="Other">Khác</Option>
+            <Select placeholder="Chọn giới tính của bạn" onChange={(e) => handleValueChange('gender', e)}>
+              <Select.Option value="MALE">Nam</Select.Option>
+              <Select.Option value="FEMALE">Nữ</Select.Option>
             </Select>
           </Form.Item>
-
-
+          <Form.Item
+            name="address"
+            label="Địa chỉ"
+          >
+            <Input placeholder="Nhập địa chỉ của bạn" onChange={(e) => handleValueChange('address', e.target.value)} />
+          </Form.Item>
         </Form>
       </Drawer>
     </div>

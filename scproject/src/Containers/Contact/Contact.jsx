@@ -12,9 +12,18 @@ export default function Contact() {
   const [listRequest, setListRequest] = useState();
   useEffect(() => {
     fetchListAddFri();
+    fetchListFri();
   }, []);
   const fetchListAddFri = async () => {
     let response = await apiUser.listRequestAddFr();
+    setLoading(true)
+    setTimeout(() => {
+      setListRequest(response.data)
+      setLoading(false);
+    }, 500);
+  }
+  const fetchListFri = async () => {
+    let response = await apiUser.getListFriends();
     setLoading(true)
     setTimeout(() => {
       setListRequest(response.data)

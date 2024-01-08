@@ -33,5 +33,9 @@ const apiUser = {
         const url = `friend-ship/cencel-friend/${id}`;
         return axiosUserClient.get(url);
     },
+    getListFriends: () => {
+        const url = `friend-ship/friend`;
+        return axiosUserClient.get(url);
+    },
 };
 export default apiUser;
