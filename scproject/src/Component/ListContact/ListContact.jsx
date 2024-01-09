@@ -23,12 +23,12 @@ const itemabc = [
       <div className="list-contact__content">Danh sách bạn bè</div>
     </NavLink>
   ),
-  getItem(
-    <NavLink to="/group" className="list-contact__menu">
-      <Users style={{fontSize:'1.25rem'}}/>
-      <div className="list-contact__content">Danh sách nhóm</div>
-    </NavLink>
-  ),
+  // getItem(
+  //   <NavLink to="/group" className="list-contact__menu">
+  //     <Users style={{fontSize:'1.25rem'}}/>
+  //     <div className="list-contact__content">Danh sách nhóm</div>
+  //   </NavLink>
+  // ),
   getItem(
     <NavLink to="/add-request" className="list-contact__menu">
       <MailOutlined style={{fontSize:'1.25rem'}}/>

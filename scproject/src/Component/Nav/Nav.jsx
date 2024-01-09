@@ -9,6 +9,8 @@ import { BookOutlined, CommentOutlined, LaptopOutlined, LoadingOutlined, PlusOut
 import LoadingComponent from "../Loading/Loading";
 import apiUser from "../../Services/apiUser";
 import { setDataUser } from "../../Redux/slice/userDataSlice";
+import { message } from "antd";
+import HelperLogOut from "../../helpers/Logout";
 // import moment from "moment";
 
 
@@ -31,56 +33,76 @@ export default function Nav() {
   }, [dispatch]);
 
   const fetchData = async () => {
-    let data ={
+    let data = {
       page: 1,
       size: 10,
       text: "Duc",
       ascending: true,
     }
-    let response = await apiUser.getUserInfo();
-    const items = [];
-    setLoading(false)
-    setTimeout(() => {
-      dispatch(setDataUser(response))
+    try {
+      let response = await apiUser.getUserInfo();
+      const items = [];
+      setLoading(false)
+      setTimeout(() => {
+        dispatch(setDataUser(response))
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
       setLoading(false);
-    }, 500);
+    }
   }
   const handleShowMenuProfile = () => {
     setIsShowMenuProfile(!isShowMenuProfile);
   };
 
-const testRequest  = async () => {
-  let data ={
-    page: 1,
-    size: 10,
-    text: "Duc",
-    ascending: true,
+  const testRequest = async () => {
+    let data = {
+      page: 1,
+      size: 10,
+      text: "Duc",
+      ascending: true,
+    }
+    try {
+      let response = await apiUser.requestAddFr(1);
+      const items = [];
+      setLoading(false)
+      setTimeout(() => {
+        console.log(response);
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
+      setLoading(false);
+    }
   }
-  let response = await apiUser.requestAddFr(1);
-  const items = [];
-  setLoading(false)
-  setTimeout(() => {
-    console.log(response);
-    setLoading(false);
-  }, 500);
-}
 
-const testGet  = async () => {
-  let data ={
-    page: 1,
-    size: 10,
-    text: "Duc",
-    ascending: true,
+  const testGet = async () => {
+    let data = {
+      page: 1,
+      size: 10,
+      text: "Duc",
+      ascending: true,
+    }
+    try {
+      let response = await apiUser.listRequestAddFr();
+      const items = [];
+      setLoading(false)
+      setTimeout(() => {
+        console.log(response);
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
+      setLoading(false);
+    }
   }
-  let response = await apiUser.listRequestAddFr();
-  const items = [];
-  setLoading(false)
-  setTimeout(() => {
-    console.log(response);
-    setLoading(false);
-  }, 500);
-}
-
   return (
     <nav className="nav">
       <LoadingComponent loading={loading} />
@@ -101,12 +123,12 @@ const testGet  = async () => {
         </NavLink>
         <NavLink to="/contact" className="nav__link">
           <li className={pathName === "/contact" ? "nav__li nav__li--choose" : "nav__li"}>
-          <TeamOutlined style={{ fontSize: '1.5rem' }} />
+            <TeamOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
         <NavLink to="/volunteers" className="nav__link">
           <li className={pathName === "/volunteers" ? "nav__li nav__li--choose" : "nav__li"} >
-          <ReadOutlined style={{ fontSize: '1.5rem' }}/>
+            <ReadOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
         <NavLink to="/exam" className="nav__link">
@@ -114,14 +136,14 @@ const testGet  = async () => {
             <LaptopOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
-      
+
         <NavLink to="/admin" className="nav__link">
           <li className={pathName === "/admin" ? "nav__li nav__li--choose" : "nav__li"}>
             <UploadOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
       </ul>
-      <LogOut className="nav__logout" onClick={() => testGet()} />
+      <LogOut className="nav__logout" onClick={() => HelperLogOut()} />
     </nav>
   );
 }

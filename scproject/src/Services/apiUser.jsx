@@ -1,3 +1,4 @@
+import { apiUploadFile } from "./apiLearning";
 import { axiosLoginClient, axiosUserClient } from "./axiosClient";
 
 const apiUser = {
@@ -24,14 +25,25 @@ const apiUser = {
     requestAddFr: (id) => {
         const url = `friend-ship/add-friend/${id}`;
         return axiosUserClient.get(url);
-    }, 
+    },
     acceptRequestAddFr: (id) => {
         const url = `friend-ship/accept-friend/${id}`;
         return axiosUserClient.get(url);
-    }, 
+    },
     cancelRequestAddFr: (id) => {
         const url = `friend-ship/cencel-friend/${id}`;
         return axiosUserClient.get(url);
     },
+    getListFriends: () => {
+        const url = `friend-ship/friend`;
+        return axiosUserClient.get(url);
+    },
+    uploadAvt: async (data) => {
+        const url = `users/uploadAvatar`;
+        let response1 = {
+            avatarLocation : await apiUploadFile.uploadFile(data),
+        };
+        return axiosUserClient.post(url, response1);
+    }
 };
 export default apiUser;

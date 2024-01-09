@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./HeaderBar.scss";
 import { useSelector } from "react-redux";
-import { Button, Empty, Input, Modal } from "antd";
+import { Button, Empty, Input, Modal, message } from "antd";
 import apiUser from "../../Services/apiUser";
 import { SearchOutlined } from "@ant-design/icons";
 import LoadingComponent from "../Loading/Loading";
@@ -17,7 +17,7 @@ export default function HeaderBar() {
 
   useEffect(() => {
     setHeaderName(userData?.name);
-  }, []);
+  }, [userData]);
   const onSearch = async () => {
     setLoading(true);
     let data = {
@@ -26,16 +26,23 @@ export default function HeaderBar() {
       text: value || '',
       ascending: true,
     }
-    let response = await apiUser.searchUser(data);
-    setTimeout(() => {
+    try {
+      let response = await apiUser.searchUser(data);
+      setTimeout(() => {
+        setLoading(false);
+        const data = response.data.map((item) => ({
+          email: item.email,
+          name: item.name,
+          id: 1,
+        }));
+        setResultSearch(data);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
       setLoading(false);
-      const data = response.data.map((item) => ({
-        email: item.email,
-        name: item.name,
-        id: 1,
-      }));
-      setResultSearch(data);
-    }, 500);
+    }
   };
   const handleChangeValue = (newValue) => {
     setValue(newValue);
@@ -44,24 +51,38 @@ export default function HeaderBar() {
 
   const onSelectUser = async (id) => {
     setLoading(true);
-    let response = await apiUser.getUserById(id);
-    setShowInfo(true);
-    setTimeout(() => {
+    try {
+      let response = await apiUser.getUserById(id);
+      setShowInfo(true);
+      setTimeout(() => {
+        setLoading(false);
+        setUserInfo(response)
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
       setLoading(false);
-      setUserInfo(response)
-    }, 500);
+    }
   };
 
   const requestAddFriend = async (id) => {
 
     setLoading(true);
-    let response = await apiUser.requestAddFr(1);
-    setShowInfo(true);
-    setTimeout(() => {
-      setShowInfo(false);
+    try {
+      let response = await apiUser.requestAddFr(1);
+      setShowInfo(true);
+      setTimeout(() => {
+        setShowInfo(false);
+        setLoading(false);
+        setUserInfo(response)
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
       setLoading(false);
-      setUserInfo(response)
-    }, 500);
+    }
   }
 
   return (

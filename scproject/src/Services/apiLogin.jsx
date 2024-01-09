@@ -2,15 +2,15 @@ import { axiosLoginClient, axiosUserClient } from "./axiosClient";
 
 const apiLogin = {
     postLogin: (data) => {
-        const url = "api/auth/login";
+        const url = "auth/login";
         return axiosLoginClient.post(url, data);
     },
     getCheckLogin: () => {
-        const url = "api/auth";
+        const url = "auth";
         return axiosLoginClient.get(url);
     },
     test: () => {
-        const url = "api/test";
+        const url = "test";
         return axiosLoginClient.get(url);
     },
     getUserInfo : ()=>{

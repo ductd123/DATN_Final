@@ -17,7 +17,6 @@ export default function PublicRouter({
             navigate("/home");
         }
         
-        console.log(token);
     }, [dispatch, token]);
     return (
         <Layout>

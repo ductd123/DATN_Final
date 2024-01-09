@@ -5,21 +5,71 @@ import { Users } from "react-feather";
 import { render } from "react-dom";
 import apiUser from "../../Services/apiUser";
 import LoadingComponent from "../../Component/Loading/Loading";
+import { Empty } from "antd";
 export default function Contact() {
   const location = useLocation();
   const pathName = location.pathname;
   const [loading, setLoading] = useState();
   const [listRequest, setListRequest] = useState();
+  const [listFriends, setListFriends] = useState();
   useEffect(() => {
     fetchListAddFri();
+    fetchListFri();
   }, []);
   const fetchListAddFri = async () => {
-    let response = await apiUser.listRequestAddFr();
-    setLoading(true)
-    setTimeout(() => {
-      setListRequest(response.data)
+    setLoading(true);
+    try {
+      let response = await apiUser.listRequestAddFr();
+      setTimeout(() => {
+        setListRequest(response.data)
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
       setLoading(false);
-    }, 500);
+    }
+  }
+  const fetchListFri = async () => {
+    setLoading(true);
+    try {
+      let response = await apiUser.getListFriends();
+      setTimeout(() => {
+        setListFriends(response.data)
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }
+  const onCancleFriends = async (id) => {
+    setLoading(true);
+    try {
+      let response = await apiUser.cancelRequestAddFr(id);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }
+
+  const onAcceptFriends = async (id) => {
+    setLoading(true);
+    try {
+      let response = await apiUser.acceptRequestAddFr(id);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   }
   const fakeData = [
     { name: "Eva", avt: "https://picsum.photos/201" },
@@ -45,21 +95,7 @@ export default function Contact() {
   ];
   const sortedData = fakeData.slice().sort((a, b) => a.name.localeCompare(b.name));
 
-  const onCancleFriends = async (id) => {
-    let response = await apiUser.cancelRequestAddFr(id);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }
 
-  const onAcceptFriends = async (id) => {
-    let response = await apiUser.acceptRequestAddFr(id);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }
 
   return (<>
     <LoadingComponent loading={loading} />
@@ -73,15 +109,15 @@ export default function Contact() {
         </div>
         <div className="contact-panel__details">
           <div className="list-contact__length">
-            Bạn bè ({sortedData.length})
+            Bạn bè ({listFriends?.length || 0})
           </div>
           <div className="list-contact__all">
-            {
-              sortedData.map((item, index) => (<>
+            {listFriends?.length ?
+              listFriends.map((item, index) => (<>
                 <Link to={`/room/${item.id}`} className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
                   <div className="conversation__content">
                     <img
-                      src={item.avt}
+                      src="https://picsum.photos/270"
                       alt=""
                       className="conversation__img"
                     />
@@ -95,6 +131,8 @@ export default function Contact() {
               </>
 
               ))
+              :
+              <Empty />
             }
           </div>
         </div>
@@ -145,10 +183,10 @@ export default function Contact() {
           </div>
           <div className="contact-panel__details">
             <div className="list-contact__length">
-              Lời mời đã nhận ({sortedData.length})
+              Lời mời đã nhận ({listRequest?.length || 0})
             </div>
-            <div className="card-invitation-list">
-              {
+            <div className="list-contact__all">
+              {listRequest?.length ?
                 listRequest?.slice(0, 5).map((item, index) => (<><div className="card-wrapper" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
                   <div className="conversation__content">
                     <img
@@ -168,6 +206,10 @@ export default function Contact() {
                 </div>
                   <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr></>
                 ))
+                :
+                <div style={{ width: '100%', height: '100%', backgroundColor: '#fff', paddingLeft: '15px' }}>
+                  <Empty description="Không có lời mời kết bạn nào." />
+                </div>
               }
             </div>
           </div>
