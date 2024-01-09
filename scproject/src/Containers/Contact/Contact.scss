@@ -21,6 +21,7 @@
 .list-contact__all {
   background-color: white;
   border-radius: 10px;
+  min-height: calc(100% - 44px);
 }
 .list-contact__length {
   font-weight: 500;
@@ -29,6 +30,7 @@
 }
 .card-invitation-list {
   position: relative;
+  height: 100%;
 }
 
 .card-wrapper {

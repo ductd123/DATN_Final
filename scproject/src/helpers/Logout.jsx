@@ -1,5 +1,6 @@
-export default async function LogOut() {
+export default async function HelperLogOut() {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
   window.location.replace("/");
 }
+

@@ -9,6 +9,8 @@ import { BookOutlined, CommentOutlined, LaptopOutlined, LoadingOutlined, PlusOut
 import LoadingComponent from "../Loading/Loading";
 import apiUser from "../../Services/apiUser";
 import { setDataUser } from "../../Redux/slice/userDataSlice";
+import { message } from "antd";
+import HelperLogOut from "../../helpers/Logout";
 // import moment from "moment";
 
 
@@ -37,13 +39,20 @@ export default function Nav() {
       text: "Duc",
       ascending: true,
     }
-    let response = await apiUser.getUserInfo();
-    const items = [];
-    setLoading(false)
-    setTimeout(() => {
-      dispatch(setDataUser(response))
+    try {
+      let response = await apiUser.getUserInfo();
+      const items = [];
+      setLoading(false)
+      setTimeout(() => {
+        dispatch(setDataUser(response))
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
       setLoading(false);
-    }, 500);
+    }
   }
   const handleShowMenuProfile = () => {
     setIsShowMenuProfile(!isShowMenuProfile);
@@ -56,13 +65,20 @@ export default function Nav() {
       text: "Duc",
       ascending: true,
     }
-    let response = await apiUser.requestAddFr(1);
-    const items = [];
-    setLoading(false)
-    setTimeout(() => {
-      console.log(response);
+    try {
+      let response = await apiUser.requestAddFr(1);
+      const items = [];
+      setLoading(false)
+      setTimeout(() => {
+        console.log(response);
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
       setLoading(false);
-    }, 500);
+    }
   }
 
   const testGet = async () => {
@@ -72,19 +88,20 @@ export default function Nav() {
       text: "Duc",
       ascending: true,
     }
-    let response = await apiUser.listRequestAddFr();
-    const items = [];
-    setLoading(false)
-    setTimeout(() => {
-      console.log(response);
+    try {
+      let response = await apiUser.listRequestAddFr();
+      const items = [];
+      setLoading(false)
+      setTimeout(() => {
+        console.log(response);
+        setLoading(false);
+      }, 500);
+    }
+    catch (error) {
+      console.log(error);
+      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
       setLoading(false);
-    }, 500);
-  }
-  const logout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    window.location.replace("/");
-    
+    }
   }
   return (
     <nav className="nav">
@@ -126,7 +143,7 @@ export default function Nav() {
           </li>
         </NavLink>
       </ul>
-      <LogOut className="nav__logout" onClick={() => logout()} />
+      <LogOut className="nav__logout" onClick={() => HelperLogOut()} />
     </nav>
   );
 }
