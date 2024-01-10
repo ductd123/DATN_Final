@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import MenuProfile from "./MenuProfile/MenuProfile";
 import { BookOutlined, CommentOutlined, LaptopOutlined, LoadingOutlined, PlusOutlined, ReadOutlined, TeamOutlined, UnderlineOutlined, UnorderedListOutlined, UploadOutlined } from "@ant-design/icons";
 
-import LoadingComponent from "../Loading/Loading";
+import LoadingComponent from "../Common/Loading/Loading";
 import apiUser from "../../Services/apiUser";
 import { setDataUser } from "../../Redux/slice/userDataSlice";
 import { message } from "antd";
@@ -33,12 +33,6 @@ export default function Nav() {
   }, [dispatch]);
 
   const fetchData = async () => {
-    let data = {
-      page: 1,
-      size: 10,
-      text: "Duc",
-      ascending: true,
-    }
     try {
       let response = await apiUser.getUserInfo();
       const items = [];
@@ -113,7 +107,7 @@ export default function Nav() {
           className="nav__img"
           onClick={handleShowMenuProfile}
         />
-        {isShowMenuProfile && <MenuProfile />}
+        {isShowMenuProfile && <MenuProfile fetchData={fetchData} />}
       </div>
       <ul className="nav__ul">
         <NavLink to="/home" className="nav__link">

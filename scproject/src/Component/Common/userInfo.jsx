@@ -28,6 +28,10 @@ const UserInfo = ({ userData }) => {
                 <span className="nav-userInfo-detail-items-title">Email</span>
                 <span className="nav-userInfo-detail-items-content">{userData?.email || "Chưa có thông tin"}</span>
             </div>
+            <div className="nav-userInfo-detail-items">
+                <span className="nav-userInfo-detail-items-title">Địa chỉ</span>
+                <span className="nav-userInfo-detail-items-content">{userData?.address || "Chưa có thông tin"}</span>
+            </div>
         </div></>
     );
 }

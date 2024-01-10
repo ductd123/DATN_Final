@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Users } from "react-feather";
 import { render } from "react-dom";
 import apiUser from "../../Services/apiUser";
-import LoadingComponent from "../../Component/Loading/Loading";
+import LoadingComponent from "../../Component/Common/Loading/Loading";
 import { Empty } from "antd";
 export default function Contact() {
   const location = useLocation();

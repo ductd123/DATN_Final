@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import './StudyAI.scss';
 import Button from '../Common/Button/Button';
 import { apiLearning } from '../../Services/apiLearning';
-import LoadingComponent from '../Loading/Loading';
+import LoadingComponent from '../Common/Loading/Loading';
 import Webcam from 'react-webcam';
 import { apiLogin } from '../../Services';
 function getItem(label, key, icon, children, type) {
@@ -49,10 +49,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
 
     const [items, setItems] = useState();
 
-    const onCloseAddTopic = () => {
-        setOpenAddTopic(false);
-        setContent('');
-    };
+
     async function fetchData1() {
         let response = await apiLearning.getTopic();
         const items = [];
@@ -77,31 +74,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
             }, 3000);
         }
     }
-    const addTopic = async () => {
-        setLoading(true);
-        let data = {
-            content: content,
-            imageLocation: '',
-            videoLocation: '',
-        }
-        let response = await apiLearning.addTopic(data);
-        if (response.code === 200) {
-            setTimeout(() => {
-                setLoading(false);
-                setOpenAddTopic(false);
-                message.success(`Thêm chủ đề ${data.content} thành công.`);
-                fetchData();
-                fetchData1();
-            }, 500);
-        }
-        else {
-            setTimeout(() => {
-                setLoading(false);
-                setOpenAddTopic(true);
-                message.error(`Thêm chủ đề ${data.content} thất bại. Vui lòng thử lại!!!`);
-            }, 3000);
-        }
-    }
+
 
     const setLabelForSelect = (e) => {
         setIdTopic(e);
@@ -165,28 +138,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
                 mode="inline"
                 items={items}
             />
-            <Drawer
-                title="Thêm chủ đề"
-                placement="right"
-                onClose={onCloseAddTopic}
-                open={openAddTopic}
-                styles={{
-                    body: {
-                        paddingBottom: 80,
-                    },
-                }}
-                footer={
-                    <Space>
-                        <Button className='ant-btn css-dev-only-do-not-override-xu9wm8 ant-btn-default' onClick={onCloseAddTopic}>Hủy bỏ</Button>
-                        <Button loading={loading} onClick={addTopic} className="ant-btn css-dev-only-do-not-override-xu9wm8 ant-btn-primary" type="primary">
-                            Xác nhận
-                        </Button>
-                    </Space>
-                }
-            >
-                <p className="ant-upload-text" style={{ margin: '0 0 10px 0' }}>Nhập chủ đề muốn thêm:</p>
-                <Input value={content} onChange={(e) => setContent(e.target.value)} />
-            </Drawer>
+
         </div>
     );
 }

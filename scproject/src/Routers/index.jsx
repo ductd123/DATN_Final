@@ -7,6 +7,7 @@ import PrivateRouter from "./PrivateRouter";
 import LearningRouter from "./LearningRouter";
 import LearningLayout from "../Layout/LearningLayout/LearningLayout";
 import Examlayout from "../Layout/ExamLayout/ExamLayout";
+import AdminLayout from "../Layout/AdminLayout/AdminLayout";
 
 export default function Routers() {
     return (
@@ -70,6 +71,14 @@ export default function Routers() {
                 element={
                     <LearningRouter
                         layout={LearningLayout}
+                    />
+                }
+            />
+            <Route
+                path="/admin"
+                element={
+                    <LearningRouter
+                        layout={AdminLayout}
                     />
                 }
             />
