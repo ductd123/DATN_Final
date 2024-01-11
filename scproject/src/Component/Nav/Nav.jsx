@@ -21,11 +21,6 @@ export default function Nav() {
   const pathName = location.pathname;
   const [loading, setLoading] = useState(false);
   const userData = useSelector((state) => state.user)
-  // const time = moment(new Date(data.exp * 1000)).format(
-  //   "MMMM Do YYYY, h:mm:ss a"
-  // );
-  // console.log(time);
-
   const [isShowMenuProfile, setIsShowMenuProfile] = useState(false);
 
   useEffect(() => {

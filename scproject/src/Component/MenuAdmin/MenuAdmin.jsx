@@ -1,4 +1,4 @@
-import { AuditOutlined, BookOutlined, CloudUploadOutlined, ExclamationCircleOutlined, FolderAddOutlined, HistoryOutlined, InboxOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { AuditOutlined, BookOutlined, CameraOutlined, CloudUploadOutlined, ExclamationCircleOutlined, FolderAddOutlined, HistoryOutlined, InboxOutlined, PlusCircleOutlined, UploadOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import { Modal, Menu, Drawer, message, Space, Select, Radio, Button, Upload } from 'antd';
 import React, { useEffect, useState } from 'react'
 import './MenuAdmin.scss';
@@ -17,7 +17,7 @@ function getItem(label, key, icon, children, type) {
     };
 }
 
-const MenuAdmin = ({ }) => {
+const MenuAdmin = ({ setVideoTNV }) => {
     const [modal, contextHolder] = Modal.useModal();
     const [showPanelHistory, setShowPanelHistory] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -38,6 +38,7 @@ const MenuAdmin = ({ }) => {
         getItem('Thêm chủ đề từ vựng', 'addTopic', <PlusCircleOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Thêm từ điển ký hiệu', 'addWord', <CloudUploadOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Tạo câu hỏi kiểm tra', 'addQuestion', <CloudUploadOutlined style={{ fontSize: '1.25rem' }} />),
+        getItem('Quay video TNV', 'tnv', <VideoCameraAddOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Lịch sử đăng tải', 'history', <HistoryOutlined style={{ fontSize: '1.25rem' }} />),
     ];
 
@@ -101,12 +102,6 @@ const MenuAdmin = ({ }) => {
                 message.error('Tạo câu hỏi thất bại. Vui lòng thử lại!!!');
             });
     };
-
-    const uploadFile = async () => {
-        const formData = new FormData();
-        formData.append("file", file);
-        let response = await apiUploadFile.uploadFile(file)
-    }
 
     const handleOkWord = async () => {
         setLoading(true);
@@ -204,16 +199,23 @@ const MenuAdmin = ({ }) => {
         console.log(e);
         switch (e.key) {
             case 'addTopic':
+                setVideoTNV(false);
                 setshowAddTopic(true);
                 break;
             case 'addQuestion':
+                setVideoTNV(false);
                 setshowCreateQuestions(true);
                 break;
             case 'addWord':
+                setVideoTNV(false);
                 setShowAddWord(true);
                 break;
             case 'history':
+                setVideoTNV(false);
                 setShowPanelHistory(true);
+                break;
+            case 'tnv':
+                setVideoTNV(true);
                 break;
             default:
                 // window.director(`./${e.key}`)

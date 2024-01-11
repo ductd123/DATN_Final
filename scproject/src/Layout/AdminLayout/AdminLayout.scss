@@ -1,0 +1,8 @@
+.setupMenu-button{
+    position: absolute;
+    top: 50%;
+    opacity: 0.1;
+    &:hover{
+        opacity: 1;
+    }
+}
