@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import MenuProfile from "./MenuProfile/MenuProfile";
 import { BookOutlined, CommentOutlined, LaptopOutlined, LoadingOutlined, PlusOutlined, ReadOutlined, TeamOutlined, UnderlineOutlined, UnorderedListOutlined, UploadOutlined } from "@ant-design/icons";
 
-import LoadingComponent from "../Loading/Loading";
+import LoadingComponent from "../Common/Loading/Loading";
 import apiUser from "../../Services/apiUser";
 import { setDataUser } from "../../Redux/slice/userDataSlice";
 import { message } from "antd";
@@ -20,12 +20,7 @@ export default function Nav() {
   const dispatch = useDispatch();
   const pathName = location.pathname;
   const [loading, setLoading] = useState(false);
-  const userData = useSelector((state) => state.user)
-  // const time = moment(new Date(data.exp * 1000)).format(
-  //   "MMMM Do YYYY, h:mm:ss a"
-  // );
-  // console.log(time);
-
+  const userData = useSelector((state) => state.userData.userData)
   const [isShowMenuProfile, setIsShowMenuProfile] = useState(false);
 
   useEffect(() => {
@@ -33,25 +28,22 @@ export default function Nav() {
   }, [dispatch]);
 
   const fetchData = async () => {
-    let data = {
-      page: 1,
-      size: 10,
-      text: "Duc",
-      ascending: true,
-    }
-    try {
-      let response = await apiUser.getUserInfo();
-      const items = [];
-      setLoading(false)
-      setTimeout(() => {
-        dispatch(setDataUser(response))
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      try {
+        let response = await apiUser.getUserInfo();
+        const items = [];
+        setLoading(false)
+        setTimeout(() => {
+          dispatch(setDataUser(response))
+          setLoading(false);
+        }, 500);
+      }
+      catch (error) {
+        console.log(error);
+        message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
         setLoading(false);
-      }, 500);
-    }
-    catch (error) {
-      console.log(error);
-      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
-      setLoading(false);
+      }
     }
   }
   const handleShowMenuProfile = () => {
@@ -113,21 +105,21 @@ export default function Nav() {
           className="nav__img"
           onClick={handleShowMenuProfile}
         />
-        {isShowMenuProfile && <MenuProfile />}
+        {isShowMenuProfile && <MenuProfile fetchData={fetchData} />}
       </div>
       <ul className="nav__ul">
-        <NavLink to="/home" className="nav__link">
+        {userData && <NavLink to="/home" className="nav__link">
           <li className={pathName === "/" || pathName === "/home" ? "nav__li nav__li--choose" : "nav__li"} >
             <CommentOutlined style={{ fontSize: '1.5rem' }} />
           </li>
-        </NavLink>
-        <NavLink to="/contact" className="nav__link">
+        </NavLink>}
+        {userData && <NavLink to="/contact" className="nav__link">
           <li className={pathName === "/contact" ? "nav__li nav__li--choose" : "nav__li"}>
             <TeamOutlined style={{ fontSize: '1.5rem' }} />
           </li>
-        </NavLink>
-        <NavLink to="/volunteers" className="nav__link">
-          <li className={pathName === "/volunteers" ? "nav__li nav__li--choose" : "nav__li"} >
+        </NavLink>}
+        <NavLink to="/learn" className="nav__link">
+          <li className={pathName === "/learn" ? "nav__li nav__li--choose" : "nav__li"} >
             <ReadOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
@@ -137,11 +129,11 @@ export default function Nav() {
           </li>
         </NavLink>
 
-        <NavLink to="/admin" className="nav__link">
+        {userData?.role && <NavLink to="/admin" className="nav__link">
           <li className={pathName === "/admin" ? "nav__li nav__li--choose" : "nav__li"}>
             <UploadOutlined style={{ fontSize: '1.5rem' }} />
           </li>
-        </NavLink>
+        </NavLink>}
       </ul>
       <LogOut className="nav__logout" onClick={() => HelperLogOut()} />
     </nav>

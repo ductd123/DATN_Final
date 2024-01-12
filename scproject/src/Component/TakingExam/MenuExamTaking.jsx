@@ -13,12 +13,11 @@ function getItem(label, key, icon, children, type) {
     };
 }
 
-const MenuTakingExam = ({ openConfirmExam, takingExam, onShowCreateQuestion }) => {
+const MenuTakingExam = ({ openConfirmExam, takingExam, setShowSelectTopic }) => {
     const [modal, contextHolder] = Modal.useModal();
     const [items, setItems] = useState([
         getItem('Kiểm tra theo bảng chữ cái', 'examABC', <BookOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Kiểm tra theo chủ đề', 'exam123', <BookOutlined style={{ fontSize: '1.25rem' }} />),
-        getItem('Tạo câu hỏi', 'addQA', <FolderAddOutlined style={{ fontSize: '1.25rem' }} />),
     ]);
     const onClick = (e) => {
         console.log(e);
@@ -39,22 +38,7 @@ const MenuTakingExam = ({ openConfirmExam, takingExam, onShowCreateQuestion }) =
                 }
                 break;
             case 'exam123':
-                if (takingExam) {
-                    modal.confirm({
-                        title: 'Cảnh báo',
-                        icon: <ExclamationCircleOutlined />,
-                        content: 'Bạn đang trong 1 bài kiểm tra. Bạn muốn thoát ra và lựa chọn 1 bài kiểm tra khác?',
-                        okText: 'Xác nhận',
-                        cancelText: 'Làm tiếp',
-                        onOk: () => openConfirmExam(),
-                    });
-                }
-                else {
-                    openConfirmExam();
-                }
-                break;
-            case 'addQA':
-                onShowCreateQuestion();
+                setShowSelectTopic(true);
                 break;
             default:
                 window.director(`./${e.key}`)

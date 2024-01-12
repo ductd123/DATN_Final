@@ -14,7 +14,7 @@ export default function PublicRouter({
     const dispatch = useDispatch();
     useEffect(() => {
         if (token) {
-            navigate("/home");
+            navigate("/");
         }
         
     }, [dispatch, token]);

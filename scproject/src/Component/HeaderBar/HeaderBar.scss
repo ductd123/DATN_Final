@@ -1,7 +1,7 @@
 @import "../../assets/scss/mixin.scss";
 
 .header-bar {
-  height: 82px;
+  max-height: 82px;
   border-bottom: solid;
   @include borderColor;
   display: flex;
@@ -10,9 +10,10 @@
   flex-direction: column;
   padding: 10px;
   &__name {
-    margin-bottom: 10px;
+    font-weight: 500;
   }
   &__form {
+    margin-top: 10px;
     display: flex;
     align-items: center;
     position: relative;

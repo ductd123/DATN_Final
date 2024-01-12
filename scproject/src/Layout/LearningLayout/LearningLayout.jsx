@@ -11,9 +11,8 @@ import TextArea from "antd/es/input/TextArea";
 import SearchWord from "./SearchWord";
 import videoSrc from "../../assets/video/doncoi.mp4";
 import noiay from "../../assets/video/noiaymemong.mp4";
-import { axiosLearningClient } from "../../Services/axiosClient";
 import { apiLearning } from "../../Services/apiLearning";
-import LoadingComponent from "../../Component/Loading/Loading";
+import LoadingComponent from "../../Component/Common/Loading/Loading";
 const q = {
     id: '204',
     question: 'Đây là gì?',
@@ -263,57 +262,6 @@ export default function LearningLayout() {
                 <div className="main-layout__children flex-center">
                     {showSlider && <VolunteerSlider />}
                     {showSearchWord && <SearchWord searchText={searchText} files={files} />}
-                    <Modal
-                        open={showPopupUploadVideo}
-                        title="Bổ sung thư viện ngôn ngữ ký hiệu"
-                        onOk={handleOk}
-                        onCancel={handleCancel}
-                        style={{ top: 20 }}
-                        footer={[
-                            <Button key="back" onClick={handleCancel}>
-                                Hủy bỏ
-                            </Button>,
-                            <Button
-                                key="link"
-                                type="primary"
-                                loading={loading}
-                                onClick={handleOk}
-                            >
-                                Tải lên
-                            </Button>,
-                        ]}
-                    >
-                        <p className="ant-upload-text" style={{ margin: '25px 0 10px 0' }}>Ngôn ngữ văn bản:</p>
-                        <TextArea placeholder="Lưu ý viết đúng chính tả và viết thường" autoSize onChange={(e) => setContent(e.target.value)} />
-                        <p className="ant-upload-text" style={{ margin: '10px 0 10px 0' }}>Ngôn ngữ ký hiệu:</p>
-                        <Dragger {...props}>
-                            <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
-                            </p>
-                            <p className="ant-upload-text">Click hoặc thả file của bạn vào đây</p>
-                            <p className="ant-upload-hint" style={{ color: 'red' }}>
-                                Lưu ý: chỉ hỗ trợ các file ảnh và video.
-                            </p>
-                            <p className="ant-upload-hint">
-                                Bổ sung thư viện ngôn ngữ ký hiệu cùng WeTalk!!!
-                            </p>
-                        </Dragger>
-                        <p className="ant-upload-text" style={{ margin: '10px 0 10px 0' }}>Chủ đề liên quan:</p>
-                        <Select
-                            mode=""
-                            style={{ width: '100%' }}
-                            options={topicInit}
-                            onChange={(e) => { handleChoseTopic(e) }}
-                        ></Select>
-                    </Modal>
-
-                    <Drawer title="Lịch sử đăng tải" placement="right" onClose={onCloseHistoryPanel} open={showHistoryPanel}>
-                        {files.map((item, i) => {
-                            return (
-                                <ImageCard file={item} key={i}></ImageCard>
-                            );
-                        })}
-                    </Drawer>
 
                     <Modal
                         open={showImage}

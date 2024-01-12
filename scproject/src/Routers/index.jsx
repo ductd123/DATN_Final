@@ -7,12 +7,13 @@ import PrivateRouter from "./PrivateRouter";
 import LearningRouter from "./LearningRouter";
 import LearningLayout from "../Layout/LearningLayout/LearningLayout";
 import Examlayout from "../Layout/ExamLayout/ExamLayout";
+import AdminLayout from "../Layout/AdminLayout/AdminLayout";
 
 export default function Routers() {
     return (
         <Routes>
             <Route
-                path="/"
+                path="/login"
                 element={
                     <PublicRouter
                         component={Login}
@@ -30,7 +31,7 @@ export default function Routers() {
                 }
             />
             <Route
-                path="/home"
+                path="/"
                 element={
                     <PrivateRouter
                         component={HomePageChat}
@@ -66,10 +67,18 @@ export default function Routers() {
                 }
             />
             <Route
-                path="/volunteers"
+                path="/learn"
                 element={
                     <LearningRouter
                         layout={LearningLayout}
+                    />
+                }
+            />
+            <Route
+                path="/admin"
+                element={
+                    <LearningRouter
+                        layout={AdminLayout}
                     />
                 }
             />

@@ -39,7 +39,7 @@ const Login = () => {
                     localStorage.setItem('access_token', response.access_token);
                     localStorage.setItem('refresh_token', response.refresh_token);
                     setTimeout(() => {
-                        navigate('/home');
+                        navigate('/');
                     }, 500);
                 }
             }

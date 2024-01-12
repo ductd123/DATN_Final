@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 import { Button, Empty, Input, Modal, message } from "antd";
 import apiUser from "../../Services/apiUser";
 import { SearchOutlined } from "@ant-design/icons";
-import LoadingComponent from "../Loading/Loading";
-
-export default function HeaderBar() {
+import LoadingComponent from "../Common/Loading/Loading";
+import logoHeader from "../../assets/image/logo.png"
+export default function HeaderBar({ disableSearch }) {
   const userData = useSelector((state) => state.userData.userData)
   const [resultSearch, setResultSearch] = useState();
   const [value, setValue] = useState('');
@@ -19,29 +19,31 @@ export default function HeaderBar() {
     setHeaderName(userData?.name);
   }, [userData]);
   const onSearch = async () => {
-    setLoading(true);
     let data = {
       page: 1,
       size: 10,
-      text: value || '',
+      text: value,
       ascending: true,
     }
-    try {
-      let response = await apiUser.searchUser(data);
-      setTimeout(() => {
+    if (value) {
+      setLoading(true);
+      try {
+        let response = await apiUser.searchUser(data);
+        setTimeout(() => {
+          setLoading(false);
+          const data = response.data.map((item) => ({
+            email: item.email,
+            name: item.name,
+            id: 1,
+          }));
+          setResultSearch(data);
+        }, 500);
+      }
+      catch (error) {
+        console.log(error);
+        message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
         setLoading(false);
-        const data = response.data.map((item) => ({
-          email: item.email,
-          name: item.name,
-          id: 1,
-        }));
-        setResultSearch(data);
-      }, 500);
-    }
-    catch (error) {
-      console.log(error);
-      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
-      setLoading(false);
+      }
     }
   };
   const handleChangeValue = (newValue) => {
@@ -99,12 +101,15 @@ export default function HeaderBar() {
       {resultSearch?.length === 0 && <div className="search" >
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />
       </div>}
-      <h4 className="header-bar__name">WeTalk - {headerName}</h4>
-      <form className="header-bar__form">
+      <h4 className="header-bar__name flex-center">
+        <img style={{ width: '24px', marginRight: '4px' }} src={logoHeader} />
+        - {headerName}
+      </h4>
+      {!disableSearch && <form className="header-bar__form">
         {/* <input className="header-bar__input" placeholder="Search..." /> */}
         <Input placeholder='Tìm kiếm bạn bè...' onChange={(e) => handleChangeValue(e.target.value)} style={{ width: '90%' }} />
         <Button onClick={onSearch} type="primary" className="header-bar__btn" icon={<SearchOutlined style={{ fontSize: '1.25rem' }} />} />
-      </form>
+      </form>}
       <Modal
         open={showInfo}
         onOk={() => requestAddFriend(userInfo.id)}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import HeaderBar from "../../Component/HeaderBar/HeaderBar";
 import { MenuStudyAI } from "..";
+import logoHeader from '../../assets/image/LogoHeaderBar.png'
 export default class LearningSideBar extends Component {
     constructor(props) {
         super(props);
@@ -12,7 +13,7 @@ export default class LearningSideBar extends Component {
     render() {
         return (<>
             <div className="main-layout__header-bar">
-                <HeaderBar />
+                <HeaderBar disableSearch={true}/>
             </div>
             <div className="main-layout__content">
                 <MenuStudyAI

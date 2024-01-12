@@ -10,13 +10,11 @@ import { useSelector } from "react-redux";
 import apiUser from "../../../Services/apiUser";
 import dayjs from "dayjs";
 import UserInfo from "../../Common/userInfo";
-import { apiUploadFile } from "../../../Services/apiLearning";
 import ImgCrop from "antd-img-crop";
-import Item from "antd/es/list/Item";
+import LoadingComponent from "../../Common/Loading/Loading";
 
 
-
-export default function MenuProfile() {
+export default function MenuProfile({ fetchData }) {
   const userData = useSelector((state) => state.userData.userData)
   const [showInfo, setShowInfo] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -34,7 +32,8 @@ export default function MenuProfile() {
   }
 
   const onCloseUpdateInfo = () => {
-    setShowUpdateInfo(false)
+    setShowUpdateInfo(false);
+    setUserInfoUpdate(userData);
   }
   const openUpdateInfo = () => {
     setShowInfo(false);
@@ -52,10 +51,12 @@ export default function MenuProfile() {
     try {
       const formData = new FormData();
       formData.append("file", fileAvt);
-      let response1 = await apiUser.uploadAvt(formData);
-      let response2 = await apiUser.updateUser(data);
-      setLoading(false)
+      if (fileAvt) {
+        await apiUser.uploadAvt(formData);
+      }
+      await apiUser.updateUser(data);
       setTimeout(() => {
+        fetchData();
         message.success('Cập nhật thông tin thành công.');
         setUserInfoUpdate(userData);
         setShowUpdateInfo(false);
@@ -67,6 +68,7 @@ export default function MenuProfile() {
       message.error('Đã xảy ra lỗi, vui lòng thử lại');
     }
   }
+
   const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
@@ -129,6 +131,7 @@ export default function MenuProfile() {
 
   return (
     <div className="menu-profile">
+      <LoadingComponent loading={loading} />
       <ul className="menu-profile__menu">
         <li onClick={() => { setShowInfo(true) }} className="menu-profile__list">
           <Edit className="menu-profile__icon" />Thông tin cá nhân
@@ -206,12 +209,17 @@ export default function MenuProfile() {
               width: '100%',
             }}
             format="DD/MM/YYYY"
-            defaultValue={dayjs(userInfoUpdate?.birthDay || '01/01/2000', "DD/MM/YYYY")}
+            defaultValue={dayjs(userInfoUpdate?.birthDay || '2000-01-01', "YYYY-MM-DD")}
             placeholder={userData?.birthDay || "Chọn ngày sinh của bạn"}
-            // onChange={(e) => handleValueChange('birthDay', `${e.$D}/${e.$M + 1}/${e.$y}`)}
-            onChange={(e) => handleValueChange('birthDay', e.$d)}
-          />
+            onChange={(e) => {
+              const year = e?.$y || 2000;
+              const month = (e?.$M + 1).toString().padStart(2, '0');
+              const day = (e?.$D || '01').toString().padStart(2, '0');
 
+              handleValueChange('birthDay', `${year}-${month}-${day}`);
+            }}
+          // onChange={(e) => handleValueChange('birthDay', e.$d)}
+          />
           <Title text="Giới tính" />
           <Select placeholder="Chọn giới tính của bạn" defaultValue={userInfoUpdate?.gender} style={{ width: '100%' }} onChange={(e) => handleValueChange('gender', e)}>
             <Select.Option value="MALE">Nam</Select.Option>

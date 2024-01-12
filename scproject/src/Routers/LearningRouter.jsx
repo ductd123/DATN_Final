@@ -14,7 +14,7 @@ export default function LearningRouter({
     const dispatch = useDispatch();
     useEffect(() => {
         if (!token) {
-            navigate("/");
+            navigate("/learn");
         }
     }, [dispatch, token]);
 
