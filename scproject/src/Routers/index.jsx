@@ -13,7 +13,7 @@ export default function Routers() {
     return (
         <Routes>
             <Route
-                path="/"
+                path="/login"
                 element={
                     <PublicRouter
                         component={Login}
@@ -31,7 +31,7 @@ export default function Routers() {
                 }
             />
             <Route
-                path="/home"
+                path="/"
                 element={
                     <PrivateRouter
                         component={HomePageChat}
@@ -67,7 +67,7 @@ export default function Routers() {
                 }
             />
             <Route
-                path="/volunteers"
+                path="/learn"
                 element={
                     <LearningRouter
                         layout={LearningLayout}

@@ -13,7 +13,7 @@ export default function PrivateRouter({
     const dispatch = useDispatch();
     useEffect(() => {
         if (!token) {
-            navigate("/");
+            navigate("/learn");
         }
     }, [dispatch, token]);
 
