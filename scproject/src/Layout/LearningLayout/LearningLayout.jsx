@@ -62,17 +62,23 @@ export default function LearningLayout() {
         handleGetListFile();
     }, [idTopic]);
     const fetchData = async () => {
-        let response = await apiLearning.getTopic();
-        const items = [];
-        response.data.forEach((element, index) => {
-            items.push({
-                id: element.id,
-                value: element.id,
-                label: element.content,
-            })
-        });
-        setTopicInit(items);
+        try {
+            let response = await apiLearning.getTopic();
+            const items = [];
+            response.data.forEach((element, index) => {
+                items.push({
+                    id: element.id,
+                    value: element.id,
+                    label: element.content,
+                })
+            });
+            setTopicInit(items);
+            
+        } catch (error) {
+            
+        }
     }
+
     const handleClickMenu = () => {
         setConfirmStudy(true)
     }
@@ -121,26 +127,30 @@ export default function LearningLayout() {
         }
     };
     const handleGetListFile = async () => {
-        setLoading(true);
-        let response = await apiLearning.getTuDien(idTopic);
-        if (response.code === 200) {
-            setTimeout(() => {
-                setLoading(false);
-                let listResponse = response.data.map(item => {
-                    return {
-                        content: item.content,
-                        type: item.videoLocation === "" ? 1 : 2,
-                        preview: item.videoLocation === "" ? item.imageLocation : item.videoLocation,
-                    }
-                });
-                setShowFile(listResponse);
-            }, 500);
-        }
-        else {
-            setTimeout(() => {
-                setLoading(false);
-                message.error(`Tìm chủ đề thất bại. Vui lòng thử lại!!!`);
-            }, 3000);
+        try {
+            setLoading(true);
+            let response = await apiLearning.getTuDien(idTopic);
+            if (response.code === 200) {
+                setTimeout(() => {
+                    setLoading(false);
+                    let listResponse = response.data.map(item => {
+                        return {
+                            content: item.content,
+                            type: item.videoLocation === "" ? 1 : 2,
+                            preview: item.videoLocation === "" ? item.imageLocation : item.videoLocation,
+                        }
+                    });
+                    setShowFile(listResponse);
+                }, 500);
+            }
+            else {
+                setTimeout(() => {
+                    setLoading(false);
+                    message.error(`Tìm chủ đề thất bại. Vui lòng thử lại!!!`);
+                }, 3000);
+            }  
+        } catch (error) {
+            
         }
     }
     const handleCancel = () => {
