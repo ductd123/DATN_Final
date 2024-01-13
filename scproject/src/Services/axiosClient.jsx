@@ -10,7 +10,7 @@ const updateToken = () => {
 };
 
 export const axiosLearningClient = axios.create({
-  baseURL: "http://202.191.56.11:8060/",
+  baseURL: "http://wetalk.ibme.edu.vn:8060/",
   headers: {
     "content-type": "application/json",
     // Authorization: `Bearer ${token}`,
@@ -18,14 +18,14 @@ export const axiosLearningClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 export  const axiosLoginClient = axios.create({
-  baseURL: "http://202.191.56.11:8080/api/",
+  baseURL: "http://wetalk.ibme.edu.vn:8080/api/",
   headers: {
     "content-type": "application/json",
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
 export  const axiosUserClient = axios.create({
-  baseURL: "http://202.191.56.11:8080/",
+  baseURL: "http://wetalk.ibme.edu.vn:8080/",
   headers: {
     "content-type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -33,10 +33,9 @@ export  const axiosUserClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 export  const axiosUploadVideoClient = axios.create({
-  baseURL: "http://202.191.56.11:8090/",
+  baseURL: "http://wetalk.ibme.edu.vn:8090/",
   headers: {
     "content-type": 'multipart/form-data',
-    Authorization: `Bearer ${token}`,
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });

@@ -52,9 +52,9 @@ const AdminLayout = () => {
             const response = await fetch(recordedVideo);
             console.log(response);
             // setBinaryData(response);
-          } catch (error) {
+        } catch (error) {
             console.error("Error fetching video binary:", error);
-          }
+        }
     };
 
     const handleDownload = async () => {
@@ -75,9 +75,37 @@ const AdminLayout = () => {
         console.log(response);
     }
 
-    const handleViewRecordedVideo = () => {
+    const handleViewRecordedVideo = async () => {
         // Display the recorded video
         setRecordedVideo(mediaBlobUrl);
+        console.log(mediaBlobUrl);
+        const response = await fetch(mediaBlobUrl);
+        console.log(response);
+        try {
+            const response = await fetch(mediaBlobUrl);
+            console.log(response);
+    
+            const blob = await response.blob();
+    
+            // Get the Blob's metadata (e.g., type, lastModified) from the original Blob
+            const metadata = { type: blob.type, lastModified: blob.lastModified };
+    
+            // Create a new File object from the Blob and metadata
+            const file = new File([blob], 'videoFile.mp4', metadata);
+            console.log(file);
+    
+            // Create a FormData object and append the file to it
+            const formData = new FormData();
+            formData.append("file", file);
+    
+            // Now you can log or use formData
+            console.log(formData);
+    
+            // Assuming apiUploadFile.uploadFile is an asynchronous function
+            await apiUploadFile.uploadFile(formData);
+        } catch (error) {
+            console.error('Error fetching and converting to file:', error);
+        }
     };
 
     const handleStartRecording = () => {

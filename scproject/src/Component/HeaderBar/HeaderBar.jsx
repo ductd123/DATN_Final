@@ -14,7 +14,7 @@ export default function HeaderBar({ disableSearch }) {
   const [showInfo, setShowInfo] = useState();
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState();
-
+  const [showResultSearch, setshowResultSearch] = useState(false);
   useEffect(() => {
     setHeaderName(userData?.name);
   }, [userData]);
@@ -34,7 +34,7 @@ export default function HeaderBar({ disableSearch }) {
           const data = response.data.map((item) => ({
             email: item.email,
             name: item.name,
-            id: 1,
+            id: item.id,
           }));
           setResultSearch(data);
         }, 500);
@@ -51,10 +51,11 @@ export default function HeaderBar({ disableSearch }) {
     setResultSearch();
   };
 
-  const onSelectUser = async (id) => {
+  const onSelectUser = async (d) => {
+    console.log(d);
     setLoading(true);
     try {
-      let response = await apiUser.getUserById(id);
+      let response = await apiUser.getUserById(d.id);
       setShowInfo(true);
       setTimeout(() => {
         setLoading(false);
@@ -72,11 +73,12 @@ export default function HeaderBar({ disableSearch }) {
 
     setLoading(true);
     try {
-      let response = await apiUser.requestAddFr(1);
+      let response = await apiUser.requestAddFr(id);
       setShowInfo(true);
       setTimeout(() => {
         setShowInfo(false);
         setLoading(false);
+        message.success("Gửi lời mời kết bạn thành công.")
         setUserInfo(response)
       }, 500);
     }
@@ -92,7 +94,7 @@ export default function HeaderBar({ disableSearch }) {
       <LoadingComponent loading={loading} />
       {resultSearch?.length !== 0 && <div className="search" >
         {(resultSearch || []).map((d) => (
-          <div onClick={() => onSelectUser(d.id)} className="search-result flex-center">
+          <div onClick={() => onSelectUser(d)} className="search-result flex-center">
             <div className="search-result-header">{d.name}</div>
             <img className="search-result-img" src="https://picsum.photos/204"></img>
           </div>
