@@ -33,7 +33,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
             getItem('Học tập theo bảng chữ cái', 'sub1', <FileWordOutlined style={{ fontSize: '1.25rem' }} />, [
                 getItem('Theo chữ cái', "chucai"),
                 getItem('Theo chữ số', "chuso"),
-                getItem('Theo dấu', "dau"),
+                // getItem('Theo dấu', "dau"),
             ]),
             getItem('Học tập theo chủ đề', 'sub2', <FileImageOutlined style={{ fontSize: '1.25rem' }} />,
                 [getItem(<Select placeholder="Chọn chủ đề" suffixIcon={null} style={{ width: '100%' }} mode="" options={topicItems} onChange={(e) => { setLabelForSelect(e) }} />, 'SearchTopic')]

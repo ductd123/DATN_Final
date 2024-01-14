@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "./Nav.scss";
-import { MessageCircle, Book, LogOut, Video, BookOpen, Edit } from "react-feather";
+import { LogOut, } from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import MenuProfile from "./MenuProfile/MenuProfile";
-import { BookOutlined, CommentOutlined, LaptopOutlined, LoadingOutlined, PlusOutlined, ReadOutlined, TeamOutlined, UnderlineOutlined, UnorderedListOutlined, UploadOutlined } from "@ant-design/icons";
+import { CommentOutlined, LaptopOutlined, ReadOutlined, SettingOutlined, TeamOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import blank from '../../assets/image/AvtBlank.jpg';
 import LoadingComponent from "../Common/Loading/Loading";
 import apiUser from "../../Services/apiUser";
 import { setDataUser } from "../../Redux/slice/userDataSlice";
 import { message } from "antd";
 import HelperLogOut from "../../helpers/Logout";
-// import moment from "moment";
 
 
 
@@ -84,10 +83,14 @@ export default function Nav() {
             <LaptopOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>
-
+        {/* <NavLink to="/volunteer" className="nav__link">
+          <li className={pathName === "/volunteer" ? "nav__li nav__li--choose" : "nav__li"}>
+            <VideoCameraAddOutlined style={{ fontSize: '1.5rem' }} />
+          </li>
+        </NavLink> */}
         {userData?.role && <NavLink to="/admin" className="nav__link">
           <li className={pathName === "/admin" ? "nav__li nav__li--choose" : "nav__li"}>
-            <UploadOutlined style={{ fontSize: '1.5rem' }} />
+            <SettingOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>}
       </ul>
