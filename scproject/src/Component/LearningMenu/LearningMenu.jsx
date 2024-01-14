@@ -50,11 +50,11 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
     const [items, setItems] = useState();
 
 
-    async function fetchData1() {
-        let response = await apiLearning.getTopic();
+    const fetchData1 = async () => {
         const items = [];
-
-        if (response.code === 200) {
+        setLoading(true);
+        try {
+            let response = await apiLearning.getTopic();
             setTimeout(() => {
                 response.data.forEach((element, index) => {
                     items.push({
@@ -66,8 +66,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
                 setLoading(false);
                 setTopicItems(items);
             }, 500);
-        }
-        else {
+        } catch (error) {
             setTimeout(() => {
                 setLoading(false);
                 message.error(`Load trang thất bại. Vui lòng thử lại!!!`);

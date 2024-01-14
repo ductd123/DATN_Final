@@ -62,6 +62,7 @@ export default function LearningLayout() {
         handleGetListFile();
     }, [idTopic]);
     const fetchData = async () => {
+        setLoading(true)
         try {
             let response = await apiLearning.getTopic();
             const items = [];
@@ -75,60 +76,23 @@ export default function LearningLayout() {
             setTopicInit(items);
 
         } catch (error) {
-
+            setLoading(false);
         }
     }
-
     const handleClickMenu = () => {
         setConfirmStudy(true);
     }
-    const handleChoseTopic = (e) => {
-        setTopicChose(e)
-    }
+
     const openPanelHistory = () => {
         setshowHistoryPanel(true);
     }
     const onUploadVideo = () => {
         setshowPopupUploadVideo(true);
     }
-    const handleOk = async () => {
-        setLoading(true);
-        let data = {}
-        if (isImage) {
-            data = {
-                content: content,
-                imageLocation: linkFile,
-                videoLocation: '',
-                topic_id: topicChose,
-            }
-        }
-        else {
-            data = {
-                content: content,
-                imageLocation: '',
-                videoLocation: linkFile,
-                topic_id: topicChose,
-            }
-        }
-        let response = await apiLearning.themTuDien(data);
-        if (response.code === 200) {
-            setTimeout(() => {
-                setLoading(false);
-                setshowPopupUploadVideo(false);
-                message.success(`Thêm ${data.content} lên thành công.`);
-            }, 500);
-        }
-        else {
-            setTimeout(() => {
-                setLoading(false);
-                setshowPopupUploadVideo(false);
-                message.error(`Thêm ${data.content} thất bại. Vui lòng thử lại!!!`);
-            }, 3000);
-        }
-    };
     const handleGetListFile = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
+            setLoading(false);
             let response = await apiLearning.getTuDien(idTopic);
             if (response.code === 200) {
                 setTimeout(() => {

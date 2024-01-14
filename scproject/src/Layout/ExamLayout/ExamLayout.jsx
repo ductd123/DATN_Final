@@ -24,17 +24,24 @@ const Examlayout = () => {
     const [confirmExam, setConfirmExam] = useState(false);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
+        setLoading(true);
         async function fetchData() {
-            let response = await apiLearning.getTopic();
-            const items = [];
-            response.data.forEach((element, index) => {
-                items.push({
-                    id: element.id,
-                    value: element.id,
-                    label: element.content,
-                })
-            });
-            setTopicInit(items);
+            try {
+                setLoading(false);
+                let response = await apiLearning.getTopic();
+                const items = [];
+                response.data.forEach((element, index) => {
+                    items.push({
+                        id: element.id,
+                        value: element.id,
+                        label: element.content,
+                    })
+                });
+                setTopicInit(items);
+            } catch (error) {
+                setLoading(false);
+                message.error("Kết nối không ổn định, vui lòng thử lại.")
+            }
         }
         fetchData()
     }, []);

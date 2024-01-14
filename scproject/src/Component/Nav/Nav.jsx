@@ -41,7 +41,8 @@ export default function Nav() {
       }
       catch (error) {
         console.log(error);
-        message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
+        setLoading(false);
+        message.warning("Bạn đang sử dụng WeTalk mà không đăng nhập")
         setLoading(false);
       }
     }
