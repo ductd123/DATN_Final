@@ -5,7 +5,9 @@ import { Button, Empty, Input, Modal, message } from "antd";
 import apiUser from "../../Services/apiUser";
 import { SearchOutlined } from "@ant-design/icons";
 import LoadingComponent from "../Common/Loading/Loading";
-import logoHeader from "../../assets/image/logo.png"
+import logoHeader from "../../assets/image/logo.png";
+import blank from '../../assets/image/AvtBlank.jpg';
+
 export default function HeaderBar({ disableSearch }) {
   const userData = useSelector((state) => state.userData.userData)
   const [resultSearch, setResultSearch] = useState();
@@ -96,7 +98,7 @@ export default function HeaderBar({ disableSearch }) {
         {(resultSearch || []).map((d) => (
           <div onClick={() => onSelectUser(d)} className="search-result flex-center">
             <div className="search-result-header">{d.name}</div>
-            <img className="search-result-img" src="https://picsum.photos/204"></img>
+            <img className="search-result-img" src={d.avatarLocation || blank}></img>
           </div>
         ))}
       </div>}

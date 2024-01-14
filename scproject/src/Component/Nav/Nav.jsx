@@ -5,7 +5,7 @@ import { MessageCircle, Book, LogOut, Video, BookOpen, Edit } from "react-feathe
 import { useDispatch, useSelector } from "react-redux";
 import MenuProfile from "./MenuProfile/MenuProfile";
 import { BookOutlined, CommentOutlined, LaptopOutlined, LoadingOutlined, PlusOutlined, ReadOutlined, TeamOutlined, UnderlineOutlined, UnorderedListOutlined, UploadOutlined } from "@ant-design/icons";
-
+import blank from '../../assets/image/AvtBlank.jpg';
 import LoadingComponent from "../Common/Loading/Loading";
 import apiUser from "../../Services/apiUser";
 import { setDataUser } from "../../Redux/slice/userDataSlice";
@@ -56,7 +56,7 @@ export default function Nav() {
       <LoadingComponent loading={loading} />
       <div className="nav__profile">
         <img
-          src="https://picsum.photos/200"
+          src={userData?.avatarLocation || blank}
           alt=""
           className="nav__img"
           onClick={handleShowMenuProfile}
