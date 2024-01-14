@@ -1,4 +1,5 @@
 import bg from '../../assets/image/wallhaven-o5762l_2560x1440.png';
+import blank from '../../assets/image/AvtBlank.jpg';
 
 const UserInfo = ({ userData }) => {
     return (<>
@@ -6,8 +7,8 @@ const UserInfo = ({ userData }) => {
             <img style={{ width: '100%' }} src={bg}></img>
         </div>
         <div className="nav-userInfo-header">
-            <img src="https://picsum.photos/200" className="nav-userInfo-header-avt"></img>
-            <span className="nav-userInfo-header-name">{userData.name}</span>
+            <img src={userData?.avatarLocation || blank} className="nav-userInfo-header-avt"></img>
+            <span className="nav-userInfo-header-name">{userData?.name}</span>
         </div>
         <div style={{ height: '8px', backgroundColor: '#efefef', borderRadius: '4px' }}></div>
         <div className="nav-userInfo-detail">
