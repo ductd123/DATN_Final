@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import anh from '../../assets/image/logoWetalk.png';
 import './Login.scss';
-import { Tooltip } from 'antd';
+import { Tooltip, message } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
 import apiLogin from '../../Services/apiLogin';
 
@@ -45,6 +45,7 @@ const Login = () => {
             }
         } catch (error) {
             console.error('Error during login:', error);
+            message.error("Đăng nhập thất bại, tài khoản hoặc mật khẩu không chính xác.")
             setInvalidPass(true);
         }
     };

@@ -29,6 +29,10 @@ export const apiLearning = {
         const url = `questions`;
         return axiosLearningClient.post(url, data);
     },
+    searchVocab: (data) => {
+        const url = `vocabularies/api/search`;
+        return axiosLearningClient.post(url, data);
+    },
 };
 
 export const apiUploadFile = {

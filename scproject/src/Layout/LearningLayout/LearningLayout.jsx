@@ -62,6 +62,7 @@ export default function LearningLayout() {
         handleGetListFile();
     }, [idTopic]);
     const fetchData = async () => {
+        setLoading(true)
         try {
             let response = await apiLearning.getTopic();
             const items = [];
@@ -73,62 +74,25 @@ export default function LearningLayout() {
                 })
             });
             setTopicInit(items);
-            
+
         } catch (error) {
-            
+            setLoading(false);
         }
     }
-
     const handleClickMenu = () => {
-        setConfirmStudy(true)
+        setConfirmStudy(true);
     }
-    const handleChoseTopic = (e) => {
-        setTopicChose(e)
-    }
+
     const openPanelHistory = () => {
         setshowHistoryPanel(true);
     }
     const onUploadVideo = () => {
         setshowPopupUploadVideo(true);
     }
-    const handleOk = async () => {
-        setLoading(true);
-        let data = {}
-        if (isImage) {
-            data = {
-                content: content,
-                imageLocation: linkFile,
-                videoLocation: '',
-                topic_id: topicChose,
-            }
-        }
-        else {
-            data = {
-                content: content,
-                imageLocation: '',
-                videoLocation: linkFile,
-                topic_id: topicChose,
-            }
-        }
-        let response = await apiLearning.themTuDien(data);
-        if (response.code === 200) {
-            setTimeout(() => {
-                setLoading(false);
-                setshowPopupUploadVideo(false);
-                message.success(`Thêm ${data.content} lên thành công.`);
-            }, 500);
-        }
-        else {
-            setTimeout(() => {
-                setLoading(false);
-                setshowPopupUploadVideo(false);
-                message.error(`Thêm ${data.content} thất bại. Vui lòng thử lại!!!`);
-            }, 3000);
-        }
-    };
     const handleGetListFile = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
+            setLoading(false);
             let response = await apiLearning.getTuDien(idTopic);
             if (response.code === 200) {
                 setTimeout(() => {
@@ -148,9 +112,9 @@ export default function LearningLayout() {
                     setLoading(false);
                     message.error(`Tìm chủ đề thất bại. Vui lòng thử lại!!!`);
                 }, 3000);
-            }  
+            }
         } catch (error) {
-            
+
         }
     }
     const handleCancel = () => {
@@ -160,20 +124,7 @@ export default function LearningLayout() {
         setshowHistoryPanel(false);
     };
     const [showImage, setShowImage] = useState(false);
-    const [files, setShowFile] = useState([
-        { name: "asss", size: "12122", preview: "https://picsum.photos/200", type: 1 },
-        { name: "video", size: "12122", preview: videoSrc, type: 2 },
-        { name: "video1", size: "12122", preview: noiay, type: 2 },
-        { name: "anh 2", size: "12122", preview: "https://picsum.photos/204", type: 1 },
-        { name: "Anh 4", size: "12122", preview: "https://picsum.photos/203", type: 1 },
-        { name: "Anh 6", size: "12122", preview: "https://picsum.photos/207", type: 1 },
-        { name: "asss", size: "12122", preview: "https://picsum.photos/200", type: 1 },
-        { name: "video", size: "12122", preview: videoSrc, type: 2 },
-        { name: "video1", size: "12122", preview: noiay, type: 2 },
-        { name: "anh 2", size: "12122", preview: "https://picsum.photos/204", type: 1 },
-        { name: "Anh 4", size: "12122", preview: "https://picsum.photos/203", type: 1 },
-        { name: "Anh 6", size: "12122", preview: "https://picsum.photos/207", type: 1 },
-    ]);
+    const [files, setShowFile] = useState([]);
     const stopVideo = () => {
         if (videoRef.current) {
             videoRef.current.pause();
@@ -191,10 +142,35 @@ export default function LearningLayout() {
         setShowSlider(false);
     }
 
-    const handleSearch = (e) => {
+    const handleSearch = async (e) => {
         setSearchText(e);
-        openSearchWord()
-        console.log('tìm', e);
+        openSearchWord();
+        setLoading(true);
+        let data = {
+            page: 1,
+            size: 10,
+            text: e,
+            ascending: true,
+            orderBy: "",
+        }
+        try {
+            let response = await apiLearning.searchVocab(data);
+            setTimeout(() => {
+                setLoading(false);
+                const data1 = response.data.map((item) => ({
+                    content: item.content,
+                    preview: item.imageLocation !== "" ? item.imageLocation : item.videoLocation,
+                    type: item.imageLocation !== "" ? 1 : 2,
+                    id: item.id,
+                }));
+                setShowFile(data1)
+            }, 500);
+        }
+        catch (error) {
+            console.log(error);
+            message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
+            setLoading(false);
+        }
     }
 
     const handleOpenDetailFile = (file) => {
@@ -203,6 +179,7 @@ export default function LearningLayout() {
     }
     const handleClickOptions = (item) => {
         setSearchText(item);
+
         openSearchWord();
     }
     const ImageCard = ({ file }) => {
@@ -306,7 +283,7 @@ export default function LearningLayout() {
                     >
                         {valueOptions.map((item, index) => {
                             return (
-                                <Button className="button-option" key={index} style={{ minWidth: '45px' }} onClick={() => handleClickOptions(item)}>{item}</Button>
+                                <Button className="button-option" key={index} style={{ minWidth: '45px' }} onClick={() => handleSearch(item)}>{item}</Button>
                             )
                         })}
                     </Modal>

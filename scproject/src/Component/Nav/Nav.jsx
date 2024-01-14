@@ -41,7 +41,8 @@ export default function Nav() {
       }
       catch (error) {
         console.log(error);
-        message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
+        setLoading(false);
+        message.warning("Bạn đang sử dụng WeTalk mà không đăng nhập")
         setLoading(false);
       }
     }
@@ -50,51 +51,6 @@ export default function Nav() {
     setIsShowMenuProfile(!isShowMenuProfile);
   };
 
-  const testRequest = async () => {
-    let data = {
-      page: 1,
-      size: 10,
-      text: "Duc",
-      ascending: true,
-    }
-    try {
-      let response = await apiUser.requestAddFr(1);
-      const items = [];
-      setLoading(false)
-      setTimeout(() => {
-        console.log(response);
-        setLoading(false);
-      }, 500);
-    }
-    catch (error) {
-      console.log(error);
-      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
-      setLoading(false);
-    }
-  }
-
-  const testGet = async () => {
-    let data = {
-      page: 1,
-      size: 10,
-      text: "Duc",
-      ascending: true,
-    }
-    try {
-      let response = await apiUser.listRequestAddFr();
-      const items = [];
-      setLoading(false)
-      setTimeout(() => {
-        console.log(response);
-        setLoading(false);
-      }, 500);
-    }
-    catch (error) {
-      console.log(error);
-      message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
-      setLoading(false);
-    }
-  }
   return (
     <nav className="nav">
       <LoadingComponent loading={loading} />
@@ -108,8 +64,8 @@ export default function Nav() {
         {isShowMenuProfile && <MenuProfile fetchData={fetchData} />}
       </div>
       <ul className="nav__ul">
-        {userData && <NavLink to="/home" className="nav__link">
-          <li className={pathName === "/" || pathName === "/home" ? "nav__li nav__li--choose" : "nav__li"} >
+        {userData && <NavLink to="/" className="nav__link">
+          <li className={pathName === "/" || pathName === "/" ? "nav__li nav__li--choose" : "nav__li"} >
             <CommentOutlined style={{ fontSize: '1.5rem' }} />
           </li>
         </NavLink>}

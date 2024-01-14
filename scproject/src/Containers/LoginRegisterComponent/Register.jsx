@@ -150,19 +150,8 @@ class Register extends Component {
             try {
                 const response = await apiSignUp.validateOtp(data)
                 this.setState({
-                    step1: false,
-                }, () => { });
-                console.log('Server Response:', response);
-                if (response.code === 200) {
-                    this.setState({
-                        step1: true,
-                    }, () => { });
-                }
-                else {
-                    this.setState({
-                        invalidOTP: false,
-                    })
-                }
+                    step1: true,
+                }, () => {});
                 // Thực hiện xử lý response tại đây nếu cần
             } catch (error) {
                 console.error('Error during registration:', error);
@@ -199,38 +188,6 @@ class Register extends Component {
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
-                                        {/* <div className="login-input " style={this.state.invalidPhoneNum ? { border: '2px solid red' } : {}}>
-                                            <i className="fa fa-phone"></i>
-                                            <input className="login-user" value={this.state.phoneNumber} onBlur={this.handleChangePhoneNumber} onChange={this.handleChangePhoneNumber} type="email" placeholder="Số điện thoại" />
-                                            {this.state.invalidPhoneNum && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
-                                                <WarningTwoTone className='icon-warning' />
-                                            </Tooltip>}
-                                        </div>
-                                        <div className="login-input " style={this.state.invalidAddress ? { border: '2px solid red' } : {}}>
-                                            <i className="fa-solid fa-address-card"></i>
-                                            <input className="login-user" value={this.state.address} onBlur={this.handleChangeAddress} onChange={this.handleChangeAddress} type="email" placeholder="Địa chỉ" />
-                                            {this.state.invalidAddress && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
-                                                <WarningTwoTone className='icon-warning' />
-                                            </Tooltip>}
-                                        </div> */}
-                                    </div>
-                                </div>
-                                <div className="login-right">
-                                    <div className="login-detail">
-                                        {/* <div className="login-input" style={this.state.invalidDate ? { border: '2px solid red' } : {}}>
-                                            <i className="fa fa-calendar"></i>
-                                            <input onBlur={this.handleChangeBirthday} onChange={this.handleChangeBirthday} value={this.state.birthday} type="date" />
-                                            {this.state.invalidDate && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
-                                                <WarningTwoTone className='icon-warning' />
-                                            </Tooltip>}
-                                        </div>
-                                        <div className="login-input " style={this.state.invalidGender ? { border: '2px solid red' } : {}}>
-                                            <i className="fa-solid fa-transgender-alt"></i>
-                                            <input className="login-user" value={this.state.gender} onBlur={this.handleChangeGender} onChange={this.handleChangeGender} type="text" placeholder="Giới tính" />
-                                            {this.state.invalidGender && <Tooltip placement='top' title={"Vui lòng không để trống"} color={'red'}>
-                                                <WarningTwoTone className='icon-warning' />
-                                            </Tooltip>}
-                                        </div> */}
                                         <div className="login-input " style={this.state.invalidPass ? { border: '2px solid red' } : {}}>
                                             <i className="fa-solid fa-lock"></i>
                                             <input className="login-user" value={this.state.password} onBlur={this.handleChangePassword} onChange={this.handleChangePassword} type="password" placeholder="Mật khẩu" />
@@ -246,7 +203,6 @@ class Register extends Component {
                                                 <WarningTwoTone className='icon-warning' />
                                             </Tooltip>}
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -254,7 +210,7 @@ class Register extends Component {
                                 <button className="login-input buttoni" onClick={this.checkAll}>Đăng ký</button>
                             </div>
                             <div className="login-forgot flex" style={{ color: 'blue', marginBottom: '10px', justifyContent: 'center' }}>
-                                <Link to="/">Trở về trang đăng nhập</Link>
+                                <Link to="/login">Trở về trang đăng nhập</Link>
                             </div>
                         </div>
 
