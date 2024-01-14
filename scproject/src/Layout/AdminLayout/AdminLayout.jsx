@@ -20,7 +20,6 @@ const AdminLayout = () => {
     const [loading, setLoading] = useState(false);
     const [recordedVideo, setRecordedVideo] = useState(null);
     const [binaryData, setBinaryData] = useState(null);
-    const [videoBlob, setVideoBlob] = useState(null);
     const { status, startRecording, stopRecording, mediaBlobUrl, duration } = useReactMediaRecorder({
         video: true,
     });
@@ -29,18 +28,13 @@ const AdminLayout = () => {
     useEffect(() => {
         initPendingData();
     }, [])
-    useEffect(() => {
-        console.log("Duration:", duration);
-    }, [duration]);
     const formatTime = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const remainingSeconds = seconds % 60;
-
         const formattedHours = String(hours).padStart(2, '0');
         const formattedMinutes = String(minutes).padStart(2, '0');
         const formattedSeconds = String(remainingSeconds).padStart(2, '0');
-
         return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     };
 
@@ -51,57 +45,38 @@ const AdminLayout = () => {
         try {
             const response = await fetch(recordedVideo);
             console.log(response);
-            // setBinaryData(response);
         } catch (error) {
             console.error("Error fetching video binary:", error);
         }
     };
 
     const handleDownload = async () => {
-        // const a = document.createElement('a');
-        // a.href = mediaBlobUrl;
-        // a.download = 'recorded-video.mp4';
-        // a.click();
-        // Create a Blob URL for the videoBlob
-        const formData = new FormData();
-        formData.append("file", binaryData);
-        if (binaryData) {
-            await apiUploadFile.uploadFile(formData);
+        try {
+            const formData = new FormData();
+            formData.append("file", binaryData);
+            if (binaryData) {
+                await apiUploadFile.uploadFile(formData);
+            }
+        } catch (error) {
+            console.error("Error uploading file:", error);
         }
     };
 
     const initPendingData = async () => {
         let response = await apiUploadFile.getPendingData();
-        console.log(response);
     }
 
     const handleViewRecordedVideo = async () => {
-        // Display the recorded video
-        setRecordedVideo(mediaBlobUrl);
-        console.log(mediaBlobUrl);
-        const response = await fetch(mediaBlobUrl);
-        console.log(response);
         try {
             const response = await fetch(mediaBlobUrl);
             console.log(response);
-    
             const blob = await response.blob();
-    
-            // Get the Blob's metadata (e.g., type, lastModified) from the original Blob
             const metadata = { type: blob.type, lastModified: blob.lastModified };
-    
-            // Create a new File object from the Blob and metadata
             const file = new File([blob], 'videoFile.mp4', metadata);
             console.log(file);
-    
-            // Create a FormData object and append the file to it
             const formData = new FormData();
             formData.append("file", file);
-    
-            // Now you can log or use formData
-            console.log(formData);
-    
-            // Assuming apiUploadFile.uploadFile is an asynchronous function
+
             await apiUploadFile.uploadFile(formData);
         } catch (error) {
             console.error('Error fetching and converting to file:', error);

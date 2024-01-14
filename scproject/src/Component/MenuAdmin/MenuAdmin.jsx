@@ -131,23 +131,21 @@ const MenuAdmin = ({ setVideoTNV }) => {
             });
     };
     const getTopic = async () => {
-        let response = await apiLearning.getTopic();
-        const items = [];
-        response.data.forEach((element, index) => {
-            items.push({
-                id: element.id,
-                value: element.id,
-                label: element.content,
-            })
-        });
-        setTopicInit(items);
-    }
-    const onCloseAddQuestion = () => {
-        setshowCreateQuestions(false);
-        setContentQuestion('');
-        setValueChecked(0);
-        setValueText(['', '', '', '']);
-        setTopicChose({});
+        try {
+            let response = await apiLearning.getTopic();
+            const items = [];
+            response.data.forEach((element, index) => {
+                items.push({
+                    id: element.id,
+                    value: element.id,
+                    label: element.content,
+                })
+            });
+            setTopicInit(items);
+            
+        } catch (error) {
+            
+        }
     }
 
     const onChange = (e) => {
