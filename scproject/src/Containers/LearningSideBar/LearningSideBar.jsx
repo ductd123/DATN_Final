@@ -26,6 +26,7 @@ export default class LearningSideBar extends Component {
                     listTopic={this.props.listTopic}
                     fetchData={this.props.fetchData}
                     setIdTopic={this.props.setIdTopic}
+                    setSearchText={this.props.setSearchText}
                 />
             </div>
         </>

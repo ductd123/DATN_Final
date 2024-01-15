@@ -9,7 +9,7 @@ import blank from '../../assets/image/AvtBlank.jpg';
 import LoadingComponent from "../Common/Loading/Loading";
 import apiUser from "../../Services/apiUser";
 import { setDataUser } from "../../Redux/slice/userDataSlice";
-import { message } from "antd";
+import { Tooltip, message } from "antd";
 import HelperLogOut from "../../helpers/Logout";
 
 
@@ -47,8 +47,10 @@ export default function Nav() {
     }
   }
   const handleShowMenuProfile = () => {
-    setIsShowMenuProfile(!isShowMenuProfile);
-  };
+    if (userData) {
+      setIsShowMenuProfile(!isShowMenuProfile);
+    };
+  }
 
   return (
     <nav className="nav">
@@ -64,34 +66,46 @@ export default function Nav() {
       </div>
       <ul className="nav__ul">
         {userData && <NavLink to="/" className="nav__link">
-          <li className={pathName === "/" || pathName === "/" ? "nav__li nav__li--choose" : "nav__li"} >
-            <CommentOutlined style={{ fontSize: '1.5rem' }} />
-          </li>
+          <Tooltip title="Trò chuyện" placement="right" trigger="hover" color="#108ee9" >
+            <li className={pathName === "/" || pathName === "/" ? "nav__li nav__li--choose" : "nav__li"} >
+              <CommentOutlined style={{ fontSize: '1.5rem' }} />
+            </li>
+          </Tooltip>
         </NavLink>}
         {userData && <NavLink to="/contact" className="nav__link">
-          <li className={pathName === "/contact" ? "nav__li nav__li--choose" : "nav__li"}>
-            <TeamOutlined style={{ fontSize: '1.5rem' }} />
-          </li>
+          <Tooltip title="Bạn bè" placement="right" trigger="hover" color="#108ee9" >
+            <li className={pathName === "/contact" ? "nav__li nav__li--choose" : "nav__li"}>
+              <TeamOutlined style={{ fontSize: '1.5rem' }} />
+            </li>
+          </Tooltip>
         </NavLink>}
         <NavLink to="/learn" className="nav__link">
-          <li className={pathName === "/learn" ? "nav__li nav__li--choose" : "nav__li"} >
-            <ReadOutlined style={{ fontSize: '1.5rem' }} />
-          </li>
+          <Tooltip title="Học tập" placement="right" trigger="hover" color="#108ee9" >
+            <li className={pathName === "/learn" ? "nav__li nav__li--choose" : "nav__li"} >
+              <ReadOutlined style={{ fontSize: '1.5rem' }} />
+            </li>
+          </Tooltip>
         </NavLink>
         <NavLink to="/exam" className="nav__link">
-          <li className={pathName === "/exam" ? "nav__li nav__li--choose" : "nav__li"} >
-            <LaptopOutlined style={{ fontSize: '1.5rem' }} />
-          </li>
+          <Tooltip title="Kiểm tra" placement="right" trigger="hover" color="#108ee9" >
+            <li className={pathName === "/exam" ? "nav__li nav__li--choose" : "nav__li"} >
+              <LaptopOutlined style={{ fontSize: '1.5rem' }} />
+            </li>
+          </Tooltip>
         </NavLink>
-        {/* <NavLink to="/volunteer" className="nav__link">
-          <li className={pathName === "/volunteer" ? "nav__li nav__li--choose" : "nav__li"}>
-            <VideoCameraAddOutlined style={{ fontSize: '1.5rem' }} />
-          </li>
-        </NavLink> */}
+        <NavLink to="/volunteer" className="nav__link">
+          <Tooltip title="Thu thập dữ liệu người dùng" placement="right" trigger="hover" color="#108ee9" >
+            <li className={pathName === "/volunteer" ? "nav__li nav__li--choose" : "nav__li"}>
+              <VideoCameraAddOutlined style={{ fontSize: '1.5rem' }} />
+            </li>
+          </Tooltip>
+        </NavLink>
         {userData?.role && <NavLink to="/admin" className="nav__link">
-          <li className={pathName === "/admin" ? "nav__li nav__li--choose" : "nav__li"}>
-            <SettingOutlined style={{ fontSize: '1.5rem' }} />
-          </li>
+          <Tooltip title="Trò chuyện" placement="right" trigger="hover" color="#108ee9" >
+            <li className={pathName === "/admin" ? "nav__li nav__li--choose" : "nav__li"}>
+              <SettingOutlined style={{ fontSize: '1.5rem' }} />
+            </li>
+          </Tooltip>
         </NavLink>}
       </ul>
       <LogOut className="nav__logout" onClick={() => HelperLogOut()} />

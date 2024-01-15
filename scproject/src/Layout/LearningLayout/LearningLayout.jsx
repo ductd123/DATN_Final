@@ -41,7 +41,7 @@ export default function LearningLayout() {
     const videoRef = useRef(null);
     const [linkFile, setLinkFile] = useState('');
     const [content, setContent] = useState('');
-    const [idTopic, setIdTopic] = useState(0);
+    const [idTopic, setIdTopic] = useState();
     const [isImage, setIsImage] = useState(true);
     const [topicInit, setTopicInit] = useState([]);
     const [topicChose, setTopicChose] = useState();
@@ -59,11 +59,16 @@ export default function LearningLayout() {
         fetchData();
     }, []);
     useEffect(() => {
-        handleGetListFile();
+        if (idTopic) {
+            handleGetListFile();
+            setShowSlider(false);
+            setshowSearchWord(true);
+        }
     }, [idTopic]);
     const fetchData = async () => {
         setLoading(true)
         try {
+            setLoading(false);
             let response = await apiLearning.getTopic();
             const items = [];
             response.data.forEach((element, index) => {
@@ -94,27 +99,21 @@ export default function LearningLayout() {
         try {
             setLoading(false);
             let response = await apiLearning.getTuDien(idTopic);
-            if (response.code === 200) {
-                setTimeout(() => {
-                    setLoading(false);
-                    let listResponse = response.data.map(item => {
-                        return {
-                            content: item.content,
-                            type: item.videoLocation === "" ? 1 : 2,
-                            preview: item.videoLocation === "" ? item.imageLocation : item.videoLocation,
-                        }
-                    });
-                    setShowFile(listResponse);
-                }, 500);
-            }
-            else {
-                setTimeout(() => {
-                    setLoading(false);
-                    message.error(`Tìm chủ đề thất bại. Vui lòng thử lại!!!`);
-                }, 3000);
-            }
-        } catch (error) {
+            setLoading(false);
+            let listResponse = response.data.map(item => {
+                return {
+                    content: item.content,
+                    type: item.videoLocation === "" ? 1 : 2,
+                    preview: item.videoLocation === "" ? item.imageLocation : item.videoLocation,
+                }
+            });
+            setShowFile(listResponse);
 
+        } catch (error) {
+            setTimeout(() => {
+                setLoading(false);
+                message.error(`Tìm chủ đề thất bại. Vui lòng thử lại!!!`);
+            }, 3000);
         }
     }
     const handleCancel = () => {
@@ -173,61 +172,6 @@ export default function LearningLayout() {
         }
     }
 
-    const handleOpenDetailFile = (file) => {
-        setShowDetail(file);
-        setShowImage(!showImage);
-    }
-    const handleClickOptions = (item) => {
-        setSearchText(item);
-
-        openSearchWord();
-    }
-    const ImageCard = ({ file }) => {
-
-        return (
-            <div style={styles.card}>
-                {file.type === 1 ?
-
-                    <div className='flex-center' style={{ width: '76px', justifyContent: "center" }}>
-                        <img src={file.preview} alt="Uploaded" style={styles.image} />
-                    </div>
-                    :
-                    <div className='flex-center' style={{ width: '76px', justifyContent: "center" }}>
-                        <PlayCircleTwoTone style={{ fontSize: '50px' }} />
-                    </div>
-                }
-                <div style={styles.cardInfo}>
-                    <p style={{ fontWeight: '500' }}>{file.content}</p>
-                </div>
-                <button onClick={() => handleOpenDetailFile(file)} style={styles.button}>
-                    <EyeTwoTone style={{ fontSize: '1.25rem' }} />
-                </button>
-            </div>
-        );
-    };
-    const props = {
-        multiple: false,
-        name: 'file',
-        action: 'http://202.191.56.11:8090/api/upload',
-        onChange(info) {
-            const { status } = info.file;
-            if (status !== 'uploading') {
-                console.log(info.file);
-            }
-            if (status === 'done') {
-                message.success(`File ${info.file.name} sẵn sàng.`);
-                setLinkFile(info.file.response);
-                let fileType = info.file.type.toString();
-                setIsImage(fileType.includes('image'))
-            } else if (status === 'error') {
-                message.error(`FIle ${info.file.name} lỗi, vui lòng xóa ${info.file.name} và thử lại.`);
-                setLinkFile('');
-            }
-        },
-        onDrop(e) {
-            console.log('Dropped files', e);
-        },
-    };
     return (
         <div className="main-layout">
             <LoadingComponent loading={loading} />
@@ -244,6 +188,7 @@ export default function LearningLayout() {
                         listTopic={topicInit}
                         setIdTopic={setIdTopic}
                         fetchData={fetchData}
+                        setSearchText={setSearchText}
                     />
                 </div>
                 <div className="main-layout__children flex-center">

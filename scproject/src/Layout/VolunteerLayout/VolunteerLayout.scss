@@ -1,0 +1,27 @@
+.record-container {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 46px);
+  justify-content: space-evenly;
+  &-child {
+    width: calc((100% - 75px) / 2);
+    &-video {
+      width: 100%;
+      height: auto;
+      margin-top: 10px;
+      max-height:  calc(100vh - 155px);
+    }
+    &-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 4px;
+      font-size: large;
+      font-weight: 600;
+    }
+  }
+  &-button{
+    margin-top: 10px;
+    width: 100%;
+  }
+}

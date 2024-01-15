@@ -8,6 +8,7 @@ import LearningRouter from "./LearningRouter";
 import LearningLayout from "../Layout/LearningLayout/LearningLayout";
 import Examlayout from "../Layout/ExamLayout/ExamLayout";
 import AdminLayout from "../Layout/AdminLayout/AdminLayout";
+import VolunterLayout from "../Layout/VolunteerLayout/VolunteerLayput";
 
 export default function Routers() {
     return (
@@ -71,6 +72,14 @@ export default function Routers() {
                 element={
                     <LearningRouter
                         layout={LearningLayout}
+                    />
+                }
+            />
+            <Route
+                path="/volunteer"
+                element={
+                    <LearningRouter
+                        layout={VolunterLayout}
                     />
                 }
             />

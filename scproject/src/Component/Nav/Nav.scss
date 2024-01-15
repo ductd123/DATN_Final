@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: calc(100vh - 0px);
+  min-height: 100vh;
   width: 75px;
   &__ul {
     list-style: none;
@@ -60,7 +60,7 @@
       height: 200px;
       width: 100%;
       overflow: hidden;
-      i{
+      i {
         width: 100%;
       }
     }
@@ -84,7 +84,7 @@
       }
     }
     &-detail {
-        padding: 8px;
+      padding: 8px;
       &-header {
         font-size: 20px;
         font-weight: 600;

@@ -19,7 +19,7 @@ function getItem(label, key, icon, children, type) {
 const BangChuCai = ['A', 'Ă', 'Â', 'B', 'C', 'D', 'Đ', 'E', 'Ê', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'Ô', 'Ơ', 'P', 'Q', 'R', 'S', 'T', 'U', 'Ư', 'V', 'X', 'Y'];
 const BangChuSo = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 const dau = ['Dấu sắc', 'Dấu huyền', 'Dấu hỏi', 'Dấu Ngã', 'Dấu nặng']
-const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleSearch, openSearchWord, setValueOptions, listTopic, setIdTopic, fetchData }) => {
+const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleSearch, openSearchWord, setValueOptions, listTopic, setIdTopic, fetchData, setSearchText }) => {
     const [topicItems, setTopicItems] = useState([]);
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(true);
@@ -40,9 +40,6 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
             ),
             getItem('Học tập theo từ ngữ', 'sub4', <FileAddOutlined style={{ fontSize: '1.25rem' }} />, [
                 getItem(<Input onChange={(e) => handleSearch(e.target.value)} placeholder="Nhập từ ngữ muốn tìm?" />, 'Search', <SearchOutlined style={{ fontSize: '1rem' }} />),
-                // getItem('Bổ sung từ điển ký hiệu', 'Upload', <UploadOutlined style={{ fontSize: '1rem' }} />),
-                // getItem('Thêm chủ đề', 'AddTopic', <PlusCircleOutlined style={{ fontSize: '1rem' }} />),
-                // getItem('Lịch sử đóng góp', 'History', <HistoryOutlined style={{ fontSize: '1rem' }} />),
             ]),
         ]);
     }, [topicItems]);
@@ -69,7 +66,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
         } catch (error) {
             setTimeout(() => {
                 setLoading(false);
-                message.error(`Load trang thất bại. Vui lòng thử lại!!!`);
+                message.error(`Kết nối không ổn định. Vui lòng thử lại!!!`);
             }, 3000);
         }
     }
@@ -77,8 +74,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
 
     const setLabelForSelect = (e) => {
         setIdTopic(e);
-        const foundItem = topicItems.find(item => item.value === e);
-        handleSearch(foundItem.label);
+        setSearchText(topicItems.find(i => i.value == e)?.label);
     }
     const onClick = (e) => {
         switch (e.key) {
