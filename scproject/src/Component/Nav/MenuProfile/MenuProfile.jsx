@@ -40,32 +40,40 @@ export default function MenuProfile({ fetchData }) {
     setShowUpdateInfo(true);
   }
   const onUpdateInfo = async () => {
-    setLoading(true);
-    let data = {
-      name: userInfoUpdate.name,
-      address: userInfoUpdate.address,
-      phoneNumber: userInfoUpdate.phoneNumber,
-      gender: userInfoUpdate.gender,
-      birthDay: userInfoUpdate.birthDay || '01/01/2000',
-    }
-    try {
-      const formData = new FormData();
-      formData.append("file", fileAvt);
-      if (fileAvt) {
-        await apiUser.uploadAvt(formData);
+    if (userInfoUpdate) {
+      setLoading(true);
+      let data = {
+        name: userInfoUpdate?.name,
+        address: userInfoUpdate?.address,
+        phoneNumber: userInfoUpdate?.phoneNumber,
+        gender: userInfoUpdate?.gender,
+        birthDay: userInfoUpdate?.birthDay || '01/01/2000',
       }
-      await apiUser.updateUser(data);
-      setTimeout(() => {
-        fetchData();
-        message.success('Cập nhật thông tin thành công.');
-        setUserInfoUpdate(userData);
-        setShowUpdateInfo(false);
+      try {
+        const formData = new FormData();
+        formData.append("file", fileAvt);
+        if (fileAvt) {
+          await apiUser.uploadAvt(formData);
+        }
+        await apiUser.updateUser(data);
+        setTimeout(() => {
+          fetchData();
+          message.success('Cập nhật thông tin thành công.');
+          setUserInfoUpdate(userData);
+          setShowUpdateInfo(false);
+          setLoading(false);
+        }, 500);
+      }
+      catch (error) {
+        console.log(error);
         setLoading(false);
-      }, 500);
+        message.error('Đã xảy ra lỗi, vui lòng thử lại');
+      }
     }
-    catch (error) {
-      console.log(error);
-      message.error('Đã xảy ra lỗi, vui lòng thử lại');
+    else {
+      setLoading(false);
+      message.info('Bạn đang sử dụng WeTalk mà không đăng nhập. Vui lòng đăng nhập và thử lại.');
+      setShowUpdateInfo(false);
     }
   }
 
