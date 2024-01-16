@@ -150,7 +150,6 @@ export default function LearningLayout() {
             size: 10,
             text: e,
             ascending: true,
-            orderBy: "",
         }
         try {
             let response = await apiLearning.searchVocab(data);
