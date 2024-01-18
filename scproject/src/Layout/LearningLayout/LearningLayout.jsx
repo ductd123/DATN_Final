@@ -13,6 +13,7 @@ import videoSrc from "../../assets/video/doncoi.mp4";
 import noiay from "../../assets/video/noiaymemong.mp4";
 import { apiLearning } from "../../Services/apiLearning";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
+import Rotate from "../../Component/Common/Rotate/Rotate";
 const q = {
     id: '204',
     question: 'Đây là gì?',
@@ -65,6 +66,8 @@ export default function LearningLayout() {
             setshowSearchWord(true);
         }
     }, [idTopic]);
+
+
     const fetchData = async () => {
         setLoading(true)
         try {
@@ -84,6 +87,7 @@ export default function LearningLayout() {
             setLoading(false);
         }
     }
+
     const handleClickMenu = () => {
         setConfirmStudy(true);
     }
@@ -116,12 +120,6 @@ export default function LearningLayout() {
             }, 3000);
         }
     }
-    const handleCancel = () => {
-        setshowPopupUploadVideo(false);
-    };
-    const onCloseHistoryPanel = () => {
-        setshowHistoryPanel(false);
-    };
     const [showImage, setShowImage] = useState(false);
     const [files, setShowFile] = useState([]);
     const stopVideo = () => {
