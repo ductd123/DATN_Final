@@ -4,7 +4,7 @@ import "./Nav.scss";
 import { LogOut, } from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import MenuProfile from "./MenuProfile/MenuProfile";
-import { CommentOutlined, LaptopOutlined, ReadOutlined, SettingOutlined, TeamOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
+import { CommentOutlined, LaptopOutlined, ReadOutlined, SafetyCertificateOutlined, SettingOutlined, TeamOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import blank from '../../assets/image/AvtBlank.jpg';
 import LoadingComponent from "../Common/Loading/Loading";
 import apiUser from "../../Services/apiUser";
@@ -101,14 +101,16 @@ export default function Nav() {
           </Tooltip>
         </NavLink>
         {userData?.role && <NavLink to="/admin" className="nav__link">
-          <Tooltip title="Trò chuyện" placement="right" trigger="hover" color="#108ee9" >
+          <Tooltip title="Admin" placement="right" trigger="hover" color="#108ee9" >
             <li className={pathName === "/admin" ? "nav__li nav__li--choose" : "nav__li"}>
-              <SettingOutlined style={{ fontSize: '1.5rem' }} />
+              <SafetyCertificateOutlined style={{ fontSize: '1.5rem' }} />
             </li>
           </Tooltip>
         </NavLink>}
       </ul>
-      <LogOut className="nav__logout" onClick={() => HelperLogOut()} />
+      <Tooltip title={userData !== null ? "Đăng xuất" : "Đăng nhập"} placement="right" trigger="hover" color="#108ee9" >
+        <LogOut className="nav__logout" onClick={() => HelperLogOut()} />
+      </Tooltip>
     </nav>
   );
 }

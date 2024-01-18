@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "../../Component";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
-import { VideoCameraAddOutlined } from "@ant-design/icons";
+import { VideoCameraAddOutlined, WarningFilled } from "@ant-design/icons";
 import Webcam from "react-webcam";
-import { Button, Modal, Select } from "antd";
+import { Button, Modal, Select, Tooltip } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import './VolunteerLayout.scss'
@@ -29,6 +29,17 @@ const VolunterLayout = () => {
         getTopic();
     }, [])
 
+    useEffect(() => {
+        previewRef.current = recordedVideo;
+    }, [recordedVideo]);
+
+    useEffect(() => {
+        if (recordingTime > 5) {
+            stopRecording();
+            clearInterval(recordingTimerId);
+            setRecordingTime(0);
+        }
+    }, [recordingTime]);
     const getTopic = async () => {
         setLoading(true);
         try {
@@ -77,7 +88,7 @@ const VolunterLayout = () => {
             console.log(response);
             const blob = await response.blob();
             const metadata = { type: blob.type, lastModified: blob.lastModified };
-            const file = new File([blob], 'videoFile.mp4', metadata);
+            const file = new File([blob], `volunteer_${showDetail.name}.mp4`, metadata);
             console.log(file);
             const formData = new FormData();
             formData.append("file", file);
@@ -120,19 +131,16 @@ const VolunterLayout = () => {
             id: x.id,
             type: x.imageLocation !== "" ? 1 : 2,
             preview: x.imageLocation !== "" ? x.imageLocation : x.videoLocation,
+            name: x.content
         })
     }
 
     const handleStartRecording = () => {
         startRecording();
         setRecordedVideo(null);
-
-        // Bắt đầu bộ đếm thời gian
         const timerId = setInterval(() => {
             setRecordingTime(prevTime => prevTime + 1);
         }, 1000);
-
-        // Lưu ID của bộ đếm trong state (để có thể dừng nó sau khi ghi kết thúc)
         setRecordingTimerId(timerId);
     };
     return (
@@ -166,10 +174,23 @@ const VolunterLayout = () => {
                     <div className="record-container-child">
                         <div className="record-container-child-header">Dữ liệu của người dùng.</div>
                         <div className="record-container-child-video">
-                            <Webcam style={{ width: '100%' }} audio={false} ref={webcamRef} />
+                            <Webcam mirrored={true} style={{ width: '100%' }} audio={false} ref={webcamRef} />
                         </div>
+                        {/* {recordedVideo && <div>
+                            <p>Xem lại video:</p>
+                            <video ref={previewRef} controls width="100%">
+                                <source src={recordedVideo} type="video/webm" />
+                                video không hỗ trợ cho trình duyệt này.
+                            </video>
+                        </div>} */}
                         <div className="record-container-button">
-                            <Button onClick={handleStartRecording} disabled={status === 'recording'}>
+                            <Button
+                                onClick={handleStartRecording}
+                                disabled={status === 'recording' || !showDetail}
+                                icon={<Tooltip title="Thời gian tối đa cho mỗi video là 5s." placement="top" trigger="hover" color="#4096ff" >
+                                    <WarningFilled style={{color:'#4096ff'}}/>
+                                </Tooltip>}
+                            >
                                 Bắt đầu quay {recordingTime !== 0 && <p style={{ color: 'red' }}>{formatTime(recordingTime)}</p>}
                             </Button>
                             <Button onClick={handleStopRecording} disabled={status !== 'recording'}>
@@ -191,7 +212,7 @@ const VolunterLayout = () => {
                 onClose={() => setShowPreviewRecord(false)}
                 onCancel={() => setShowPreviewRecord(false)}
                 footer={[]}
-            >
+                key={recordedVideo}            >
                 <div>
                     <p>Xem lại video:</p>
                     <video ref={previewRef} controls width="100%">

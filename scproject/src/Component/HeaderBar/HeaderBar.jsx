@@ -109,9 +109,12 @@ export default function HeaderBar({ disableSearch }) {
         <img style={{ width: '24px', marginRight: '4px' }} src={logoHeader} />
         - {headerName}
       </h4>
-      {!disableSearch && <form className="header-bar__form">
+      {!disableSearch && <form onSubmit={(e) => e.preventDefault()} className="header-bar__form">
         {/* <input className="header-bar__input" placeholder="Search..." /> */}
-        <Input placeholder='Tìm kiếm bạn bè...' onChange={(e) => handleChangeValue(e.target.value)} style={{ width: '90%' }} />
+        <Input
+          placeholder='Tìm kiếm bạn bè...'
+          onChange={(e) => { handleChangeValue(e.target.value); }}
+          style={{ width: '90%' }} />
         <Button onClick={onSearch} type="primary" className="header-bar__btn" icon={<SearchOutlined style={{ fontSize: '1.25rem' }} />} />
       </form>}
       <Modal
