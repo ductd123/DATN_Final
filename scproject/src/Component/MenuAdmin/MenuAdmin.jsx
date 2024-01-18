@@ -38,7 +38,6 @@ const MenuAdmin = ({ setVideoTNV }) => {
         getItem('Thêm chủ đề từ vựng', 'addTopic', <PlusCircleOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Thêm từ điển ký hiệu', 'addWord', <CloudUploadOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Tạo câu hỏi kiểm tra', 'addQuestion', <CloudUploadOutlined style={{ fontSize: '1.25rem' }} />),
-        getItem('Quay video TNV', 'tnv', <VideoCameraAddOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Lịch sử đăng tải', 'history', <HistoryOutlined style={{ fontSize: '1.25rem' }} />),
     ];
 
@@ -216,7 +215,6 @@ const MenuAdmin = ({ setVideoTNV }) => {
                 setVideoTNV(true);
                 break;
             default:
-                // window.director(`./${e.key}`)
                 break;
         }
     };
