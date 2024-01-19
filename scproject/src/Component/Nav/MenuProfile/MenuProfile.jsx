@@ -144,8 +144,8 @@ export default function MenuProfile({ fetchData }) {
         <li onClick={() => { setShowInfo(true) }} className="menu-profile__list">
           <Edit className="menu-profile__icon" />Thông tin cá nhân
         </li>
-        <Button className="menu-profile__list">
-          <LogOut className="menu-profile__icon" onClick={() => HelperLogOut()} /> Đăng xuất
+        <Button onClick={() => HelperLogOut()} className="menu-profile__list">
+          <LogOut className="menu-profile__icon" /> Đăng xuất
         </Button>
       </ul>
       <Modal

@@ -1,4 +1,4 @@
-import { axiosLearningClient, axiosUploadVideoClient } from "./axiosClient";
+import { axiosLearningClient, axiosUploadVideoClient, axiosUploadVolunteerClient } from "./axiosClient";
 
 export const apiLearning = {
     themTuDien: (data) => {
@@ -42,18 +42,22 @@ export const apiUploadFile = {
     },
     rejectData: (data) => {
         const url = "collect-data/reject";
-        return axiosUploadVideoClient.post(url, data);
+        return axiosUploadVolunteerClient.post(url, data);
+    },
+    sendData: (data) => {
+        const url = "collect-data/send-data";
+        return axiosUploadVolunteerClient.post(url, data);
     },
     getPendingData: () => {
         const url = "collect-data/get-pending";
-        return axiosUploadVideoClient.get(url);
+        return axiosUploadVolunteerClient.get(url);
     },
     getApprovedData: () => {
         const url = "collect-data/get-approved";
-        return axiosUploadVideoClient.get(url);
+        return axiosUploadVolunteerClient.get(url);
     },
     approvedData: (id) => {
-        const url = `collect-data/approved/${id}`;
-        return axiosUploadVideoClient.get(url);
+        const url = `collect-data/approve/${id}`;
+        return axiosUploadVolunteerClient.get(url);
     },
 };

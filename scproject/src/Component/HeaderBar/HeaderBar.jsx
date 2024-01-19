@@ -138,7 +138,7 @@ export default function HeaderBar({ disableSearch }) {
           <span className="nav-userInfo-detail-header">Thông tin cá nhân</span>
           <div className="nav-userInfo-detail-items">
             <span className="nav-userInfo-detail-items-title">Giới tính</span>
-            <span className="nav-userInfo-detail-items-content">{userInfo?.gender || "Chưa có thông tin"}</span>
+            <span className="nav-userInfo-detail-items-content">{userInfo?.gender === "FEMALE" ? "Nam" : "Nữ" || "Chưa có thông tin"}</span>
           </div>
           <div className="nav-userInfo-detail-items">
             <span className="nav-userInfo-detail-items-title">Điện thoại</span>

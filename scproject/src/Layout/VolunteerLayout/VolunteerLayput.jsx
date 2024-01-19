@@ -3,7 +3,7 @@ import { Nav } from "../../Component";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
 import { VideoCameraAddOutlined, WarningFilled } from "@ant-design/icons";
 import Webcam from "react-webcam";
-import { Button, Modal, Select, Tooltip } from "antd";
+import { Button, Modal, Select, Tooltip, message } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import './VolunteerLayout.scss'
@@ -21,6 +21,7 @@ const VolunterLayout = () => {
     const [showPreviewRecord, setShowPreviewRecord] = useState(false);
     const { status, startRecording, stopRecording, mediaBlobUrl, duration } = useReactMediaRecorder({
         video: true,
+        audio: false
     });
     const webcamRef = useRef(null);
     const videoRef = useRef(null);
@@ -85,15 +86,27 @@ const VolunterLayout = () => {
     const handleDownload = async () => {
         try {
             const response = await fetch(mediaBlobUrl);
-            console.log(response);
             const blob = await response.blob();
             const metadata = { type: blob.type, lastModified: blob.lastModified };
             const file = new File([blob], `volunteer_${showDetail.name}.mp4`, metadata);
-            console.log(file);
             const formData = new FormData();
             formData.append("file", file);
 
-            await apiUploadFile.uploadFile(formData);
+            const link = await apiUploadFile.uploadFile(formData);
+            if (link) {
+                try {
+                    const data = {
+                        dataLocation: link,
+                        content: showDetail.name,
+                        dataType: "Vocab"
+                    }
+                    await apiUploadFile.sendData(data);
+                    message.success(` Thêm dữ liệu cho ${showDetail.name} thành công.`)
+                } catch (error) {
+                    console.log(error);
+                }
+
+            }
         } catch (error) {
             console.error('Error fetching and converting to file:', error);
         }
@@ -188,7 +201,7 @@ const VolunterLayout = () => {
                                 onClick={handleStartRecording}
                                 disabled={status === 'recording' || !showDetail}
                                 icon={<Tooltip title="Thời gian tối đa cho mỗi video là 5s." placement="top" trigger="hover" color="#4096ff" >
-                                    <WarningFilled style={{color:'#4096ff'}}/>
+                                    <WarningFilled style={{ color: '#4096ff' }} />
                                 </Tooltip>}
                             >
                                 Bắt đầu quay {recordingTime !== 0 && <p style={{ color: 'red' }}>{formatTime(recordingTime)}</p>}
