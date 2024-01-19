@@ -37,9 +37,15 @@ export  const axiosUserClient = axios.create({
 });
 export  const axiosUploadVideoClient = axios.create({
   baseURL: "https://wetalk.ibme.edu.vn/data-collection-service/",
-  // baseURL: "http://wetalk.ibme.edu.vn:8090/",
   headers: {
     "content-type": 'multipart/form-data',
+  },
+  paramsSerializer: (params) => queryString.stringify(params),
+});
+export  const axiosUploadVolunteerClient = axios.create({
+  baseURL: "https://wetalk.ibme.edu.vn/data-collection-service/",
+  headers: {
+    "content-type": "application/json",
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
@@ -59,6 +65,17 @@ axiosUserClient.interceptors.request.use(
   }
 );
 axiosLearningClient.interceptors.request.use(
+  (config) => {
+    updateToken();
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    // Handle request error
+    return Promise.reject(error);
+  }
+);
+axiosUploadVolunteerClient.interceptors.request.use(
   (config) => {
     updateToken();
     config.headers.Authorization = `Bearer ${token}`;
@@ -115,6 +132,17 @@ axiosLoginClient.interceptors.response.use(
   }
 );
 axiosUploadVideoClient.interceptors.response.use(
+  (res) => {
+    if (res && res.data) {
+      return res.data;
+    }
+    return res;
+  },
+  (err) => {
+    throw err;
+  }
+);
+axiosUploadVolunteerClient.interceptors.response.use(
   (res) => {
     if (res && res.data) {
       return res.data;

@@ -6,10 +6,8 @@ import LoadingComponent from "../../Component/Common/Loading/Loading";
 import MenuAdmin from "../../Component/MenuAdmin/MenuAdmin";
 import { ArrowLeftOutlined, ArrowRightOutlined, AuditOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import VideoCall from "../../Component/VideoCall/VideoCall";
-import { apiUploadFile } from "../../Services/apiLearning";
-import { useReactMediaRecorder } from "react-media-recorder";
-import Webcam from "react-webcam";
-import apiUser from "../../Services/apiUser";
+import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
+import defaultvideo from '../../assets/image/defaultvideo.png'
 
 const AdminLayout = () => {
     const [listAccept, setListAccept] = useState({});
@@ -17,14 +15,44 @@ const AdminLayout = () => {
     const [loading, setLoading] = useState(false);
     const [videoTNV, setVideoTNV] = useState(false);
 
-    
+
     useEffect(() => {
         initPendingData();
     }, [])
     const initPendingData = async () => {
         let response = await apiUploadFile.getPendingData();
+        setListAccept(response.data)
     }
- 
+    const approvedData = async (id) => {
+        try {
+            setLoading(false);
+            await apiUploadFile.approvedData(id);
+            message.success("Đã chấp nhận dữ liệu thành công");
+            initPendingData();
+        } catch (error) {
+            setLoading(false);
+            console.log(error);
+            message.error("Kết nối không ổn định, vui lòng thử lại.")
+        }
+    }
+
+    const rejectData = async (id) => {
+        setLoading(true);
+        try {
+            setLoading(false);
+            let data = {
+                dataCollectionId: id,
+                feedBack: ""
+            }
+            await apiUploadFile.rejectData(data);
+            message.success("Đãtừ chối dữ liệu thành công");
+            initPendingData();
+        } catch (error) {
+            setLoading(false);
+            message.error("Kết nối không ổn định, vui lòng thử lại.")
+        }
+    }
+
 
     return (
         <div className="main-layout">
@@ -62,20 +90,20 @@ const AdminLayout = () => {
                                     listAccept.map((item, index) => (<>
                                         <div className="card-wrapper" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
                                             <div className="conversation__content">
-                                                <img
+<img
                                                     src="https://picsum.photos/230"
                                                     alt=""
                                                     className="conversation__img"
                                                 />
-                                                <div className="conversation__main">
-                                                    <h4 className="conversation__name">{item.name}</h4>
+                                                <div className="conversation__main" style={{width:'400px'}}>
+                                                    <h4 className="conversation__name" style={{fontWeight:600}}>Nội dung: {item.content}</h4>
+                                                    <h4 className="conversation__name">Nội dung: {item.volunteerEmail}</h4>
                                                 </div>
                                                 <div className="contact_button">
-                                                    <button className="contact_button-deny" onClick={() => { }}>Từ chối</button>
-                                                    <button className="contact_button-accept" onClick={() => { }}>Đồng ý</button>
+                                                    <Button className="contact_button-deny" key={`tuchoi ${item.id}`} onClick={() => rejectData(item.id)}>Từ chối</Button>
+                                                    <Button className="contact_button-accept" key={`chapnhan ${item.id}`} onClick={() => approvedData(item.id)}>Đồng ý</Button>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr></>
                                     ))

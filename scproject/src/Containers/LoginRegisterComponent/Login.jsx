@@ -106,7 +106,7 @@ const Login = () => {
                             <Link to="/register">Đăng ký tài khoản mới</Link>
                         </div>
                         <div className="login-forgot">
-                            <Link to="/">Quên mật khẩu</Link>
+                            <Link to="/">Đăng nhập không cần tài khoản!!!</Link>
                         </div>
                     </div>
                 </div>

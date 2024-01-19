@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './Login.scss'
 import { Link } from 'react-router-dom'
-import { Tooltip } from 'antd';
+import { Tooltip, message } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
 import axios from 'axios';
 import logo from "../../assets/image/logo.png"
@@ -102,12 +102,8 @@ class Register extends Component {
     checkAll = () => {
         this.setState({
             invalidName: this.state.fullName === '',
-            // invalidAddress: this.state.address === '',
-            // invalidDate: this.state.birthday === '',
             invalidEmail: this.validateEmail(this.state.email),
-            // invalidGender: this.state.gender === '',
             invalidPass: this.state.password === '',
-            // invalidPhoneNum: this.state.phoneNumber === '',
         }, () => {
             if (!this.state.invalidName && !this.state.invalidEmail  && !this.state.invalidPass ) {
                 this.onSubmit();
@@ -120,7 +116,7 @@ class Register extends Component {
             name: this.state.fullName,
             email: this.state.email,
             password: this.state.password,
-            role: "USER",
+            role: "ADMIN",
         };
         // this.setState({
         //     step1: false,
@@ -131,8 +127,8 @@ class Register extends Component {
             this.setState({
                 step1: false,
             }, () => { });
+            message.success("Vui lòng nhập mã OTP được gửi về email.");
             console.log('Server Response:', response.data);
-            // Thực hiện xử lý response tại đây nếu cần
         } catch (error) {
             console.error('Error during registration:', error);
         }
@@ -152,7 +148,8 @@ class Register extends Component {
                 this.setState({
                     step1: true,
                 }, () => {});
-                // Thực hiện xử lý response tại đây nếu cần
+                
+                message.success("Đăng ký tài khoản thành công.")
             } catch (error) {
                 console.error('Error during registration:', error);
             }
