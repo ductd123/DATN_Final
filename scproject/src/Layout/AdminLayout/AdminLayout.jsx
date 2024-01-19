@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { HeaderBar, MenuTakingExam, Nav } from "../../Component";
-import { Button, Empty, message } from "antd";
+import { Button, Empty, Modal, message } from "antd";
 import './AdminLayout.scss';
 import LoadingComponent from "../../Component/Common/Loading/Loading";
 import MenuAdmin from "../../Component/MenuAdmin/MenuAdmin";
@@ -14,8 +14,10 @@ const AdminLayout = () => {
     const [simpleMenu, setSimpleMenu] = useState(false);
     const [loading, setLoading] = useState(false);
     const [videoTNV, setVideoTNV] = useState(false);
-
-
+    const [preview, setPreview] = useState('');
+    const [showPreview, setShowPreview] = useState(false);
+    const [history, setHistory] = useState([]);
+    const videoRef = useRef(null);
     useEffect(() => {
         initPendingData();
     }, [])
@@ -23,12 +25,23 @@ const AdminLayout = () => {
         let response = await apiUploadFile.getPendingData();
         setListAccept(response.data)
     }
+    const getHistory = async () => {
+        try {
+            let response = await apiUploadFile.getApprovedData();
+            const items = [];
+            setHistory(response.data);
+
+        } catch (error) {
+
+        }
+    }
     const approvedData = async (id) => {
         try {
             setLoading(false);
             await apiUploadFile.approvedData(id);
             message.success("Đã chấp nhận dữ liệu thành công");
             initPendingData();
+            getHistory();
         } catch (error) {
             setLoading(false);
             console.log(error);
@@ -53,6 +66,10 @@ const AdminLayout = () => {
         }
     }
 
+    const onPreviewHistory = (item) => {
+        setShowPreview(true);
+        setPreview(item)
+    }
 
     return (
         <div className="main-layout">
@@ -70,7 +87,7 @@ const AdminLayout = () => {
                             onClick={() => setSimpleMenu(!simpleMenu)}
                             style={simpleMenu ? { left: '80px' } : { left: '320px' }}
                         />
-                        <MenuAdmin setVideoTNV={setVideoTNV} />
+                        <MenuAdmin getHistory={getHistory} history={history} setVideoTNV={setVideoTNV} />
                     </div>
                 </div>
                 <div className="main-layout__children flex-center">
@@ -90,16 +107,17 @@ const AdminLayout = () => {
                                     listAccept.map((item, index) => (<>
                                         <div className="card-wrapper" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
                                             <div className="conversation__content">
-<img
+                                                <img
                                                     src="https://picsum.photos/230"
                                                     alt=""
                                                     className="conversation__img"
                                                 />
-                                                <div className="conversation__main" style={{width:'400px'}}>
-                                                    <h4 className="conversation__name" style={{fontWeight:600}}>Nội dung: {item.content}</h4>
+                                                <div className="conversation__main" style={{ width: '400px' }}>
+                                                    <h4 className="conversation__name" style={{ fontWeight: 600 }}>Nội dung: {item.content}</h4>
                                                     <h4 className="conversation__name">Nội dung: {item.volunteerEmail}</h4>
                                                 </div>
                                                 <div className="contact_button">
+                                                    <Button className="contact_button-deny" key={`tuchoi ${item.id}`} onClick={() => onPreviewHistory(item)}>Xem lại</Button>
                                                     <Button className="contact_button-deny" key={`tuchoi ${item.id}`} onClick={() => rejectData(item.id)}>Từ chối</Button>
                                                     <Button className="contact_button-accept" key={`chapnhan ${item.id}`} onClick={() => approvedData(item.id)}>Đồng ý</Button>
                                                 </div>
@@ -117,6 +135,28 @@ const AdminLayout = () => {
                     </div>
                 </div>
             </div>
+            <Modal
+                open={showPreview}
+                footer={[]}
+                onCancel={() => {
+                    if (videoRef.current) {
+                        videoRef.current.pause();
+                        videoRef.current.currentTime = 0;
+                    }
+                    setShowPreview(false)
+                }}
+                style={{ top: 20 }}
+                title={preview?.content}
+                key={preview?.id}
+            >
+                <video ref={videoRef} controls style={{
+                    width: '100%',
+                    height: 'auto',
+                    marginTop: '30px',
+                }}>
+                    <source src={preview?.dataLocation} type="video/mp4" />
+                </video>
+            </Modal>
         </div>
     );
 }

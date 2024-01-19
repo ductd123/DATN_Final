@@ -1,6 +1,6 @@
-import { AuditOutlined, BookOutlined, CameraOutlined, CloudUploadOutlined, ExclamationCircleOutlined, FolderAddOutlined, HistoryOutlined, InboxOutlined, PlusCircleOutlined, UploadOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
+import { AuditOutlined, BookOutlined, CameraOutlined, CloudUploadOutlined, ExclamationCircleOutlined, EyeFilled, EyeInvisibleTwoTone, EyeTwoTone, FolderAddOutlined, HistoryOutlined, InboxOutlined, PlusCircleOutlined, UploadOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import { Modal, Menu, Drawer, message, Space, Select, Radio, Button, Upload } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './MenuAdmin.scss';
 import { apiLearning, apiUploadFile } from '../../Services/apiLearning';
 import TextArea from 'antd/es/input/TextArea';
@@ -17,7 +17,7 @@ function getItem(label, key, icon, children, type) {
     };
 }
 
-const MenuAdmin = ({ setVideoTNV }) => {
+const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
     const [modal, contextHolder] = Modal.useModal();
     const [showPanelHistory, setShowPanelHistory] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -27,6 +27,8 @@ const MenuAdmin = ({ setVideoTNV }) => {
     const [valueText, setValueText] = useState(["", "", "", ""]);
     const [linkFile, setLinkFile] = useState('');
     const [file, setFile] = useState('');
+    const [preview, setPreview] = useState('');
+    const [showPreview, setShowPreview] = useState(false);
     const [contentTopic, setContentTopic] = useState('');
     const [contentWord, setContentWord] = useState('');
     const [contentQuestion, setContentQuestion] = useState();
@@ -34,15 +36,17 @@ const MenuAdmin = ({ setVideoTNV }) => {
     const [topicInit, setTopicInit] = useState([]);
     const [valueChecked, setValueChecked] = useState(0);
     const [isImage, setIsImage] = useState(true);
+    const videoRef = useRef(null);
     const items = [
         getItem('Thêm chủ đề từ vựng', 'addTopic', <PlusCircleOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Thêm từ điển ký hiệu', 'addWord', <CloudUploadOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Tạo câu hỏi kiểm tra', 'addQuestion', <CloudUploadOutlined style={{ fontSize: '1.25rem' }} />),
-        getItem('Lịch sử đăng tải', 'history', <HistoryOutlined style={{ fontSize: '1.25rem' }} />),
+        getItem('Lịch sử chấp thuận', 'history', <HistoryOutlined style={{ fontSize: '1.25rem' }} />),
     ];
 
     useEffect(() => {
         getTopic();
+        getHistory();
     }, [])
 
     const handleCreateQuestion = () => {
@@ -143,9 +147,9 @@ const MenuAdmin = ({ setVideoTNV }) => {
                 })
             });
             setTopicInit(items);
-            
+
         } catch (error) {
-            
+
         }
     }
 
@@ -222,6 +226,11 @@ const MenuAdmin = ({ setVideoTNV }) => {
         }
     };
 
+    const onPreviewHistory = (item) => {
+        setShowPreview(true);
+        setPreview(item)
+    }
+
     return (
         <div className='AI-menu-taking'>
             <Menu
@@ -233,13 +242,43 @@ const MenuAdmin = ({ setVideoTNV }) => {
                 mode="inline"
                 items={items}
             />
-            <Drawer title="Lịch sử đăng tải" placement="right" onClose={() => setShowPanelHistory(false)} open={showPanelHistory}>
-                {/* {files.map((item, i) => {
+            <Drawer title="Lịch sử chấp thuận" placement="right" onClose={() => setShowPanelHistory(false)} open={showPanelHistory}>
+                {history.map((item, i) => {
                     return (
-                        <ImageCard file={item} key={i}></ImageCard>
+                        <div style={{ height: '50px', width: '100%', borderBottom: '1px solid #bdbdbd', display: 'flex', justifyContent: 'space-between' }} key={i}>
+                            <div style={{}}>
+                                <h4 className="conversation__name" style={{ fontWeight: 600 }}>{i + 1}. {item.content}</h4>
+                                <h4 className="conversation__name">Người đăng: {item.volunteerEmail}</h4>
+                            </div>
+                            <button onClick={() => { onPreviewHistory(item) }}>
+                                <EyeTwoTone style={{ fontSize: '1.25rem' }} />
+                            </button>
+                        </div>
                     );
-                })} */}
+                })}
             </Drawer>
+            <Modal
+                open={showPreview}
+                footer={[]}
+                onCancel={() => {
+                    if (videoRef.current) {
+                        videoRef.current.pause();
+                        videoRef.current.currentTime = 0;
+                    }
+                    setShowPreview(false)
+                }}
+                style={{ top: 20 }}
+                title={preview?.content}
+                key={preview?.id}
+            >
+                <video ref={videoRef} controls style={{
+                    width: '100%',
+                    height: 'auto',
+                    marginTop: '30px',
+                }}>
+                    <source src={preview?.dataLocation} type="video/mp4" />
+                </video>
+            </Modal>
             <Modal
                 open={showCreateQuestions}
                 title="Tạo câu hỏi kiểm tra"
