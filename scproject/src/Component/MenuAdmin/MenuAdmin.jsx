@@ -92,6 +92,7 @@ const MenuAdmin = ({ setVideoTNV }) => {
             .then(() => {
                 setLoading(false);
                 setshowCreateQuestions(false);
+                onCloseAdd();
                 message.success(`Tạo câu hỏi thành công.`);
             })
             .catch(error => {
@@ -120,6 +121,7 @@ const MenuAdmin = ({ setVideoTNV }) => {
             })
             .then(() => {
                 setLoading(false);
+                onCloseAdd();
                 setShowAddWord(false);
                 message.success(`Thêm từ điển lên thành công.`);
             })
@@ -182,6 +184,7 @@ const MenuAdmin = ({ setVideoTNV }) => {
                 setLoading(false);
                 setshowAddTopic(false);
                 getTopic();
+                onCloseAdd();
                 message.success(`Thêm chủ đề ${data.content} thành công.`);
             }, 500);
         }
