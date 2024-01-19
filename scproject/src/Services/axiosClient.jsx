@@ -36,8 +36,8 @@ export  const axiosUserClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 export  const axiosUploadVideoClient = axios.create({
-  // baseURL: "https://wetalk.ibme.edu.vn/data-collection-service/",
-  baseURL: "http://wetalk.ibme.edu.vn:8090/",
+  baseURL: "https://wetalk.ibme.edu.vn/data-collection-service/",
+  // baseURL: "http://wetalk.ibme.edu.vn:8090/",
   headers: {
     "content-type": 'multipart/form-data',
   },
