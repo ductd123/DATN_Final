@@ -7,7 +7,6 @@ import MenuAdmin from "../../Component/MenuAdmin/MenuAdmin";
 import { ArrowLeftOutlined, ArrowRightOutlined, AuditOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import VideoCall from "../../Component/VideoCall/VideoCall";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
-import defaultvideo from '../../assets/image/defaultvideo.png'
 
 const AdminLayout = () => {
     const [listAccept, setListAccept] = useState({});
@@ -26,13 +25,14 @@ const AdminLayout = () => {
         setListAccept(response.data)
     }
     const getHistory = async () => {
+        setLoading(true);
         try {
             let response = await apiUploadFile.getApprovedData();
-            const items = [];
             setHistory(response.data);
-
+            setLoading(false);
         } catch (error) {
-
+            setLoading(false);
+            console.log(error);
         }
     }
     const approvedData = async (id) => {

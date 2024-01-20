@@ -94,6 +94,7 @@ const VolunterLayout = () => {
 
             const link = await apiUploadFile.uploadFile(formData);
             if (link) {
+                setLoading(true);
                 try {
                     const data = {
                         dataLocation: link,
@@ -101,17 +102,17 @@ const VolunterLayout = () => {
                         dataType: "Vocab"
                     }
                     await apiUploadFile.sendData(data);
+                    setLoading(false);
                     message.success(` Thêm dữ liệu cho ${showDetail.name} thành công.`)
                 } catch (error) {
                     console.log(error);
+                    setLoading(false);
                 }
-
             }
         } catch (error) {
             console.error('Error fetching and converting to file:', error);
         }
     };
-
 
     const handleViewRecordedVideo = async () => {
         setShowPreviewRecord(true);
@@ -189,13 +190,6 @@ const VolunterLayout = () => {
                         <div className="record-container-child-video">
                             <Webcam mirrored={true} style={{ width: '100%' }} audio={false} ref={webcamRef} />
                         </div>
-                        {/* {recordedVideo && <div>
-                            <p>Xem lại video:</p>
-                            <video ref={previewRef} controls width="100%">
-                                <source src={recordedVideo} type="video/webm" />
-                                video không hỗ trợ cho trình duyệt này.
-                            </video>
-                        </div>} */}
                         <div className="record-container-button">
                             <Button
                                 onClick={handleStartRecording}
