@@ -127,10 +127,10 @@ export default function HeaderBar({ disableSearch }) {
         style={{ top: 20 }}
       >
         <div className="nav-userInfo-background">
-          <img style={{ width: '100%' }} src="https://picsum.photos/204"></img>
+          <img style={{ width: '100%' }} src={"https://picsum.photos/204"}></img>
         </div>
         <div className="nav-userInfo-header">
-          <img src="https://picsum.photos/200" className="nav-userInfo-header-avt"></img>
+          <img src={userInfo?.avatarLocation || "https://picsum.photos/204"} className="nav-userInfo-header-avt"></img>
           <span className="nav-userInfo-header-name">{userInfo?.name || "Chưa có thông tin"}</span>
         </div>
         <div style={{ height: '8px', backgroundColor: '#efefef', borderRadius: '4px' }}></div>
@@ -138,7 +138,7 @@ export default function HeaderBar({ disableSearch }) {
           <span className="nav-userInfo-detail-header">Thông tin cá nhân</span>
           <div className="nav-userInfo-detail-items">
             <span className="nav-userInfo-detail-items-title">Giới tính</span>
-            <span className="nav-userInfo-detail-items-content">{userInfo?.gender === "FEMALE" ? "Nam" : "Nữ" || "Chưa có thông tin"}</span>
+            <span className="nav-userInfo-detail-items-content">{userInfo?.gender === "MALE" ? "Nam" : "Nữ" || "Chưa có thông tin"}</span>
           </div>
           <div className="nav-userInfo-detail-items">
             <span className="nav-userInfo-detail-items-title">Điện thoại</span>
