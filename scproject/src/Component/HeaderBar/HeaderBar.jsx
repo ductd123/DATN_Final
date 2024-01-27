@@ -37,6 +37,7 @@ export default function HeaderBar({ disableSearch }) {
             email: item.email,
             name: item.name,
             id: item.id,
+            avatarLocation:item.avatarLocation,
           }));
           setResultSearch(data);
         }, 500);

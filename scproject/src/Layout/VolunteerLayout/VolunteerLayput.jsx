@@ -108,6 +108,12 @@ const VolunterLayout = () => {
                     let response = await apiUploadFile.checkAI(data);
                     setLoading(false);
                     if (normalizeString(response.content) === normalizeString(content)) {
+                        let body = {
+                            dataLocation: link,
+                            content: showDetail.name,
+                            dataType: "Vocab"
+                        }
+                        await apiUploadFile.sendData(body);
                         message.success(`Thêm dữ liệu cho ${showDetail.name} thành công.`)
                     }
                     else {
@@ -151,7 +157,7 @@ const VolunterLayout = () => {
     const onChooseVocab = (e) => {
         const x = vocabInit.find(i => i.id == e);
         if (x.videoLocation === "") {
-            videoRef.current=null;
+            videoRef.current = null;
         }
         setShowDetail({
             id: x.id,

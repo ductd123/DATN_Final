@@ -58,7 +58,7 @@ const AdminLayout = () => {
                 feedBack: ""
             }
             await apiUploadFile.rejectData(data);
-            message.success("Đãtừ chối dữ liệu thành công");
+            message.success("Đã từ chối dữ liệu thành công");
             initPendingData();
         } catch (error) {
             setLoading(false);
@@ -117,7 +117,7 @@ const AdminLayout = () => {
                                                     <h4 className="conversation__name">Nội dung: {item.volunteerEmail}</h4>
                                                 </div>
                                                 <div className="contact_button">
-                                                    <Button className="contact_button-deny" key={`tuchoi ${item.id}`} onClick={() => onPreviewHistory(item)}>Xem lại</Button>
+                                                    <Button className="contact_button-deny" key={`xemlai ${item.id}`} onClick={() => onPreviewHistory(item)}>Xem lại</Button>
                                                     <Button className="contact_button-deny" key={`tuchoi ${item.id}`} onClick={() => rejectData(item.id)}>Từ chối</Button>
                                                     <Button className="contact_button-accept" key={`chapnhan ${item.id}`} onClick={() => approvedData(item.id)}>Đồng ý</Button>
                                                 </div>
