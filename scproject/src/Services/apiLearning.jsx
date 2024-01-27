@@ -1,4 +1,4 @@
-import { axiosLearningClient, axiosUploadVideoClient, axiosUploadVolunteerClient } from "./axiosClient";
+import { axiosCheckAIClient, axiosLearningClient, axiosUploadVideoClient, axiosUploadVolunteerClient } from "./axiosClient";
 
 export const apiLearning = {
     themTuDien: (data) => {
@@ -59,5 +59,9 @@ export const apiUploadFile = {
     approvedData: (id) => {
         const url = `collect-data/approve/${id}`;
         return axiosUploadVolunteerClient.get(url);
+    },
+    checkAI:(data)=> {
+        const url = "ai/detection";
+        return axiosCheckAIClient.post(url, data);
     },
 };

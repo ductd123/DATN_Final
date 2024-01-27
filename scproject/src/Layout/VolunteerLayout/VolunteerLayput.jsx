@@ -7,6 +7,12 @@ import { Button, Modal, Select, Tooltip, message } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import './VolunteerLayout.scss'
+function normalizeString(inputString) {
+    let lowercasedString = inputString.toLowerCase();
+    let strippedString = lowercasedString.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let alphanumericString = strippedString.replace(/[^a-z0-9]/g, "");
+    return alphanumericString;
+}
 
 const VolunterLayout = () => {
     const [loading, setLoading] = useState(false);
@@ -23,6 +29,7 @@ const VolunterLayout = () => {
         video: true,
         audio: false
     });
+    const [content, setContent] = useState();
     const webcamRef = useRef(null);
     const videoRef = useRef(null);
     const previewRef = useRef(null);
@@ -76,8 +83,7 @@ const VolunterLayout = () => {
         clearInterval(recordingTimerId);
         setRecordingTime(0);
         try {
-            const response = await fetch(recordedVideo);
-            console.log(response);
+            await fetch(recordedVideo);
         } catch (error) {
             console.error("Error fetching video binary:", error);
         }
@@ -94,24 +100,28 @@ const VolunterLayout = () => {
 
             const link = await apiUploadFile.uploadFile(formData);
             if (link) {
+                setLoading(true);
                 try {
                     const data = {
-                        dataLocation: link,
-                        content: showDetail.name,
-                        dataType: "Vocab"
+                        videoUrl: link,
                     }
-                    await apiUploadFile.sendData(data);
-                    message.success(` Thêm dữ liệu cho ${showDetail.name} thành công.`)
+                    let response = await apiUploadFile.checkAI(data);
+                    setLoading(false);
+                    if (normalizeString(response.content) === normalizeString(content)) {
+                        message.success(`Thêm dữ liệu cho ${showDetail.name} thành công.`)
+                    }
+                    else {
+                        message.error(`AI nhận diện dữ diệu không hợp lệ (là ${response.content}), vui lòng thử lại`)
+                    }
                 } catch (error) {
                     console.log(error);
+                    setLoading(false);
                 }
-
             }
         } catch (error) {
             console.error('Error fetching and converting to file:', error);
         }
     };
-
 
     const handleViewRecordedVideo = async () => {
         setShowPreviewRecord(true);
@@ -146,6 +156,11 @@ const VolunterLayout = () => {
             preview: x.imageLocation !== "" ? x.imageLocation : x.videoLocation,
             name: x.content
         })
+        if (videoRef.current) {
+            videoRef.current.load();
+            videoRef.current.play();
+        }
+        setContent(x.content);
     }
 
     const handleStartRecording = () => {
@@ -174,7 +189,7 @@ const VolunterLayout = () => {
                             {/* {showDetail?.type === 2 ? */}
                             {showDetail?.type === 1 && <img src={showDetail?.preview} alt="Uploaded" className="record-container-child-video" />}
 
-                            {showDetail?.type === 2 && <video ref={videoRef} controls className="record-container-child-video">
+                            {showDetail?.type === 2 && <video ref={videoRef} key={videoRef} controls className="record-container-child-video">
                                 <source src={showDetail?.preview} type="video/mp4" />
                             </video>}
                             {/* } */}
@@ -189,13 +204,6 @@ const VolunterLayout = () => {
                         <div className="record-container-child-video">
                             <Webcam mirrored={true} style={{ width: '100%' }} audio={false} ref={webcamRef} />
                         </div>
-                        {/* {recordedVideo && <div>
-                            <p>Xem lại video:</p>
-                            <video ref={previewRef} controls width="100%">
-                                <source src={recordedVideo} type="video/webm" />
-                                video không hỗ trợ cho trình duyệt này.
-                            </video>
-                        </div>} */}
                         <div className="record-container-button">
                             <Button
                                 onClick={handleStartRecording}
