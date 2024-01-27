@@ -51,6 +51,8 @@ export default function Contact() {
       setTimeout(() => {
         setLoading(false);
       }, 500);
+      fetchListAddFri();
+      fetchListFri();
     }
     catch (error) {
       console.log(error);
@@ -65,6 +67,8 @@ export default function Contact() {
       setTimeout(() => {
         setLoading(false);
       }, 500);
+      fetchListAddFri();
+      fetchListFri();
     }
     catch (error) {
       console.log(error);
@@ -117,7 +121,7 @@ export default function Contact() {
                 <Link to={`/room/${item.id}`} className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
                   <div className="conversation__content">
                     <img
-                      src="https://picsum.photos/270"
+                      src={item.avatarLocation}
                       alt=""
                       className="conversation__img"
                     />
