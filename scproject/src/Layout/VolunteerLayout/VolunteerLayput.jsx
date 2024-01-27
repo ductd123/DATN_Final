@@ -150,15 +150,23 @@ const VolunterLayout = () => {
 
     const onChooseVocab = (e) => {
         const x = vocabInit.find(i => i.id == e);
+        if (x.videoLocation === "") {
+            videoRef.current=null;
+        }
         setShowDetail({
             id: x.id,
             type: x.imageLocation !== "" ? 1 : 2,
             preview: x.imageLocation !== "" ? x.imageLocation : x.videoLocation,
             name: x.content
         })
-        if (videoRef.current) {
-            videoRef.current.load();
-            videoRef.current.play();
+        try {
+            if (videoRef.current) {
+                videoRef.current.load();
+                videoRef.current.play();
+            }
+
+        } catch (error) {
+
         }
         setContent(x.content);
     }
