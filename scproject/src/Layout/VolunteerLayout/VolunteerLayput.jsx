@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "../../Component";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
-import { VideoCameraAddOutlined, WarningFilled } from "@ant-design/icons";
+import { CameraOutlined, HistoryOutlined, VideoCameraAddOutlined, WarningFilled } from "@ant-design/icons";
 import Webcam from "react-webcam";
-import { Button, Modal, Select, Tooltip, message } from "antd";
+import { Button, FloatButton, Modal, Select, Space, Table, Tag, Tooltip, message } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import './VolunteerLayout.scss'
@@ -19,12 +19,35 @@ const VolunterLayout = () => {
     const [recordingTime, setRecordingTime] = useState(0);
     const [recordingTimerId, setRecordingTimerId] = useState(null);
     const [recordedVideo, setRecordedVideo] = useState(null);
-    const [binaryData, setBinaryData] = useState(null);
+    const [recordPage, setRecordedPage] = useState(true);
     const [topicInit, setTopicInit] = useState();
     const [vocabInit, setVocabInit] = useState();
     const [vocabOption, setVocabOption] = useState();
     const [showDetail, setShowDetail] = useState();
     const [showPreviewRecord, setShowPreviewRecord] = useState(false);
+    const dataTable = [
+        {
+            key: '1',
+            name: 'John Brown',
+            age: 32,
+            address: 'New York No. 1 Lake Park',
+            tags: ['nice', 'developer'],
+        },
+        {
+            key: '2',
+            name: 'Jim Green',
+            age: 42,
+            address: 'London No. 1 Lake Park',
+            tags: ['loser'],
+        },
+        {
+            key: '3',
+            name: 'Joe Black',
+            age: 32,
+            address: 'Sydney No. 1 Lake Park',
+            tags: ['cool', 'teacher'],
+        },
+    ];
     const { status, startRecording, stopRecording, mediaBlobUrl, duration } = useReactMediaRecorder({
         video: true,
         audio: false
@@ -48,6 +71,41 @@ const VolunterLayout = () => {
             setRecordingTime(0);
         }
     }, [recordingTime]);
+
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            filters: topicInit,
+            filterMode: 'tree',
+            filterSearch: true,
+            onFilter: (value, record) => record.name.startsWith(value),
+            width: '30%',
+        },
+        {
+            title: 'Age',
+            dataIndex: 'age',
+            sorter: (a, b) => a.age - b.age,
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            filters: [
+                {
+                    text: 'London',
+                    value: 'London',
+                },
+                {
+                    text: 'New York',
+                    value: 'New York',
+                },
+            ],
+            onFilter: (value, record) => record.address.startsWith(value),
+            filterSearch: true,
+            width: '40%',
+        },
+    ];
+
     const getTopic = async () => {
         setLoading(true);
         try {
@@ -59,6 +117,7 @@ const VolunterLayout = () => {
                     id: element.id,
                     value: element.id,
                     label: element.content,
+                    text: element.content,
                 })
             });
             setTopicInit(items);
@@ -189,7 +248,28 @@ const VolunterLayout = () => {
         <div className="main-layout">
             <LoadingComponent loading={loading} />
             <Nav />
-            <div className="contact" style={{ height: '100%' }}>
+            {recordPage ? <Tooltip title="Nội dung đã đăng tải" placement="left" trigger="hover" color="#4096ff" >
+                <FloatButton
+                    style={{
+                        right: 34,
+                    }}
+                    type="primary"
+                    icon={<HistoryOutlined />}
+                    onClick={() => setRecordedPage(false)}
+                />
+            </Tooltip>
+                : <Tooltip title="Quay video ngôn ngữ ký tự" placement="left" trigger="hover" color="#4096ff" >
+                    <FloatButton
+                        style={{
+                            right: 34,
+                        }}
+                        type="primary"
+                        icon={<VideoCameraAddOutlined />}
+                        onClick={() => setRecordedPage(true)}
+                    />
+                </Tooltip>
+            }
+            {recordPage ? <div className="contact" style={{ height: '100%' }}>
                 <div className="contact-panel__header">
                     <div className="list-contact__selection">
                         <VideoCameraAddOutlined />
@@ -242,6 +322,16 @@ const VolunterLayout = () => {
                     </div>
                 </div>
             </div>
+                : <div className="contact" style={{ height: '100%' }}>
+                    <div className="contact-panel__header">
+                        <div className="list-contact__selection">
+                            <VideoCameraAddOutlined />
+                            <div className="list-contact__content">Nội dung tình nguyện viên đã đăng tải</div>
+                        </div>
+                        <Table dataSource={dataTable} columns={columns} />
+                    </div>
+                </div>
+            }
             <Modal
                 open={showPreviewRecord}
                 onClose={() => setShowPreviewRecord(false)}
