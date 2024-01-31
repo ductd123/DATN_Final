@@ -9,7 +9,7 @@
       width: 100%;
       height: auto;
       margin-top: 10px;
-      max-height:  calc(100vh - 155px);
+      max-height: calc(100vh - 155px);
     }
     &-header {
       display: flex;
@@ -20,8 +20,15 @@
       font-weight: 600;
     }
   }
-  &-button{
+  &-button {
     margin-top: 10px;
     width: 100%;
   }
+}
+.dot-status {
+  border-radius: 30px;
+  height: 8px;
+  width: 8px;
+  display: inline-block;
+  margin-right: 8px;
 }

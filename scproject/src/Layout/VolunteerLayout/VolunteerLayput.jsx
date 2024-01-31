@@ -7,6 +7,9 @@ import { Button, FloatButton, Modal, Select, Space, Table, Tag, Tooltip, message
 import { useReactMediaRecorder } from "react-media-recorder";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import './VolunteerLayout.scss'
+import TableData from "./TableData";
+import dayjs from "dayjs";
+
 function normalizeString(inputString) {
     let lowercasedString = inputString.toLowerCase();
     let strippedString = lowercasedString.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -25,29 +28,7 @@ const VolunterLayout = () => {
     const [vocabOption, setVocabOption] = useState();
     const [showDetail, setShowDetail] = useState();
     const [showPreviewRecord, setShowPreviewRecord] = useState(false);
-    const dataTable = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sydney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
+    const [dataTable, setDataTable] = useState([])
     const { status, startRecording, stopRecording, mediaBlobUrl, duration } = useReactMediaRecorder({
         video: true,
         audio: false
@@ -58,6 +39,7 @@ const VolunterLayout = () => {
     const previewRef = useRef(null);
     useEffect(() => {
         getTopic();
+        getTableData();
     }, [])
 
     useEffect(() => {
@@ -72,39 +54,28 @@ const VolunterLayout = () => {
         }
     }, [recordingTime]);
 
-    const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            filters: topicInit,
-            filterMode: 'tree',
-            filterSearch: true,
-            onFilter: (value, record) => record.name.startsWith(value),
-            width: '30%',
-        },
-        {
-            title: 'Age',
-            dataIndex: 'age',
-            sorter: (a, b) => a.age - b.age,
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            filters: [
-                {
-                    text: 'London',
-                    value: 'London',
-                },
-                {
-                    text: 'New York',
-                    value: 'New York',
-                },
-            ],
-            onFilter: (value, record) => record.address.startsWith(value),
-            filterSearch: true,
-            width: '40%',
-        },
-    ];
+    const getTableData = async () => {
+        setLoading(true);
+        let data = {
+            page: 1,
+            size: 999999,
+            volunteerEmail: "",
+            topic: "",
+            vocab: "",
+            ascending: true,
+            orderBy: "",
+            createdFrom: "",
+            createdTo: ''
+        }
+        try {
+            setLoading(false);
+            let response = await apiLearning.getTableData(data);
+            console.log(response.data);
+            setDataTable( response.data);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
 
     const getTopic = async () => {
         setLoading(true);
@@ -169,8 +140,7 @@ const VolunterLayout = () => {
                     if (normalizeString(response.content) === normalizeString(content)) {
                         let body = {
                             dataLocation: link,
-                            content: showDetail.name,
-                            dataType: "Vocab"
+                            vocab_id: showDetail.id,
                         }
                         await apiUploadFile.sendData(body);
                         message.success(`Thêm dữ liệu cho ${showDetail.name} thành công.`)
@@ -328,7 +298,7 @@ const VolunterLayout = () => {
                             <VideoCameraAddOutlined />
                             <div className="list-contact__content">Nội dung tình nguyện viên đã đăng tải</div>
                         </div>
-                        <Table dataSource={dataTable} columns={columns} />
+                        <TableData data={dataTable} />
                     </div>
                 </div>
             }

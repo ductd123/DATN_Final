@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { HeaderBar, MenuTakingExam, Nav } from "../../Component";
-import { Button, Empty, Modal, message } from "antd";
+import { Button, DatePicker, Empty, FloatButton, Input, Modal, Select, Table, Tooltip, message } from "antd";
 import './AdminLayout.scss';
 import LoadingComponent from "../../Component/Common/Loading/Loading";
 import MenuAdmin from "../../Component/MenuAdmin/MenuAdmin";
-import { ArrowLeftOutlined, ArrowRightOutlined, AuditOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, ArrowRightOutlined, AuditOutlined, EyeFilled, EyeInvisibleTwoTone, EyeTwoTone, HistoryOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import VideoCall from "../../Component/VideoCall/VideoCall";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
+import dayjs from "dayjs";
+
 
 const AdminLayout = () => {
     const [listAccept, setListAccept] = useState({});
@@ -16,14 +18,155 @@ const AdminLayout = () => {
     const [preview, setPreview] = useState('');
     const [showPreview, setShowPreview] = useState(false);
     const [history, setHistory] = useState([]);
+    const [showPending, setShowPending] = useState(false);
     const videoRef = useRef(null);
+    const [dataTable, setDataTable] = useState([]);
+    const [showFilter, setShowFilter] = useState(false);
+    const [vocabInit, setVocabInit] = useState();
+    const [vocabOption, setVocabOption] = useState();
+    const [topicInit, setTopicInit] = useState();
+    const [filter, setFilter] = useState({
+        page: 1,
+        size: 999999,
+        volunteerEmail: "",
+        topic: "",
+        vocab: "",
+        ascending: true,
+        orderBy: "",
+        createdFrom: "",
+        createdTo: ''
+    });
+
+    const statusEnum = [
+
+        {
+            id: 0,
+            value: 0,
+            label: <div style={{ display: 'table' }}>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid gray`, backgroundColor: 'gray' }}></div></div>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đang chờ xét duyệt</div>
+            </div>,
+            text: <div style={{ display: 'table' }}>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid gray`, backgroundColor: 'gray' }}></div></div>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đang chờ xét duyệt</div>
+            </div>,
+        },
+        {
+            id: 100,
+            value: 100,
+            label: <div style={{ display: 'table' }}>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid #00db00`, backgroundColor: '#00db00' }}></div></div>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đã xét duyệt</div>
+            </div>,
+            text: <div style={{ display: 'table' }}>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid #00db00`, backgroundColor: '#00db00' }}></div></div>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đã xét duyệt</div>
+            </div>,
+        },
+        {
+            id: 200,
+            value: 200,
+            label: <div style={{ display: 'table' }}>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid red`, backgroundColor: 'red' }}></div></div>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Từ chối</div>
+            </div>,
+            text: <div style={{ display: 'table' }}>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid red`, backgroundColor: 'red' }}></div></div>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Từ chối</div>
+            </div>,
+        }
+
+    ]
+
+    const columns = [
+        {
+            title: 'Chủ đề',
+            dataIndex: 'topic',
+            key: 'topic',
+            width: '10%',
+            render: (a) => <span style={{ fontWeight: 500 }}>{a}</span>
+        },
+        {
+            title: 'Từ vựng',
+            dataIndex: 'vocab',
+            key: 'vocab',
+            sorter: (a, b) => a.age - b.age,
+            width: '10%',
+            render: (a) => <span style={{ fontWeight: 500 }}>{a}</span>
+        },
+        {
+            title: 'Người đăng',
+            dataIndex: 'author',
+            key: 'author',
+            width: '20%',
+        },
+        {
+            title: 'Ngày đăng',
+            dataIndex: 'created',
+            key: 'created',
+            width: '20%',
+            render: (text) => <span>{new Date(text).getHours()}:{new Date(text).getMinutes()} {new Date(text).getDate()}/{new Date(text).getMonth() + 1}/{new Date(text).getFullYear()}</span>,
+        },
+        // {
+        //     title: 'Trạng thái',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     width: '20%',
+        //     render: (status) => status == '0' ? <div style={{ display: 'table' }}>
+        //         <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid gray`, backgroundColor: 'gray' }}></div></div>
+        //         <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đang chờ xét duyệt</div>
+        //     </div>
+        //         : status == '200' ? <div style={{ display: 'table' }}>
+        //             <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid red`, backgroundColor: 'red' }}></div></div>
+        //             <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Từ chối</div>
+        //         </div>
+        //             : <div style={{ display: 'table' }}>
+        //                 <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid #00db00`, backgroundColor: '#00db00' }}></div></div>
+        //                 <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đã xét duyệt</div>
+        //             </div>
+        // },
+        {
+            title: 'Xem lại',
+            dataIndex: 'dataLocation',
+            key: 'dataLocation',
+            width: '20%',
+            render: (text) => <Button key={text} onClick={() => xemLaiData(text)} icon={<EyeTwoTone style={{ fontSize: '1.25rem' }} />} ></Button>,
+        },
+
+    ];
+
     useEffect(() => {
         initPendingData();
+        getTableData();
+        getTopic();
+        setShowPending(true);
     }, [])
+
     const initPendingData = async () => {
         let response = await apiUploadFile.getPendingData();
         setListAccept(response.data)
     }
+    const getTopic = async () => {
+        setLoading(true);
+        try {
+            setLoading(false);
+            let response = await apiLearning.getTopic();
+            const items = [];
+            response.data.forEach((element, index) => {
+                items.push({
+                    id: element.id,
+                    value: element.id,
+                    label: element.content,
+                    text: element.content,
+                })
+            });
+            setTopicInit(items);
+
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     const getHistory = async () => {
         setLoading(true);
         try {
@@ -33,6 +176,29 @@ const AdminLayout = () => {
         } catch (error) {
             setLoading(false);
             console.log(error);
+        }
+    }
+
+    const getTableData = async () => {
+        setLoading(true);
+        try {
+            setLoading(false);
+            let response = await apiLearning.getTableData(filter);
+            console.log(response.data);
+            setDataTable(response.data);
+            setFilter({
+                page: 1,
+                size: 999999,
+                volunteerEmail: "",
+                topic: "",
+                vocab: "",
+                ascending: true,
+                orderBy: "",
+                createdFrom: "",
+                createdTo: ''
+            })
+        } catch (error) {
+            setLoading(false);
         }
     }
     const approvedData = async (id) => {
@@ -65,16 +231,83 @@ const AdminLayout = () => {
             message.error("Kết nối không ổn định, vui lòng thử lại.")
         }
     }
-
+    const xemLaiData = (link) => {
+        let item = {
+            content: '',
+            id: link,
+            dataLocation: link
+        }
+        setPreview(item)
+        setShowPreview(true);
+    }
     const onPreviewHistory = (item) => {
         setShowPreview(true);
         setPreview(item)
     }
+    const onChangeFilter = (property, value) => {
+        setFilter({
+            ...filter,
+            [property]: value
+        })
+    }
+
+    const onChooseTopic = async (e) => {
+        setLoading(true);
+        // onChangeFilter('topic',e)
+        let data = {
+            page: 1,
+            size: 9999,
+            text: "",
+            ascending: true,
+            orderBy: "content",
+            topicId: e
+        }
+        try {
+            setLoading(false);
+            let response = await apiLearning.searchVocab(data);
+            const items = [];
+            response.data.forEach((element, index) => {
+                items.push({
+                    id: element.id,
+                    value: element.content,
+                    label: element.content,
+                })
+            });
+            setVocabOption(items);
+        } catch (error) {
+            setLoading(false);
+        }
+    };
+
 
     return (
         <div className="main-layout">
             <LoadingComponent loading={loading} />
             <Nav />
+            {showPending ? <Tooltip title="Thống kê nội dung đã phê duyệt" placement="left" trigger="hover" color="#4096ff" >
+                <FloatButton
+                    style={{
+                        right: 34,
+                    }}
+                    type="primary"
+                    icon={<AuditOutlined />}
+                    onClick={() => {
+                        setShowPending(false);
+                        setSimpleMenu(true);
+                    }}
+                />
+            </Tooltip>
+                : <Tooltip title="Xem danh sách cần phê duyệt" placement="left" trigger="hover" color="#4096ff" >
+                    <FloatButton
+                        style={{
+                            right: 34,
+                        }}
+                        type="primary"
+                        icon={<HistoryOutlined />}
+                        onClick={() => setShowPending(true)}
+                    />
+                </Tooltip>
+            }
             <div className="main-layout__container">
                 <div className="main-layout__side-bar" style={simpleMenu ? { width: '50px' } : {}}>
                     <div className="main-layout__header-bar">
@@ -90,7 +323,7 @@ const AdminLayout = () => {
                         <MenuAdmin getHistory={getHistory} history={history} setVideoTNV={setVideoTNV} />
                     </div>
                 </div>
-                <div className="main-layout__children flex-center">
+                {showPending ? <div className="main-layout__children flex-center">
                     <div className="contact">
                         <div className="contact-panel__header">
                             <div className="list-contact__selection">
@@ -134,7 +367,100 @@ const AdminLayout = () => {
                         </div>
                     </div>
                 </div>
+                    : <div className="contact" style={{ height: '100%' }}>
+                        <div className="contact-panel__header">
+                            <div className="list-contact__selection">
+                                <VideoCameraAddOutlined />
+                                <div className="list-contact__content">Nội dung đã được phê duyệt</div>
+                            </div>
+                            <div style={{ padding: 20, overflow: 'auto', height: 'calc(100vh - 44px)' }}>
+                                <Button
+                                    type="primary"
+                                    style={{ fontWeight: 500, marginBottom: 10 }}
+                                    onClick={() => {
+                                        getTableData();
+                                        setShowFilter(false);
+                                    }} >
+                                    Tìm kiếm
+                                </Button>
+                                <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+                                    <Select style={{ width: 200 }} placeholder="Chọn chủ đề" options={topicInit} onChange={onChooseTopic} />
+                                    <Select style={{ width: 200 }} placeholder="Chọn từ vựng" options={vocabOption} onChange={(e) => onChangeFilter('vocab', e)} />
+                                    <Input placeholder="Tìm theo người đăng" onChange={(e) => onChangeFilter("volunteerEmail", e.target.value)} />
+                                    <DatePicker
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        format="DD/MM/YYYY"
+                                        placeholder="Thời gian đăng từ"
+                                        onChange={(e) => {
+                                            const year = e?.$y;
+                                            const month = (e?.$M + 1).toString().padStart(2, '0');
+                                            const day = (e?.$D).toString().padStart(2, '0');
+
+                                            onChangeFilter('createTo', `${year}-${month}-${day}`);
+                                        }}
+                                    />
+                                    <DatePicker
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        format="DD/MM/YYYY"
+                                        placeholder="Thời gian đăng đến"
+                                        onChange={(e) => {
+                                            const year = e?.$y || 2000;
+                                            const month = (e?.$M + 1).toString().padStart(2, '0');
+                                            const day = (e?.$D || '01').toString().padStart(2, '0');
+
+                                            onChangeFilter('createFrom', `${year}-${month}-${day}`);
+                                        }}
+                                    />
+                                </div>
+                                <Table dataSource={dataTable} columns={columns} />
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
+            <Modal
+                open={showFilter}
+                onCancel={() => setShowFilter(false)}
+                onOk={() => {
+                    getTableData();
+                    setShowFilter(false);
+
+                }}
+                okText={"Tìm kiếm"}
+                cancelText="Hủy bỏ"
+                title="Tìm kiếm nội dung"
+            >
+                <div className="filter">
+                    <div style={{ minWidth: '100px', display: 'inline-grid', gap: 4 }}>
+                        <span style={{ fontWeight: 500 }}>Chọn chủ đề</span>
+                        <Select options={topicInit} onChange={onChooseTopic} />
+                    </div>
+                    <div style={{ minWidth: '100px', display: 'inline-grid', gap: 4 }}>
+                        <span style={{ fontWeight: 500 }}>Chọn từ vựng</span>
+                        <Select />
+                    </div>
+                    <div style={{ minWidth: '100px', display: 'inline-grid', gap: 4 }}>
+                        <span style={{ fontWeight: 500 }}>Người đăng</span>
+                        <Input placeholder="nhập Email người đăng" />
+                    </div>
+                    <div style={{ minWidth: '100px', display: 'inline-grid', gap: 4 }}>
+                        <span style={{ fontWeight: 500 }}>Thời gian đăng: Từ</span>
+
+                    </div>
+                    <div style={{ minWidth: '100px', display: 'inline-grid', gap: 4 }}>
+                        <span style={{ fontWeight: 500 }}>Đến:</span>
+
+                    </div>
+                    {/* <div style={{ minWidth: '100px', display: 'inline-grid', gap: 4 }}>
+                        <span style={{ fontWeight: 500 }}>Trạng thái</span>
+                        <Select options={statusEnum} onChange={(e)=>onChangeFilter('status', e)} />
+                    </div> */}
+                </div>
+            </Modal>
             <Modal
                 open={showPreview}
                 footer={[]}

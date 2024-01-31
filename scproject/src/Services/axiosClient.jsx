@@ -47,7 +47,7 @@ export  const axiosCheckAIClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 export  const axiosUploadVolunteerClient = axios.create({
-  baseURL: "https://wetalk.ibme.edu.vn/data-collection-service/",
+  baseURL: "https://wetalk.ibme.edu.vn/learning-service/",
   headers: {
     "content-type": "application/json",
   },
