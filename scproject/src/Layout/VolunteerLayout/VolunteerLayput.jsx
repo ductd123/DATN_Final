@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "../../Component";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
-import { VideoCameraAddOutlined, WarningFilled } from "@ant-design/icons";
+import { CameraOutlined, HistoryOutlined, VideoCameraAddOutlined, WarningFilled } from "@ant-design/icons";
 import Webcam from "react-webcam";
-import { Button, Modal, Select, Tooltip, message } from "antd";
+import { Button, FloatButton, Modal, Select, Space, Table, Tag, Tooltip, message } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import './VolunteerLayout.scss'
+import TableData from "./TableData";
+import dayjs from "dayjs";
+
 function normalizeString(inputString) {
     let lowercasedString = inputString.toLowerCase();
     let strippedString = lowercasedString.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -19,12 +22,13 @@ const VolunterLayout = () => {
     const [recordingTime, setRecordingTime] = useState(0);
     const [recordingTimerId, setRecordingTimerId] = useState(null);
     const [recordedVideo, setRecordedVideo] = useState(null);
-    const [binaryData, setBinaryData] = useState(null);
+    const [recordPage, setRecordedPage] = useState(true);
     const [topicInit, setTopicInit] = useState();
     const [vocabInit, setVocabInit] = useState();
     const [vocabOption, setVocabOption] = useState();
     const [showDetail, setShowDetail] = useState();
     const [showPreviewRecord, setShowPreviewRecord] = useState(false);
+    const [dataTable, setDataTable] = useState([])
     const { status, startRecording, stopRecording, mediaBlobUrl, duration } = useReactMediaRecorder({
         video: true,
         audio: false
@@ -35,6 +39,7 @@ const VolunterLayout = () => {
     const previewRef = useRef(null);
     useEffect(() => {
         getTopic();
+        getTableData();
     }, [])
 
     useEffect(() => {
@@ -48,6 +53,30 @@ const VolunterLayout = () => {
             setRecordingTime(0);
         }
     }, [recordingTime]);
+
+    const getTableData = async () => {
+        setLoading(true);
+        let data = {
+            page: 1,
+            size: 999999,
+            volunteerEmail: "",
+            topic: "",
+            vocab: "",
+            ascending: true,
+            orderBy: "",
+            createdFrom: "",
+            createdTo: ''
+        }
+        try {
+            setLoading(false);
+            let response = await apiLearning.getTableData(data);
+            console.log(response.data);
+            setDataTable( response.data);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     const getTopic = async () => {
         setLoading(true);
         try {
@@ -59,6 +88,7 @@ const VolunterLayout = () => {
                     id: element.id,
                     value: element.id,
                     label: element.content,
+                    text: element.content,
                 })
             });
             setTopicInit(items);
@@ -110,8 +140,7 @@ const VolunterLayout = () => {
                     if (normalizeString(response.content) === normalizeString(content)) {
                         let body = {
                             dataLocation: link,
-                            content: showDetail.name,
-                            dataType: "Vocab"
+                            vocab_id: showDetail.id,
                         }
                         await apiUploadFile.sendData(body);
                         message.success(`Thêm dữ liệu cho ${showDetail.name} thành công.`)
@@ -189,7 +218,28 @@ const VolunterLayout = () => {
         <div className="main-layout">
             <LoadingComponent loading={loading} />
             <Nav />
-            <div className="contact" style={{ height: '100%' }}>
+            {recordPage ? <Tooltip title="Nội dung đã đăng tải" placement="left" trigger="hover" color="#4096ff" >
+                <FloatButton
+                    style={{
+                        right: 34,
+                    }}
+                    type="primary"
+                    icon={<HistoryOutlined />}
+                    onClick={() => setRecordedPage(false)}
+                />
+            </Tooltip>
+                : <Tooltip title="Quay video ngôn ngữ ký tự" placement="left" trigger="hover" color="#4096ff" >
+                    <FloatButton
+                        style={{
+                            right: 34,
+                        }}
+                        type="primary"
+                        icon={<VideoCameraAddOutlined />}
+                        onClick={() => setRecordedPage(true)}
+                    />
+                </Tooltip>
+            }
+            {recordPage ? <div className="contact" style={{ height: '100%' }}>
                 <div className="contact-panel__header">
                     <div className="list-contact__selection">
                         <VideoCameraAddOutlined />
@@ -242,6 +292,16 @@ const VolunterLayout = () => {
                     </div>
                 </div>
             </div>
+                : <div className="contact" style={{ height: '100%' }}>
+                    <div className="contact-panel__header">
+                        <div className="list-contact__selection">
+                            <VideoCameraAddOutlined />
+                            <div className="list-contact__content">Nội dung tình nguyện viên đã đăng tải</div>
+                        </div>
+                        <TableData data={dataTable} />
+                    </div>
+                </div>
+            }
             <Modal
                 open={showPreviewRecord}
                 onClose={() => setShowPreviewRecord(false)}

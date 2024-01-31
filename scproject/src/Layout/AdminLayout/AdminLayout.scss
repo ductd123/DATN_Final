@@ -1,8 +1,19 @@
-.setupMenu-button{
-    position: absolute;
-    top: 50%;
-    opacity: 0.1;
-    &:hover{
-        opacity: 1;
-    }
+.setupMenu-button {
+  position: absolute;
+  top: 50%;
+  opacity: 0.1;
+  &:hover {
+    opacity: 1;
+  }
+}
+.filter {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ant-table{
+    border: 1px solid #004fbd;
+    border-radius: 5px !important;
+    box-shadow: 1px 1px #9ac7ff;
 }

@@ -116,7 +116,7 @@ class Register extends Component {
             name: this.state.fullName,
             email: this.state.email,
             password: this.state.password,
-            role: "ADMIN",
+            role: "USER",
         };
         // this.setState({
         //     step1: false,

@@ -33,6 +33,10 @@ export const apiLearning = {
         const url = `vocabularies/api/search`;
         return axiosLearningClient.post(url, data);
     },
+    getTableData : (data)=>{
+        const url = `collect-data/get-data`;
+        return axiosLearningClient.post(url, data);
+    }
 };
 
 export const apiUploadFile = {

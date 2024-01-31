@@ -109,6 +109,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
 
     const handleOkWord = async () => {
         setLoading(true);
+        setTopicInit([]);
         const formData = new FormData();
         formData.append("file", file);
         apiUploadFile.uploadFile(formData)
@@ -126,6 +127,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
             .then(() => {
                 setLoading(false);
                 onCloseAdd();
+                getTopic();
                 setShowAddWord(false);
                 message.success(`Thêm từ điển lên thành công.`);
             })
@@ -171,7 +173,6 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
         setContentQuestion('');
         setFile();
         setLinkFile('');
-        setTopicChose();
         setValueChecked(0);
         setValueText(['', '', '', '']);
     };
