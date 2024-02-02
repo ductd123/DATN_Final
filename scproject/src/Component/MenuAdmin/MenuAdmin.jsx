@@ -160,7 +160,6 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
     };
     const beforeUpload = (file) => {
         setIsImage(file.type.includes('image'))
-        console.log(file);
         setFile(file);
         return false;
     };
@@ -201,7 +200,6 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
 
     }
     const onClick = (e) => {
-        console.log(e);
         switch (e.key) {
             case 'addTopic':
                 setVideoTNV(false);

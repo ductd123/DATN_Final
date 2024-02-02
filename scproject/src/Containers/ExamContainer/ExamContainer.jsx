@@ -35,7 +35,6 @@ export default function ExamContainer({ takingExam, point, setPoint, indexx, set
     };
     useEffect(() => {
         setRandom(generateUniqueArray(10, 0, listQuestions.length - 1));
-        console.log(random);
     }, [takingExam]);
 
     useEffect(() => {

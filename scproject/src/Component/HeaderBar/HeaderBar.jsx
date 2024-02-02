@@ -55,7 +55,6 @@ export default function HeaderBar({ disableSearch }) {
   };
 
   const onSelectUser = async (d) => {
-    console.log(d);
     setLoading(true);
     try {
       let response = await apiUser.getUserById(d.id);

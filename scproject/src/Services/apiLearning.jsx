@@ -33,8 +33,12 @@ export const apiLearning = {
         const url = `vocabularies/api/search`;
         return axiosLearningClient.post(url, data);
     },
-    getTableData : (data)=>{
+    getTableDataAdmin : (data)=>{
         const url = `collect-data/get-data`;
+        return axiosLearningClient.post(url, data);
+    },
+    getTableDataVolunteer : (data)=>{
+        const url = `collect-data/get-approved`;
         return axiosLearningClient.post(url, data);
     }
 };
