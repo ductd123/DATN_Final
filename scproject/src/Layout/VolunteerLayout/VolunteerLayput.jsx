@@ -69,8 +69,7 @@ const VolunterLayout = () => {
         }
         try {
             setLoading(false);
-            let response = await apiLearning.getTableData(data);
-            console.log(response.data);
+            let response = await apiLearning.getTableDataVolunteer(data);
             setDataTable( response.data);
         } catch (error) {
             setLoading(false);

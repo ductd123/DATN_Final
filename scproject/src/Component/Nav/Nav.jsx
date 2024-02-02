@@ -41,7 +41,7 @@ export default function Nav() {
       catch (error) {
         console.log(error);
         setLoading(false);
-        message.warning("Bạn đang sử dụng WeTalk mà không đăng nhập")
+        message.warning("Xác thực tài khoản lỗi, vui lòng thử lại.")
         setLoading(false);
       }
     }

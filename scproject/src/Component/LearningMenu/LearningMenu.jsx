@@ -53,7 +53,7 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
         try {
             let response = await apiLearning.getTopic();
             setTimeout(() => {
-                response.data.forEach((element, index) => {
+                response.data?.forEach((element, index) => {
                     items.push({
                         id: element.id,
                         value: element.id,
@@ -112,7 +112,6 @@ const MenuStudyAI = ({ onUploadVideo, openPanelHistory, handleClickMenu, handleS
 
     const capture = () => {
         const imageSrc = webcamRef.current.getScreenshot();
-        console.log(imageSrc);
     };
 
     return (

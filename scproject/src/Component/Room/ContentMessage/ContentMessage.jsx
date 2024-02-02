@@ -3,7 +3,6 @@ import "./ContentMessage.scss";
 import background from "../../../assets/image/zl1.png"
 
 export default function ContentMessage({ messages, userId }) {
-  // console.log(messages);
   return (
     <>
       {/* <img className="mx-auto w-[380px] h-[230px]" src={background} alt="" /> */}

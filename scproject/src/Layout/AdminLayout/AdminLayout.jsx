@@ -183,8 +183,7 @@ const AdminLayout = () => {
         setLoading(true);
         try {
             setLoading(false);
-            let response = await apiLearning.getTableData(filter);
-            console.log(response.data);
+            let response = await apiLearning.getTableDataAdmin(filter);
             setDataTable(response.data);
             setFilter({
                 page: 1,

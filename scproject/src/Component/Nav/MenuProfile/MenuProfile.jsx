@@ -72,7 +72,7 @@ export default function MenuProfile({ fetchData }) {
     }
     else {
       setLoading(false);
-      message.info('Bạn đang sử dụng WeTalk mà không đăng nhập. Vui lòng đăng nhập và thử lại.');
+      message.info('Có lỗi. Vui lòng thử lại.');
       setShowUpdateInfo(false);
     }
   }
@@ -92,7 +92,6 @@ export default function MenuProfile({ fetchData }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64Image = reader.result;
-        console.log("Base64 Image:", base64Image);
         if (base64Image) {
           setImageUrl(base64Image);
         } else {
@@ -110,7 +109,6 @@ export default function MenuProfile({ fetchData }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64Image = reader.result;
-        console.log("Base64 Image:", base64Image);
         if (base64Image) {
           setImageUrl(base64Image);
         } else {

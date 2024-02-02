@@ -15,7 +15,6 @@ const SearchWord = ({ searchText, files }) => {
             videoRef.current.pause();
             videoRef.current.currentTime = 0;
         }
-        console.log(videoRef);
         setShowFileDetail(false);
     }
     return (

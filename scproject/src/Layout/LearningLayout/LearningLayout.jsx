@@ -127,7 +127,6 @@ export default function LearningLayout() {
             videoRef.current.pause();
             videoRef.current.currentTime = 0;
         }
-        console.log(videoRef);
         setShowImage(!showImage);
     };
     const cancleStudy = () => {
