@@ -13,7 +13,7 @@ export const axiosLearningClient = axios.create({
   baseURL: "https://wetalk.ibme.edu.vn/learning-service/",
   headers: {
     "content-type": "application/json",
-    // Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });

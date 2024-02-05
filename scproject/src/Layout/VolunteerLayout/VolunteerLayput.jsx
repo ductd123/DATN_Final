@@ -8,7 +8,7 @@ import { useReactMediaRecorder } from "react-media-recorder";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import './VolunteerLayout.scss'
 import TableData from "./TableData";
-import dayjs from "dayjs";
+import * as tf from "@tensorflow/tfjs";
 
 function normalizeString(inputString) {
     let lowercasedString = inputString.toLowerCase();
@@ -26,6 +26,7 @@ const VolunterLayout = () => {
     const [topicInit, setTopicInit] = useState();
     const [vocabInit, setVocabInit] = useState();
     const [vocabOption, setVocabOption] = useState();
+    const [model, setModel] = useState(null);
     const [showDetail, setShowDetail] = useState();
     const [showPreviewRecord, setShowPreviewRecord] = useState(false);
     const [dataTable, setDataTable] = useState([])
@@ -40,12 +41,19 @@ const VolunterLayout = () => {
     useEffect(() => {
         getTopic();
         getTableData();
+        async function loadModel() {
+            const loadedModel = await tf.loadLayersModel("path_to_your_model/model.json");
+            setModel(loadedModel);
+          }
+          loadModel();
     }, [])
 
     useEffect(() => {
         previewRef.current = recordedVideo;
     }, [recordedVideo]);
-
+    useEffect(() => {
+        detect();
+      }, [model]); 
     useEffect(() => {
         if (recordingTime > 5) {
             stopRecording();
@@ -96,7 +104,21 @@ const VolunterLayout = () => {
             setLoading(false);
         }
     }
-
+    const detect = async () => {
+        if (!model || !webcamRef.current) return;
+    
+        const webcam = webcamRef.current.video;
+        const image = tf.browser.fromPixels(webcam); // Convert webcam data to tensor
+        const resizedImage = tf.image.resizeBilinear(image, [224, 224]); // Resize to fit model's input shape
+        const input = resizedImage.expandDims(0); // Add batch dimension
+        const predictions = await model.predict(input); // Make prediction
+        // Process predictions...
+    
+        // Clean up
+        image.dispose();
+        resizedImage.dispose();
+        input.dispose();
+      };
     const formatTime = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);

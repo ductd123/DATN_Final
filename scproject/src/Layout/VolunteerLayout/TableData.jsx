@@ -1,4 +1,5 @@
-import { Table } from 'antd';
+import { EyeTwoTone } from '@ant-design/icons';
+import { Button, Table } from 'antd';
 import React from 'react';
 const rejectStatus = () => {
     return (
@@ -7,7 +8,7 @@ const rejectStatus = () => {
         </div>
     )
 }
-const TableData = ({ data }) => {
+const TableData = ({ data, xemLaiData }) => {
     const columns = [
         {
             title: 'Chủ đề',
@@ -35,26 +36,27 @@ const TableData = ({ data }) => {
             title: 'Trạng thái',
             dataIndex: 'status',
             width: '20%',
-            render: (status) => status=='0'? <div style={{ display: 'table' }}>
+            render: (status) => status == '0' ? <div style={{ display: 'table' }}>
                 <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid gray`, backgroundColor: 'gray' }}></div></div>
                 <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đang chờ xét duyệt</div>
-            </div> 
-            : status=='1'?<div style={{ display: 'table' }}>
-                <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid red`, backgroundColor: 'red' }}></div></div>
-                <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Từ chối</div>
             </div>
-            : <div style={{ display: 'table' }}>
-            <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid grean`, backgroundColor: 'green' }}></div></div>
-            <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đã xét duyệt</div>
-        </div>
+                : status == '1' ? <div style={{ display: 'table' }}>
+                    <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid red`, backgroundColor: 'red' }}></div></div>
+                    <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Từ chối</div>
+                </div>
+                    : <div style={{ display: 'table' }}>
+                        <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid grean`, backgroundColor: 'green' }}></div></div>
+                        <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đã xét duyệt</div>
+                    </div>
         },
         {
             title: 'Xem lại',
-            dataIndex: 'created',
+            dataIndex: 'dataLocation',
+            key: 'dataLocation',
             width: '20%',
-            render: (text) => <a>{new Date(text).getHours()}:{new Date(text).getMinutes()} {new Date(text).getDate()}/{new Date(text).getMonth() + 1}/{new Date(text).getFullYear()}</a>,
+            render: (text) => <Button key={text} onClick={() => xemLaiData(text)} icon={<EyeTwoTone style={{ fontSize: '1.25rem' }} />} ></Button>,
         },
-        
+
     ];
     return (
         <div>

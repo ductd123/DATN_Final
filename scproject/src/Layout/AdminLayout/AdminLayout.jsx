@@ -28,13 +28,13 @@ const AdminLayout = () => {
     const [filter, setFilter] = useState({
         page: 1,
         size: 999999,
-        volunteerEmail: "",
-        topic: "",
-        vocab: "",
+        volunteerEmail: "caominhducpx@gmail.com",
+        // topic: "",
+        // vocab: "",
         ascending: true,
-        orderBy: "",
-        createdFrom: "",
-        createdTo: ''
+        // orderBy: "",
+        // createdFrom: "",
+        // createdTo: ''
     });
 
     const statusEnum = [
@@ -170,7 +170,7 @@ const AdminLayout = () => {
     const getHistory = async () => {
         setLoading(true);
         try {
-            let response = await apiUploadFile.getApprovedData();
+            let response = await apiUploadFile.getPendingData();
             setHistory(response.data);
             setLoading(false);
         } catch (error) {
@@ -188,13 +188,13 @@ const AdminLayout = () => {
             setFilter({
                 page: 1,
                 size: 999999,
-                volunteerEmail: "",
-                topic: "",
-                vocab: "",
+                // volunteerEmail: "",
+                // topic: "",
+                // vocab: "",
                 ascending: true,
-                orderBy: "",
-                createdFrom: "",
-                createdTo: ''
+                // orderBy: "",
+                // createdFrom: "",
+                // createdTo: ''
             })
         } catch (error) {
             setLoading(false);

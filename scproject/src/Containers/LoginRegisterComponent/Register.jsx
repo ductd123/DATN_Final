@@ -13,7 +13,7 @@ const Register = () => {
         name: '',
         email: '',
         password: '',
-        role: 'USER'
+        role: 'ADMIN',
     });
     const [invalidFields, setInvalidFields] = useState({
         name: false,
@@ -83,10 +83,6 @@ const Register = () => {
     };
 
     const checkAuthen = async () => {
-        setInvalidFields({
-            ...invalidFields,
-            otp: formData.otp === '',
-        });
 
         if (!invalidFields.otp) {
             try {
@@ -106,7 +102,6 @@ const Register = () => {
         }
     };
     const handleLogin = async (e) => {
-        e.preventDefault();
         let data = {
             email: formData.email,
             password: formData.password,

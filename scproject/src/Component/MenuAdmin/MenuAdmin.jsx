@@ -241,7 +241,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
                 mode="inline"
                 items={items}
             />
-            <Drawer title="Lịch sử chấp thuận" placement="right" onClose={() => setShowPanelHistory(false)} open={showPanelHistory}>
+            {/* <Drawer title="Lịch sử chấp thuận" placement="right" onClose={() => setShowPanelHistory(false)} open={showPanelHistory}>
                 {history.map((item, i) => {
                     return (
                         <div style={{ height: '50px', width: '100%', borderBottom: '1px solid #bdbdbd', display: 'flex', justifyContent: 'space-between' }} key={i}>
@@ -255,7 +255,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
                         </div>
                     );
                 })}
-            </Drawer>
+            </Drawer> */}
             <Modal
                 open={showPreview}
                 footer={[]}
