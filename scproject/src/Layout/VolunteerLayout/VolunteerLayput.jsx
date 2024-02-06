@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "../../Component";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
-import { CameraOutlined, HistoryOutlined, VideoCameraAddOutlined, WarningFilled } from "@ant-design/icons";
+import { HistoryOutlined, VideoCameraAddOutlined, WarningFilled } from "@ant-design/icons";
 import Webcam from "react-webcam";
-import { Button, FloatButton, Modal, Select, Space, Table, Tag, Tooltip, message } from "antd";
+import { Button, DatePicker, FloatButton, Modal, Select, Tooltip, message } from "antd";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import './VolunteerLayout.scss'
 import TableData from "./TableData";
 import * as tf from "@tensorflow/tfjs";
-
+import * as cocossd from "@tensorflow-models/coco-ssd";
 function normalizeString(inputString) {
     let lowercasedString = inputString.toLowerCase();
     let strippedString = lowercasedString.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -28,24 +28,44 @@ const VolunterLayout = () => {
     const [vocabOption, setVocabOption] = useState();
     const [model, setModel] = useState(null);
     const [showDetail, setShowDetail] = useState();
+    const [showFilter, setShowFilter] = useState(false);
     const [showPreviewRecord, setShowPreviewRecord] = useState(false);
-    const [dataTable, setDataTable] = useState([])
+    const [dataTable, setDataTable] = useState([]);
+    const [predictions, setPredictions] = useState([]);
     const { status, startRecording, stopRecording, mediaBlobUrl, duration } = useReactMediaRecorder({
         video: true,
         audio: false
     });
     const [content, setContent] = useState();
+    const [filter, setFilter] = useState({
+        page: 1,
+        size: 999999,
+        volunteerEmail: "caominhducpx@gmail.com",
+        // topic: "",
+        // vocab: "",
+        ascending: true,
+        // orderBy: "",
+        // createdFrom: "",
+        // createdTo: ''
+    });
     const webcamRef = useRef(null);
+    const canvasRef = useRef(null);
     const videoRef = useRef(null);
     const previewRef = useRef(null);
     useEffect(() => {
         getTopic();
         getTableData();
-        async function loadModel() {
-            const loadedModel = await tf.loadLayersModel("path_to_your_model/model.json");
-            setModel(loadedModel);
-          }
-          loadModel();
+        // async function loadModel() {
+        //     const loadedModel = await tf.loadLayersModel("../../assets/moduleAI/mymodel.h5");
+        //     setModel(loadedModel);
+        // }
+        // loadModel();
+        runcoco();
+        // async function loadModel() {
+        //     const loadedModel = await tf.loadGraphModel("/src/assets/moduleAI/mymodel.h5");
+        //     setModel(loadedModel);
+        // }
+        // loadModel();
     }, [])
 
     useEffect(() => {
@@ -53,7 +73,7 @@ const VolunterLayout = () => {
     }, [recordedVideo]);
     useEffect(() => {
         detect();
-      }, [model]); 
+    }, [model]);
     useEffect(() => {
         if (recordingTime > 5) {
             stopRecording();
@@ -61,29 +81,54 @@ const VolunterLayout = () => {
             setRecordingTime(0);
         }
     }, [recordingTime]);
+    const runcoco = async () => {
+        const net = await cocossd.load();
+        setInterval(() => {
+            detect(net);
+        }, 10)
+    }
+    const detect = async (net) => {
+        if (typeof webcamRef.current != "undefined" && webcamRef.current !== null && webcamRef.current.video.readyState === 4) {
+            const video = webcamRef.current.video;
+            const videoWidth = webcamRef.current.video.videoWidth;
+            const videoHeight = webcamRef.current.video.videoHeight;
 
+            webcamRef.current.video.width = videoWidth;
+            webcamRef.current.video.height = videoHeight;
+            canvasRef.current.width = videoWidth;
+            canvasRef.current.height = videoHeight;
+            const obj = await net.detect(video);
+            // console.log(obj);
+            const ctx = canvasRef.current.getContext('2d');
+            drawReact(obj, ctx);
+        }
+    }
     const getTableData = async () => {
         setLoading(true);
-        let data = {
-            page: 1,
-            size: 999999,
-            volunteerEmail: "",
-            topic: "",
-            vocab: "",
-            ascending: true,
-            orderBy: "",
-            createdFrom: "",
-            createdTo: ''
-        }
         try {
             setLoading(false);
-            let response = await apiLearning.getTableDataVolunteer(data);
-            setDataTable( response.data);
+            let response = await apiLearning.getTableDataVolunteer(filter);
+            setDataTable(response.data);
         } catch (error) {
             setLoading(false);
         }
     }
+    const drawReact = (detections, ctx) => {
+        detections.forEach(prediction => {
+            const [x, y, width, height] = prediction['bbox'];
+            const text = prediction['class'];
 
+            const color = 'green';
+            ctx.strokeStyle = color;
+            ctx.font = '18px Arial';
+            ctx.fillStyle = color;
+
+            ctx.beginPath();
+            ctx.fillText(text, x, y);
+            ctx.rect(x, y, width, height)
+            ctx.stroke()
+        })
+    }
     const getTopic = async () => {
         setLoading(true);
         try {
@@ -104,21 +149,20 @@ const VolunterLayout = () => {
             setLoading(false);
         }
     }
-    const detect = async () => {
-        if (!model || !webcamRef.current) return;
-    
-        const webcam = webcamRef.current.video;
-        const image = tf.browser.fromPixels(webcam); // Convert webcam data to tensor
-        const resizedImage = tf.image.resizeBilinear(image, [224, 224]); // Resize to fit model's input shape
-        const input = resizedImage.expandDims(0); // Add batch dimension
-        const predictions = await model.predict(input); // Make prediction
-        // Process predictions...
-    
-        // Clean up
-        image.dispose();
-        resizedImage.dispose();
-        input.dispose();
-      };
+    const detectObjects = async () => {
+        if (webcamRef.current && model) {
+            // Capture a frame from the webcam
+            const image = webcamRef.current.getScreenshot();
+
+            // Preprocess the image (optional)
+
+            // Perform prediction using the model
+            const prediction = await model.predict(image);
+
+            // Update state with the predictions
+            setPredictions(prediction);
+        }
+    };
     const formatTime = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -235,6 +279,18 @@ const VolunterLayout = () => {
         }, 1000);
         setRecordingTimerId(timerId);
     };
+
+    const onChangeFilter = (property, value) => {
+        setFilter({
+            ...filter,
+            [property]: value
+        })
+    }
+
+    const xemLaiData = (link) => {
+        setRecordedVideo(link)
+        setShowPreviewRecord(true);
+    }
     return (
         <div className="main-layout">
             <LoadingComponent loading={loading} />
@@ -288,6 +344,19 @@ const VolunterLayout = () => {
                         <div className="record-container-child-header">Dữ liệu của người dùng.</div>
                         <div className="record-container-child-video">
                             <Webcam mirrored={true} style={{ width: '100%' }} audio={false} ref={webcamRef} />
+                            <canvas
+                                ref={canvasRef}
+                                style={{
+                                    position: 'fixed',
+                                    top: 0
+                                }}
+                            />
+                            {/* <button onClick={detectObjects}>Detect Objects</button>
+                            <div>
+                                {predictions.map((prediction, index) => (
+                                    <div key={index}>{prediction}</div>
+                                ))}
+                            </div> */}
                         </div>
                         <div className="record-container-button">
                             <Button
@@ -319,7 +388,50 @@ const VolunterLayout = () => {
                             <VideoCameraAddOutlined />
                             <div className="list-contact__content">Nội dung tình nguyện viên đã đăng tải</div>
                         </div>
-                        <TableData data={dataTable} />
+                        <div style={{ padding: 20, overflow: 'auto', height: 'calc(100vh - 44px)' }}>
+                            <Button
+                                type="primary"
+                                style={{ fontWeight: 500, marginBottom: 10 }}
+                                onClick={() => {
+                                    getTableData();
+                                    setShowFilter(false);
+                                }} >
+                                Tìm kiếm
+                            </Button>
+                            <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+                                <Select style={{ width: 200 }} placeholder="Chọn chủ đề" options={topicInit} onChange={onChooseTopic} />
+                                <Select style={{ width: 200 }} placeholder="Chọn từ vựng" options={vocabOption} onChange={(e) => onChangeFilter('vocab', e)} />
+                                <DatePicker
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                    format="DD/MM/YYYY"
+                                    placeholder="Thời gian đăng từ"
+                                    onChange={(e) => {
+                                        const year = e?.$y;
+                                        const month = (e?.$M + 1).toString().padStart(2, '0');
+                                        const day = (e?.$D).toString().padStart(2, '0');
+
+                                        onChangeFilter('createTo', `${year}-${month}-${day}`);
+                                    }}
+                                />
+                                <DatePicker
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                    format="DD/MM/YYYY"
+                                    placeholder="Thời gian đăng đến"
+                                    onChange={(e) => {
+                                        const year = e?.$y || 2000;
+                                        const month = (e?.$M + 1).toString().padStart(2, '0');
+                                        const day = (e?.$D || '01').toString().padStart(2, '0');
+
+                                        onChangeFilter('createFrom', `${year}-${month}-${day}`);
+                                    }}
+                                />
+                            </div>
+                            <TableData xemLaiData={xemLaiData} data={dataTable} />
+                        </div>
                     </div>
                 </div>
             }
