@@ -90,7 +90,7 @@ const AdminLayout = () => {
             title: 'Từ vựng',
             dataIndex: 'vocab',
             key: 'vocab',
-            sorter: (a, b) => a.age - b.age,
+            sorter: (a, b) => a.vocab - b.vocab,
             width: '10%',
             render: (a) => <span style={{ fontWeight: 500 }}>{a}</span>
         },
@@ -107,24 +107,24 @@ const AdminLayout = () => {
             width: '20%',
             render: (text) => <span>{new Date(text).getHours()}:{new Date(text).getMinutes()} {new Date(text).getDate()}/{new Date(text).getMonth() + 1}/{new Date(text).getFullYear()}</span>,
         },
-        // {
-        //     title: 'Trạng thái',
-        //     dataIndex: 'status',
-        //     key: 'status',
-        //     width: '20%',
-        //     render: (status) => status == '0' ? <div style={{ display: 'table' }}>
-        //         <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid gray`, backgroundColor: 'gray' }}></div></div>
-        //         <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đang chờ xét duyệt</div>
-        //     </div>
-        //         : status == '200' ? <div style={{ display: 'table' }}>
-        //             <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid red`, backgroundColor: 'red' }}></div></div>
-        //             <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Từ chối</div>
-        //         </div>
-        //             : <div style={{ display: 'table' }}>
-        //                 <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid #00db00`, backgroundColor: '#00db00' }}></div></div>
-        //                 <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đã xét duyệt</div>
-        //             </div>
-        // },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            width: '20%',
+            render: (status) => status == '0' ? <div style={{ display: 'table' }}>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid gray`, backgroundColor: 'gray' }}></div></div>
+                <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đang chờ xét duyệt</div>
+            </div>
+                : status == '200' ? <div style={{ display: 'table' }}>
+                    <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid red`, backgroundColor: 'red' }}></div></div>
+                    <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Từ chối</div>
+                </div>
+                    : <div style={{ display: 'table' }}>
+                        <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid #00db00`, backgroundColor: '#00db00' }}></div></div>
+                        <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đã xét duyệt</div>
+                    </div>
+        },
         {
             title: 'Xem lại',
             dataIndex: 'dataLocation',
