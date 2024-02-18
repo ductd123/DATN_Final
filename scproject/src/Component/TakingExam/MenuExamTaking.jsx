@@ -16,7 +16,7 @@ function getItem(label, key, icon, children, type) {
 const MenuTakingExam = ({ openConfirmExam, takingExam, setShowSelectTopic }) => {
     const [modal, contextHolder] = Modal.useModal();
     const [items, setItems] = useState([
-        getItem('Kiểm tra theo bảng chữ cái', 'examABC', <BookOutlined style={{ fontSize: '1.25rem' }} />),
+        getItem('Kiểm tra theo bảng chữ cái và số', 'examABC', <BookOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Kiểm tra theo chủ đề', 'exam123', <BookOutlined style={{ fontSize: '1.25rem' }} />),
     ]);
     const onClick = (e) => {

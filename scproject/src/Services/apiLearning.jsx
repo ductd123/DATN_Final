@@ -60,9 +60,13 @@ export const apiUploadFile = {
         const url = "collect-data/get-pending";
         return axiosUploadVolunteerClient.get(url);
     },
-    getApprovedData: () => {
+    getVolunteerTableData: (data) => {
         const url = "collect-data/get-approved";
-        return axiosUploadVolunteerClient.get(url);
+        return axiosUploadVolunteerClient.post(url,data);
+    },
+    getAdminTableData: (data) => {
+        const url = "collect-data/get-data";
+        return axiosUploadVolunteerClient.post(url,data);
     },
     approvedData: (id) => {
         const url = `collect-data/approve/${id}`;
