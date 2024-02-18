@@ -41,7 +41,6 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
         getItem('Thêm chủ đề từ vựng', 'addTopic', <PlusCircleOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Thêm từ điển ký hiệu', 'addWord', <CloudUploadOutlined style={{ fontSize: '1.25rem' }} />),
         getItem('Tạo câu hỏi kiểm tra', 'addQuestion', <CloudUploadOutlined style={{ fontSize: '1.25rem' }} />),
-        getItem('Lịch sử chấp thuận', 'history', <HistoryOutlined style={{ fontSize: '1.25rem' }} />),
     ];
 
     useEffect(() => {
@@ -241,21 +240,6 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
                 mode="inline"
                 items={items}
             />
-            {/* <Drawer title="Lịch sử chấp thuận" placement="right" onClose={() => setShowPanelHistory(false)} open={showPanelHistory}>
-                {history.map((item, i) => {
-                    return (
-                        <div style={{ height: '50px', width: '100%', borderBottom: '1px solid #bdbdbd', display: 'flex', justifyContent: 'space-between' }} key={i}>
-                            <div style={{}}>
-                                <h4 className="conversation__name" style={{ fontWeight: 600 }}>{i + 1}. {item.content}</h4>
-                                <h4 className="conversation__name">Người đăng: {item.volunteerEmail}</h4>
-                            </div>
-                            <button onClick={() => { onPreviewHistory(item) }}>
-                                <EyeTwoTone style={{ fontSize: '1.25rem' }} />
-                            </button>
-                        </div>
-                    );
-                })}
-            </Drawer> */}
             <Modal
                 open={showPreview}
                 footer={[]}

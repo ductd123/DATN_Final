@@ -24,7 +24,7 @@ export default function FormRoom({ handleSendMess }) {
     >
       <input
         type="text"
-        placeholder="Your messenage"
+        placeholder="Nhập tin nhắn của bạn"
         className="form-room__input"
         id="mes"
         name="mes"

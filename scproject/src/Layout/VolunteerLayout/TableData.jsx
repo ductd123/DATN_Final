@@ -40,7 +40,7 @@ const TableData = ({ data, xemLaiData }) => {
                 <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid gray`, backgroundColor: 'gray' }}></div></div>
                 <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Đang chờ xét duyệt</div>
             </div>
-                : status == '1' ? <div style={{ display: 'table' }}>
+                : status == '100' ? <div style={{ display: 'table' }}>
                     <div style={{ display: 'table-cell', verticalAlign: 'top' }}><div className='dot-status' style={{ border: `1px solid red`, backgroundColor: 'red' }}></div></div>
                     <div style={{ display: 'table-cell', verticalAlign: 'top' }} className="inline-block" data-tooltip="true" >Từ chối</div>
                 </div>
