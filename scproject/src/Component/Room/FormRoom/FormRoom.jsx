@@ -28,9 +28,9 @@ export default function FormRoom({ handleSendMess }) {
         className="form-room__input"
         id="mes"
         name="mes"
-      // onChange={formik.handleChange}
-      // onBlur={formik.handleBlur}
-      // value={formik.values.mes}
+        onSubmit={handleSendMess}
+        // onBlur={formik.handleBlur}
+        // value={formik.values.mes}
       />
       <Button type="submit" className="form-room__btn">
         <Send size={18} />

@@ -10,15 +10,15 @@ export default function ListConversation() {
   const dispatch = useDispatch();
 
   // useEffect(() => {
-  //   dispatch(doGetConversationOfUser(reduxUserData.data.id));
+  //   dispatch(doGetConversationOfUser(reduxUserData.data.id));Ftr
   // }, [reduxUserData.data.id, dispatch]);
 
   return (
     <div className="conversation">
-      <HeaderList title="Conversation" />
+      <HeaderList title="Các cuộc trò chuyện" />
       {Array.from({ length: 8 }).map((item, i) => {
         return (
-          <Link to={`/room/${i}`} className="conversation__link" key={i}>
+          <Link to={`/room/id=${i}`} className="conversation__link" key={i}>
             <div className="conversation__container" key={i}>
               <div className="conversation__content">
                 <img

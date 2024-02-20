@@ -255,9 +255,15 @@ const VolunterLayout = () => {
 
     const onChooseTopic = async (e) => {
         setLoading(true);
+        let data = {
+            page: 1,
+            size: 10,
+            text: e,
+            ascending: true,
+        }
         try {
             setLoading(false);
-            let response = await apiLearning.getTuDien(e);
+            let response = await apiLearning.searchVocab(data);
             const items = [];
             response.data.forEach((element, index) => {
                 items.push({
