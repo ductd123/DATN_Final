@@ -258,8 +258,9 @@ const VolunterLayout = () => {
         let data = {
             page: 1,
             size: 10,
-            text: e,
+            // text: e,
             ascending: true,
+            topicId:e
         }
         try {
             setLoading(false);

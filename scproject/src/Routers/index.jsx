@@ -109,6 +109,15 @@ export default function Routers() {
                 }
             />
             <Route
+                path="/room/userId=:userId&&conversationId=:conversationId"
+                element={
+                    <PrivateRouter
+                        component={Room}
+                        layout={MainLayout}
+                    />
+                }
+            />
+            <Route
                 path="/room/:id"
                 element={
                     <PrivateRouter

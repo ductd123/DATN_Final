@@ -13,6 +13,7 @@ export default function Room() {
   const params = useParams();
   const [messages, setMessages] = useState([]);
   const [mes, setMes] = useState('');
+  const [user, setUser] = useState();
   const [loading, setLoading] = useState(false);
   const [stompClient, setStompClient] = useState(null);
   const [conversationID, setConversationID] = useState();
@@ -21,22 +22,32 @@ export default function Room() {
   useEffect(() => {
     const fetchMessages = async () => {
       setLoading(true);
+      const ids = getValueAfterHash();
+      console.log(ids);
       try {
-        const newValueAfterHash = getValueAfterHash();
-        setConversationID(newValueAfterHash);
+        if (ids) {
+          const infoUser = await apiChat.getConversationIdByUserId(ids.userId);
+          setUser(infoUser.contactResList[1], () => { console.log(user) })
+        }
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+      try {
+        setConversationID(ids.conversationId);
         let response = '';
-        if (newValueAfterHash) {
-          response = await apiChat.getMessage(newValueAfterHash);
+        if (ids) {
+          response = await apiChat.getMessage(ids.conversationId);
           setMessages(response);
         }
         setLoading(false);
       } catch (error) {
         console.log(error);
-        // message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
         setLoading(false);
       }
     };
-  
+
     fetchMessages();
   }, [params]);
 
@@ -57,12 +68,15 @@ export default function Room() {
       };
     }
   }, [conversationID]);
+
   const getValueAfterHash = () => {
     const url = window.location.href;
-    const hashIndex = url.indexOf('=');
-    if (hashIndex !== -1) {
-      const value = url.substring(hashIndex + 1);
-      return value;
+    const userIdIndex = url.indexOf('userId=');
+    const conversationIdIndex = url.indexOf('conversationId=');
+    if (userIdIndex !== -1 && conversationIdIndex !== -1) {
+      const userId = url.substring(userIdIndex + 7, conversationIdIndex - 2);
+      const conversationId = url.substring(conversationIdIndex + 15);
+      return { userId, conversationId };
     } else {
       return null;
     }
@@ -93,7 +107,9 @@ export default function Room() {
   return (
     <div className="room">
       <div className="room__header">
-        <HeaderRoom />
+        <HeaderRoom
+          userInfo={user}
+        />
       </div>
       <div className="room__content">
         <ContentMessage messages={messages} />
