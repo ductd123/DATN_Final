@@ -28,10 +28,12 @@ const VolunterLayout = () => {
     const [vocabOption, setVocabOption] = useState();
     const [model, setModel] = useState(null);
     const [showDetail, setShowDetail] = useState();
+    const [imageSrc, setImageSrc] = useState();
     const [showFilter, setShowFilter] = useState(false);
     const [showPreviewRecord, setShowPreviewRecord] = useState(false);
     const [dataTable, setDataTable] = useState([]);
     const [predictions, setPredictions] = useState([]);
+    const [viewImg, setViewImg] = useState(true);
     const { status, startRecording, stopRecording, mediaBlobUrl, duration } = useReactMediaRecorder({
         video: true,
         audio: false
@@ -175,6 +177,7 @@ const VolunterLayout = () => {
 
     const handleStopRecording = async () => {
         stopRecording();
+        setViewImg(false);
         clearInterval(recordingTimerId);
         setRecordingTime(0);
         try {
@@ -184,16 +187,38 @@ const VolunterLayout = () => {
         }
     };
 
+    const handleCapture = async () => {
+        setViewImg(true);
+        setImageSrc(webcamRef.current.getScreenshot());
+    };
+
+    const convertToBlob = async (base64Data) => {
+        const response = await fetch(base64Data);
+        const blob = await response.blob();
+        const metadata = { type: blob.type, lastModified: blob.lastModified };
+        const file = new File([blob], `captured_image_${Date.now()}.jpg`, metadata);
+        return file;
+    };
+
     const handleDownload = async () => {
         try {
-            const response = await fetch(mediaBlobUrl);
-            const blob = await response.blob();
-            const metadata = { type: blob.type, lastModified: blob.lastModified };
-            const file = new File([blob], `volunteer_${showDetail.name}.mp4`, metadata);
+            let link = ''
             const formData = new FormData();
-            formData.append("file", file);
-
-            const link = await apiUploadFile.uploadFile(formData);
+            if (viewImg) {
+                // const blobUrl = `data:image/jpeg;base64,${imageSrc}`;
+                const file = await convertToBlob(imageSrc);
+                formData.append("file", file);
+                // console.log(file);
+                link = await apiUploadFile.uploadFile(formData);
+            }
+            else {
+                const response = await fetch(mediaBlobUrl);
+                const blob = await response.blob();
+                const metadata = { type: blob.type, lastModified: blob.lastModified };
+                const file = new File([blob], `volunteer_${showDetail.name}.mp4`, metadata);
+                formData.append("file", file);
+                link = await apiUploadFile.uploadFile(formData);
+            }
             if (link) {
                 setLoading(true);
                 try {
@@ -273,6 +298,7 @@ const VolunterLayout = () => {
 
     const handleStartRecording = () => {
         startRecording();
+        setViewImg(false)
         setRecordedVideo(null);
         const timerId = setInterval(() => {
             setRecordingTime(prevTime => prevTime + 1);
@@ -288,7 +314,7 @@ const VolunterLayout = () => {
     }
 
     const xemLaiData = (link) => {
-        setRecordedVideo(link)
+        setRecordedVideo(link);
         setShowPreviewRecord(true);
     }
     return (
@@ -371,11 +397,14 @@ const VolunterLayout = () => {
                             <Button onClick={handleStopRecording} disabled={status !== 'recording'}>
                                 Dừng quay
                             </Button>
-                            <Button onClick={handleDownload} disabled={!mediaBlobUrl}>
+                            <Button onClick={handleCapture} disabled={!showDetail}>
+                                Chụp ảnh
+                            </Button>
+                            <Button onClick={handleDownload} disabled={!mediaBlobUrl && !imageSrc}>
                                 Tải lên
                             </Button>
-                            <Button onClick={handleViewRecordedVideo} disabled={!mediaBlobUrl}>
-                                Xem lại video
+                            <Button onClick={handleViewRecordedVideo} disabled={!mediaBlobUrl && !imageSrc}>
+                                Xem lại file
                             </Button>
                             {duration && <p>Thời gian quay: {duration.toFixed(2)} giây</p>}
                         </div>
@@ -440,14 +469,19 @@ const VolunterLayout = () => {
                 onClose={() => setShowPreviewRecord(false)}
                 onCancel={() => setShowPreviewRecord(false)}
                 footer={[]}
-                key={recordedVideo}            >
-                <div>
-                    <p>Xem lại video:</p>
+                title={viewImg ? "Xem lại ảnh: " : "Xem lại video"}
+                key={recordedVideo}
+            >
+                {!viewImg ? <div>
                     <video ref={previewRef} controls width="100%">
                         <source src={recordedVideo} type="video/webm" />
                         video không hỗ trợ cho trình duyệt này.
                     </video>
                 </div>
+                    :
+                    <div>
+                        <img src={imageSrc} alt="Captured" />
+                    </div>}
             </Modal>
         </div>
     );

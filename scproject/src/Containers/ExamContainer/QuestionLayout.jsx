@@ -29,11 +29,6 @@ const QuestionLayout = ({ question, src, type, answers, indexx, setIndexx, point
 
     const answerOptions = ({ answer, index }) => {
         let color1 = "";
-        // indexSelected !== index
-        //     ? answer.check ? "#53d100" : "rgb(0, 152, 253)"
-        //     : answer.check
-        //         ? "#53d100"
-        //         : "red";
         if (indexSelected == undefined) {
             color1 = "rgb(0, 152, 253)";
         }

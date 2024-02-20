@@ -33,7 +33,7 @@ import chin from "../../assets/video/9.mp4";
 
 export const listQuestions = [
     {
-        id: '001',
+        id: 0,
         question: 'Đây là gì?',
         src: A,
         answers: [
@@ -45,7 +45,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '002',
+        id: 1,
         question: 'Đây là gì?',
         src: B,
         answers: [
@@ -57,7 +57,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '003',
+        id: 2,
         question: 'Đây là gì?',
         src: C,
         answers: [
@@ -69,7 +69,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '004',
+        id: 3,
         question: 'Đây là gì?',
         src: D,
         answers: [
@@ -81,7 +81,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '005',
+        id: 4,
         question: 'Đây là gì?',
         src: E,
         answers: [
@@ -93,7 +93,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '006',
+        id: 5,
         question: 'Đây là gì?',
         src: G,
         answers: [
@@ -105,7 +105,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '007',
+        id: 6,
         question: 'Đây là gì?',
         src: H,
         answers: [
@@ -117,7 +117,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '008',
+        id: 7,
         question: 'Đây là gì?',
         src: I,
         answers: [
@@ -129,7 +129,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '009',
+        id: 8,
         question: 'Đây là gì?',
         src: K,
         answers: [
@@ -141,7 +141,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '010',
+        id: 9,
         question: 'Đây là gì?',
         src: L,
         answers: [
@@ -153,7 +153,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '011',
+        id: 10,
         question: 'Đây là gì?',
         src: M,
         answers: [
@@ -165,7 +165,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '012',
+        id: 11,
         question: 'Đây là gì?',
         src: N,
         answers: [
@@ -177,7 +177,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '013',
+        id: 12,
         question: 'Đây là gì?',
         src: O,
         answers: [
@@ -189,7 +189,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '014',
+        id: 13,
         question: 'Đây là gì?',
         src: P,
         answers: [
@@ -201,7 +201,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '015',
+        id: 14,
         question: 'Đây là gì?',
         src: Q,
         answers: [
@@ -213,7 +213,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '016',
+        id: 15,
         question: 'Đây là gì?',
         src: R,
         answers: [
@@ -225,7 +225,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '017',
+        id: 16,
         question: 'Đây là gì?',
         src: S,
         answers: [
@@ -237,7 +237,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '018',
+        id: 17,
         question: 'Đây là gì?',
         src: T,
         answers: [
@@ -249,7 +249,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '019',
+        id: 18,
         question: 'Đây là gì?',
         src: U,
         answers: [
@@ -261,7 +261,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '020',
+        id: 19,
         question: 'Đây là gì?',
         src: V,
         answers: [
@@ -273,7 +273,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '021',
+        id: 20,
         question: 'Đây là gì?',
         src: X,
         answers: [
@@ -285,7 +285,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '020',
+        id: 21,
         question: 'Đây là gì?',
         src: Y,
         answers: [
@@ -297,7 +297,7 @@ export const listQuestions = [
         type: 1,
     },
     {
-        id: '021',
+        id: 22,
         question: 'Đây là gì?',
         src: khong,
         answers: [
@@ -310,7 +310,7 @@ export const listQuestions = [
     },
 
     {
-        id: '022',
+        id: 23,
         question: 'Đây là gì?',
         src: mot,
         answers: [
@@ -322,7 +322,7 @@ export const listQuestions = [
         type: 2,
     },
     {
-        id: '023',
+        id: 24,
         question: 'Đây là gì?',
         src: hai,
         answers: [
@@ -335,7 +335,7 @@ export const listQuestions = [
     },
 
     {
-        id: '024',
+        id: 25,
         question: 'Đây là gì?',
         src: ba,
         answers: [
@@ -347,7 +347,7 @@ export const listQuestions = [
         type: 2,
     },
     {
-        id: '025',
+        id: 26,
         question: 'Đây là gì?',
         src: bon,
         answers: [
@@ -359,7 +359,7 @@ export const listQuestions = [
         type: 2,
     },
     {
-        id: '026',
+        id: 27,
         question: 'Đây là gì?',
         src: nam,
         answers: [
@@ -371,7 +371,7 @@ export const listQuestions = [
         type: 2,
     },
     {
-        id: '027',
+        id: 28,
         question: 'Đây là gì?',
         src: sau,
         answers: [
@@ -383,7 +383,7 @@ export const listQuestions = [
         type: 2,
     },
     {
-        id: '028',
+        id: 29,
         question: 'Đây là gì?',
         src: bay,
         answers: [
@@ -395,7 +395,7 @@ export const listQuestions = [
         type: 2,
     },
     {
-        id: '029',
+        id: 30,
         question: 'Đây là gì?',
         src: tam,
         answers: [
@@ -407,7 +407,7 @@ export const listQuestions = [
         type: 2,
     },
     {
-        id: '030',
+        id: 31,
         question: 'Đây là gì?',
         src: chin,
         answers: [
@@ -418,5 +418,4 @@ export const listQuestions = [
         ],
         type: 2,
     },
-
 ]

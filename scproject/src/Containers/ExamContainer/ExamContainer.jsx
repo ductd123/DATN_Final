@@ -18,11 +18,11 @@ const generateUniqueArray = (length, min, max) => {
 const isUnique = (arr, value) => arr.indexOf(value) === -1;
 // let random = generateUniqueArray(10, 0, 19);
 
-export default function ExamContainer({ takingExam, point, setPoint, indexx, setIndexx, showPointResult }) {
+export default function ExamContainer({ takingExam, point, setPoint, indexx, setIndexx, showPointResult, random }) {
     const location = useLocation();
     const pathName = location.pathname;
     const [q, setQuestion] = useState();
-    const [random, setRandom] = useState(generateUniqueArray(10, 0, listQuestions.length - 1))
+
     const shuffleArray = (array) => {
         const shuffledArray = array.slice();
 
@@ -33,25 +33,23 @@ export default function ExamContainer({ takingExam, point, setPoint, indexx, set
 
         return shuffledArray;
     };
-    useEffect(() => {
-        setRandom(generateUniqueArray(10, 0, listQuestions.length - 1));
-        console.log(random);
-    }, [takingExam]);
 
     useEffect(() => {
-        let index = random[indexx];
-        if (indexx > 9) {
-            showPointResult();
+        if (random) {
+            let index = random[indexx];
+            if (indexx > 9) {
+                showPointResult();
+            }
+            else {
+                let newAnswers = shuffleArray(listQuestions[index].answers);
+                setQuestion({ ...listQuestions[index], answers: newAnswers });
+            }
         }
-        else {
-            let newAnswers = shuffleArray(listQuestions[index].answers);
-            setQuestion({ ...listQuestions[index], answers: newAnswers });
-        }
-    }, [indexx]);
+    }, [indexx, random]);
 
     return (
         <>
-            {takingExam ?
+            {takingExam && q ?
                 <div className="question-layout">
                     <QuestionLayout
                         question={q.question}

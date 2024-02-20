@@ -8,8 +8,19 @@ import Dragger from "antd/es/upload/Dragger";
 import TextArea from "antd/es/input/TextArea";
 import { apiLearning } from "../../Services/apiLearning";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
+import { listQuestions } from "../../Containers/ExamContainer/listQuestion";
 
-
+const generateUniqueArray = (length, min, max) => {
+    const uniqueArray = [];
+    while (uniqueArray.length < length) {
+        const randomValue = Math.floor(Math.random() * (max - min + 1) + min);
+        if (isUnique(uniqueArray, randomValue)) {
+            uniqueArray.push(randomValue);
+        }
+    }
+    return uniqueArray;
+};
+const isUnique = (arr, value) => arr.indexOf(value) === -1;
 
 const Examlayout = () => {
     const [takingExam, setTakingExam] = useState(false);
@@ -17,6 +28,7 @@ const Examlayout = () => {
     const [confirmExamStarted, setConfirmExamStarted] = useState(false);
     const [point, setPoint] = useState(0);
     const [topicChose, setTopicChose] = useState();
+    const [random, setRandom] = useState(generateUniqueArray(10, 0, listQuestions.length - 1));
     const [topicInit, setTopicInit] = useState([]);
     const [indexx, setIndexx] = useState(0);
     const [showPoint, setshowPoint] = useState(false);
@@ -25,6 +37,7 @@ const Examlayout = () => {
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
+        console.log(random);
         async function fetchData() {
             try {
                 setLoading(false);
@@ -45,6 +58,7 @@ const Examlayout = () => {
         }
         fetchData()
     }, []);
+
     useEffect(() => {
         if (confirmExamStarted && countdown < 1) {
             onConfirmExam();
@@ -75,7 +89,9 @@ const Examlayout = () => {
             }, countdown * 1000);
         }
     };
-
+    const resetRandom = () => {
+        setRandom(generateUniqueArray(10, 0, listQuestions.length - 1))
+    }
     const openConfirmExam = () => {
         setConfirmExam(true);
         setCountdown(3);
@@ -88,7 +104,7 @@ const Examlayout = () => {
         setConfirmExam(false);
         setTakingExam(true);
         setPoint(0);
-
+        resetRandom();
     }
 
     const showPointResult = () => {
@@ -138,6 +154,7 @@ const Examlayout = () => {
                     indexx={indexx}
                     setIndexx={setIndexx}
                     showPointResult={showPointResult}
+                    random={random}
                 />
                 <Modal
                     open={confirmExam}

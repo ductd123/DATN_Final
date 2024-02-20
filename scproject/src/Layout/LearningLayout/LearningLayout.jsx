@@ -1,42 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Nav, LearningSideBar, } from "../../Component/index";
 import "./LearningLayout.scss";
-import { useLocation } from "react-router-dom";
 import { VolunteerSlider } from "../../Containers";
-import StudyContainer from "../../Component/StudyContainer/StudyContainer";
-import { Button, Drawer, Dropdown, Modal, Radio, Select, Space, message } from "antd";
-import { EyeTwoTone, InboxOutlined, PlayCircleTwoTone } from "@ant-design/icons";
-import Dragger from "antd/es/upload/Dragger";
-import TextArea from "antd/es/input/TextArea";
+import { Button,  Modal,  message } from "antd";
 import SearchWord from "./SearchWord";
-import videoSrc from "../../assets/video/doncoi.mp4";
-import noiay from "../../assets/video/noiaymemong.mp4";
 import { apiLearning } from "../../Services/apiLearning";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
-import Rotate from "../../Component/Common/Rotate/Rotate";
-const q = {
-    id: '204',
-    question: 'Đây là gì?',
-    image: `https://picsum.photos/`,
-    answers: [
-        { value: 'a', check: true },
-        { value: 'b', check: false },
-        { value: 'c', check: false },
-        { value: 'd', check: false },
-    ],
-    correctAnswerIndex: 1,
-};
-const fileType = [
-    {
-        label: 'Ảnh',
-        value: 0
-    },
-    {
-        label: 'Video',
-        value: 1
-    }
-]
-
 
 export default function LearningLayout() {
     const videoRef = useRef(null);

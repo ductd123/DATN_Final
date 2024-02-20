@@ -53,11 +53,28 @@ export  const axiosUploadVolunteerClient = axios.create({
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
-// axiosClient.interceptors.request.use(async (config)=>{
-//   return config;
-// })
+
+export  const axiosChatClient = axios.create({
+  baseURL: "https://wetalk.ibme.edu.vn/chat-service/",
+  headers: {
+    "content-type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  paramsSerializer: (params) => queryString.stringify(params),
+});
 
 axiosUserClient.interceptors.request.use(
+  (config) => {
+    updateToken();
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    // Handle request error
+    return Promise.reject(error);
+  }
+);
+axiosChatClient.interceptors.request.use(
   (config) => {
     updateToken();
     config.headers.Authorization = `Bearer ${token}`;
@@ -136,6 +153,17 @@ axiosCheckAIClient.interceptors.response.use(
   }
 );
 axiosUserClient.interceptors.response.use(
+  (res) => {
+    if (res && res.data) {
+      return res.data;
+    }
+    return res;
+  },
+  (err) => {
+    throw err;
+  }
+);
+axiosChatClient.interceptors.response.use(
   (res) => {
     if (res && res.data) {
       return res.data;
