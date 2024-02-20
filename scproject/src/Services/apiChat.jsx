@@ -9,10 +9,10 @@ const apiChat = {
         const url = `messages/conversation/${id}`;
         return axiosChatClient.get(url);
     },
-    //   getMessage: (id) => {
-    //     const url = `conversations/contactId/${id}`;
-    //     return axiosChatClient.get(url);
-    // },
+    getConversationIdByUserId: (id) => {
+        const url = `conversations/contactId/${id}`;
+        return axiosChatClient.get(url);
+    },
     postConversation: (data) => {
         const url = "conversations";
         return axiosChatClient.post(url, data);

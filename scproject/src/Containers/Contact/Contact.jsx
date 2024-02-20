@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./Contact.scss";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Users } from "react-feather";
 import { render } from "react-dom";
 import apiUser from "../../Services/apiUser";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
-import { Empty } from "antd";
+import { Empty, message } from "antd";
+import apiChat from "../../Services/apiChat";
 export default function Contact() {
   const location = useLocation();
   const pathName = location.pathname;
   const [loading, setLoading] = useState();
   const [listRequest, setListRequest] = useState();
   const [listFriends, setListFriends] = useState();
+  const navigate = useNavigate();
   useEffect(() => {
     fetchListAddFri();
     fetchListFri();
@@ -75,6 +77,20 @@ export default function Contact() {
       setLoading(false);
     }
   }
+  const handleRouterChat = async (item) => {
+    try {
+      console.log(item.id);
+      const response = await apiChat.getConversationIdByUserId(item.id);
+      if (response) {
+        setTimeout(() => {
+          navigate(`/room/userId=${item.id}&&conversationId=${response.conversationId}`);
+        }, 500);
+      }
+    } catch (error) {
+      message.error("Có lỗi xảy ra.")
+    }
+  }
+
   const fakeData = [
     { name: "Eva", avt: "https://picsum.photos/201" },
     { name: "Mia", avt: "https://picsum.photos/202" },
@@ -118,7 +134,7 @@ export default function Contact() {
           <div className="list-contact__all">
             {listFriends?.length ?
               listFriends.map((item, index) => (<>
-                <Link to={`/room/${item.id}`} className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
+                <button onClick={() => handleRouterChat(item)} className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px', width:'100%' }}>
                   <div className="conversation__content">
                     <img
                       src={item.avatarLocation}
@@ -129,8 +145,7 @@ export default function Contact() {
                       <h4 className="conversation__name">{item.name}</h4>
                     </div>
                   </div>
-
-                </Link>
+                </button>
                 <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr>
               </>
 
