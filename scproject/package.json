@@ -30,6 +30,7 @@
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
     "react-spinners": "^0.13.8",
+    "react-stomp": "^5.1.0",
     "react-toastify": "^9.1.3",
     "react-webcam": "^7.2.0",
     "redux": "^4.2.1",
@@ -38,8 +39,11 @@
     "sass": "^1.69.5",
     "simple-peer": "^9.11.1",
     "slick-carousel": "^1.8.1",
-    "socket.io-client": "^4.7.2",
+    "socket.io-client": "^4.7.4",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "web-vitals": "^2.1.4",
+    "websocket": "^1.0.34",
     "yup": "^1.3.2"
   },
   "scripts": {

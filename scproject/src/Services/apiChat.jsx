@@ -1,13 +1,26 @@
-import {axiosChatClient} from "./axiosClient";
+import { axiosChatClient } from "./axiosClient";
 
 const apiChat = {
     getListChat: () => {
         const url = "conversations/list/me";
-        return axiosLoginClient.get(url);
+        return axiosChatClient.get(url);
     },
-    validateOtp: (data) => {
-        const url = "register/validateOtp";
-        return axiosLoginClient.post(url, data);
+    getMessage: (id) => {
+        const url = `messages/conversation/${id}`;
+        return axiosChatClient.get(url);
     },
+    //   getMessage: (id) => {
+    //     const url = `conversations/contactId/${id}`;
+    //     return axiosChatClient.get(url);
+    // },
+    postConversation: (data) => {
+        const url = "conversations";
+        return axiosChatClient.post(url, data);
+    },
+    createGroup: (data) => {
+        const url = "group-member";
+        return axiosChatClient.post(url, data);
+    },
+
 };
-export default apiSignUp;
+export default apiChat;
