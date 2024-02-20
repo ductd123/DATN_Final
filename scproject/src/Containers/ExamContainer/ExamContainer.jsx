@@ -16,7 +16,6 @@ const generateUniqueArray = (length, min, max) => {
     return uniqueArray;
 };
 const isUnique = (arr, value) => arr.indexOf(value) === -1;
-// let random = generateUniqueArray(10, 0, 19);
 
 export default function ExamContainer({ takingExam, point, setPoint, indexx, setIndexx, showPointResult, random }) {
     const location = useLocation();
