@@ -30,7 +30,7 @@ export default function ListConversation() {
     try {
       console.log(item.id);
         setTimeout(() => {
-          navigate(`/room/userId=${item.conversationId}&&conversationId=${item.conversationId}`);
+          navigate(`/room/userId=${1}&&conversationId=${item.conversationId}`);
         }, 500);
     } catch (error) {
       message.error("Có lỗi xảy ra.")
@@ -45,16 +45,16 @@ export default function ListConversation() {
             <div className="conversation__container" key={i}>
               <div className="conversation__content">
                 <img
-                  src={item.contactResList[1].avatarLocation}
+                  src={item?.contactResList[1]?.avatarLocation}
                   alt=""
                   className="conversation__img"
                 />
                 <div className="conversation__main">
-                  <h4 className="conversation__name">{item.contactResList[1].name}</h4>
-                  <span className="conversation__mess">{item.contactResList[1].lastMessage}</span>
+                  <h4 className="conversation__name">{item?.contactResList[1]?.name}</h4>
+                  <span className="conversation__mess">{item?.contactResList[1]?.lastMessage}</span>
                 </div>
               </div>
-              <span className="conversation__time">{item.contactResList[1].lastActivity}</span>
+              <span className="conversation__time">{item?.contactResList[1]?.lastActivity}</span>
             </div>
           </button>
         );
