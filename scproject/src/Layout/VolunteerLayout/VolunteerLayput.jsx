@@ -10,6 +10,7 @@ import './VolunteerLayout.scss'
 import TableData from "./TableData";
 import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
+import { useSelector } from "react-redux";
 function normalizeString(inputString) {
     let lowercasedString = inputString.toLowerCase();
     let strippedString = lowercasedString.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -19,6 +20,7 @@ function normalizeString(inputString) {
 
 const VolunterLayout = () => {
     const [loading, setLoading] = useState(false);
+    const userData = useSelector((state) => state.userData.userData)
     const [recordingTime, setRecordingTime] = useState(0);
     const [recordingTimerId, setRecordingTimerId] = useState(null);
     const [recordedVideo, setRecordedVideo] = useState(null);
@@ -42,11 +44,11 @@ const VolunterLayout = () => {
     const [filter, setFilter] = useState({
         page: 1,
         size: 999999,
-        volunteerEmail: "caominhducpx@gmail.com",
+        volunteerEmail: userData?.email,
         // topic: "",
         // vocab: "",
         ascending: true,
-        // orderBy: "",
+        status: 300,
         // createdFrom: "",
         // createdTo: ''
     });
@@ -57,17 +59,7 @@ const VolunterLayout = () => {
     useEffect(() => {
         getTopic();
         getTableData();
-        // async function loadModel() {
-        //     const loadedModel = await tf.loadLayersModel("../../assets/moduleAI/mymodel.h5");
-        //     setModel(loadedModel);
-        // }
-        // loadModel();
         runcoco();
-        // async function loadModel() {
-        //     const loadedModel = await tf.loadGraphModel("/src/assets/moduleAI/mymodel.h5");
-        //     setModel(loadedModel);
-        // }
-        // loadModel();
     }, [])
 
     useEffect(() => {
@@ -100,7 +92,6 @@ const VolunterLayout = () => {
             canvasRef.current.width = videoWidth;
             canvasRef.current.height = videoHeight;
             const obj = await net.detect(video);
-            // console.log(obj);
             const ctx = canvasRef.current.getContext('2d');
             drawReact(obj, ctx);
         }
@@ -323,6 +314,7 @@ const VolunterLayout = () => {
     const xemLaiData = (link) => {
         setRecordedVideo(link);
         setShowPreviewRecord(true);
+        setViewImg(false);
     }
     return (
         <div className="main-layout">
