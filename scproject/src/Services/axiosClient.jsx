@@ -55,8 +55,8 @@ export  const axiosUploadVolunteerClient = axios.create({
 });
 
 export  const axiosChatClient = axios.create({
-  // baseURL: "https://wetalk.ibme.edu.vn/chat-service/",
-  baseURL: "http://202.191.56.11:8050/",
+  baseURL: "https://wetalk.ibme.edu.vn/service-chat/",
+  // baseURL: "http://202.191.56.11:8050/",
   headers: {
     "content-type": "application/json",
     Authorization: `Bearer ${token}`,
