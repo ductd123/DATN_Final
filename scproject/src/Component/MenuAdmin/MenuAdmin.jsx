@@ -57,7 +57,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
                 const imageData = isImage ? response : '';
                 const videoData = isImage ? '' : response;
                 const data = {
-                    content: "",
+                    content: contentQuestion,
                     explanation: "",
                     imageLocation: imageData,
                     videoLocation: videoData,

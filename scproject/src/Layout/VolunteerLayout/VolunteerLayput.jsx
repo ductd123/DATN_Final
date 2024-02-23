@@ -427,14 +427,15 @@ const VolunterLayout = () => {
                                 Tìm kiếm
                             </Button>
                             <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
-                                <Select style={{ width: 200 }} placeholder="Chọn chủ đề" options={topicInit} onChange={onChooseTopic} />
-                                <Select style={{ width: 200 }} placeholder="Chọn từ vựng" options={vocabOption} onChange={(e) => onChangeFilter('vocab', e)} />
+                                <Select allowClear style={{ width: 200 }} placeholder="Chọn chủ đề" options={topicInit} onChange={onChooseTopic} />
+                                <Select allowClear style={{ width: 200 }} placeholder="Chọn từ vựng" options={vocabOption} onChange={(e) => onChangeFilter('vocab', e)} />
                                 <DatePicker
                                     style={{
                                         width: '100%',
                                     }}
                                     format="DD/MM/YYYY"
                                     placeholder="Thời gian đăng từ"
+                                    allowClear
                                     onChange={(e) => {
                                         const year = e?.$y;
                                         const month = (e?.$M + 1).toString().padStart(2, '0');
@@ -449,6 +450,7 @@ const VolunterLayout = () => {
                                     }}
                                     format="DD/MM/YYYY"
                                     placeholder="Thời gian đăng đến"
+                                    allowClear
                                     onChange={(e) => {
                                         const year = e?.$y || 2000;
                                         const month = (e?.$M + 1).toString().padStart(2, '0');

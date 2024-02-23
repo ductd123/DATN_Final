@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { CheckCircleTwoTone } from "@ant-design/icons";
 import ExamBlankPage from "./ExamBlankPage";
 import QuestionLayout from "./QuestionLayout";
-import { listQuestions } from "./listQuestion";
+import { listQuestion } from "./listQuestion";
 const generateUniqueArray = (length, min, max) => {
     const uniqueArray = [];
     while (uniqueArray.length < length) {
@@ -40,8 +40,8 @@ export default function ExamContainer({ takingExam, point, setPoint, indexx, set
                 showPointResult();
             }
             else {
-                let newAnswers = shuffleArray(listQuestions[index].answers);
-                setQuestion({ ...listQuestions[index], answers: newAnswers });
+                let newAnswers = shuffleArray(listQuestion[index].answers);
+                setQuestion({ ...listQuestion[index], answers: newAnswers });
             }
         }
     }, [indexx, random]);

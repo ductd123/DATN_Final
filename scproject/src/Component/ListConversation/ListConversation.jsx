@@ -28,10 +28,9 @@ export default function ListConversation() {
   }
   const handleRouterChat = async (item) => {
     try {
-      console.log(item.id);
-        setTimeout(() => {
-          navigate(`/room/userId=${1}&&conversationId=${item.conversationId}`);
-        }, 500);
+      setTimeout(() => {
+        navigate(`/room/userId=${1}&&conversationId=${item.conversationId}`);
+      }, 500);
     } catch (error) {
       message.error("Có lỗi xảy ra.")
     }
@@ -41,7 +40,7 @@ export default function ListConversation() {
       <HeaderList title="Các cuộc trò chuyện" />
       {listConver.map((item, i) => {
         return (
-          <button onClick={() => handleRouterChat(item)}className="conversation__link" key={i}>
+          <button onClick={() => handleRouterChat(item)} className="conversation__link" key={i}>
             <div className="conversation__container" key={i}>
               <div className="conversation__content">
                 <img

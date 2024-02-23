@@ -31,7 +31,7 @@ import bay from "../../assets/video/7.mp4";
 import tam from "../../assets/video/8.mp4";
 import chin from "../../assets/video/9.mp4";
 
-export const listQuestions = [
+export const listQuestion = [
     {
         id: 0,
         question: 'Đây là gì?',
