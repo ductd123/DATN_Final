@@ -333,8 +333,8 @@ const AdminLayout = () => {
                                                     className="conversation__img"
                                                 />
                                                 <div className="conversation__main" style={{ width: '400px' }}>
-                                                    <h4 className="conversation__name" style={{ fontWeight: 600 }}>Nội dung: {item.content}</h4>
-                                                    <h4 className="conversation__name">Nội dung: {item.volunteerEmail}</h4>
+                                                    <h4 className="conversation__name" style={{ fontWeight: 600 }}>Nội dung: B</h4>
+                                                    <h4 className="conversation__name">Người đăng: {item.volunteerEmail}</h4>
                                                 </div>
                                                 <div className="contact_button">
                                                     <Button className="contact_button-deny" key={`xemlai ${item.id}`} onClick={() => onPreviewHistory(item)}>Xem lại</Button>
