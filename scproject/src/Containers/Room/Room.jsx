@@ -22,7 +22,6 @@ export default function Room() {
     const fetchMessages = async () => {
       setLoading(true);
       const ids = getValueAfterHash();
-      console.log(ids);
       try {
         if (ids) {
           const infoUser = await apiChat.getConversationIdByUserId(ids.userId);
@@ -52,7 +51,7 @@ export default function Room() {
 
   useEffect(() => {
     if (conversationID) {
-      const sock = new SockJS('http://202.191.56.11:8050/chat-message');
+      const sock = new SockJS('https://wetalk.ibme.edu.vn/service-chat/chat-message');
       const stomp = Stomp.over(sock);
       stomp.connect({}, () => {
         console.log('Kết nối STOMP đã được mở.');
@@ -100,7 +99,7 @@ export default function Room() {
     if (message.body) {
       const receivedMessage = JSON.parse(message.body);
       setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-      console.log(messages);
+      console.log(receivedMessage);
     }
   }
   return (

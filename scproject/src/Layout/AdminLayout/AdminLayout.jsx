@@ -30,7 +30,7 @@ const AdminLayout = () => {
         size: 999999,
         // volunteerEmail: "caominhducpx@gmail.com",
         // topic: "",
-// vocab: "",
+        status: 100,
         ascending: true,
         // orderBy: "",
         // createdFrom: "",
@@ -184,17 +184,6 @@ const AdminLayout = () => {
             setLoading(false);
             let response = await apiLearning.getTableDataAdmin(filter);
             setDataTable(response.data);
-            setFilter({
-                page: 1,
-                size: 999999,
-                // volunteerEmail: "",
-                // topic: "",
-                // vocab: "",
-                ascending: true,
-                // orderBy: "",
-                // createdFrom: "",
-                // createdTo: ''
-            })
         } catch (error) {
             setLoading(false);
         }
@@ -251,18 +240,18 @@ const AdminLayout = () => {
 
     const onChooseTopic = async (e) => {
         setLoading(true);
-        // onChangeFilter('topic',e)
-        let data = {
-            page: 1,
-            size: 9999,
-            text: "",
-            ascending: true,
-            orderBy: "content",
-            topicId: e
-        }
+        onChangeFilter('topic',e)
+        // let data = {
+        //     page: 1,
+        //     size: 9999,
+        //     text: "",
+        //     ascending: true,
+        //     // orderBy: "content",
+        //     topicId: e
+        // }
         try {
             setLoading(false);
-            let response = await apiLearning.searchVocab(data);
+            let response = await apiLearning.searchVocab(filter);
             const items = [];
             response.data.forEach((element, index) => {
                 items.push({
@@ -382,13 +371,14 @@ const AdminLayout = () => {
                                     Tìm kiếm
                                 </Button>
                                 <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
-                                    <Select style={{ width: 200 }} placeholder="Chọn chủ đề" options={topicInit} onChange={onChooseTopic} />
-                                    <Select style={{ width: 200 }} placeholder="Chọn từ vựng" options={vocabOption} onChange={(e) => onChangeFilter('vocab', e)} />
-                                    <Input placeholder="Tìm theo người đăng" onChange={(e) => onChangeFilter("volunteerEmail", e.target.value)} />
+                                    <Select allowClear style={{ width: 200 }} placeholder="Chọn chủ đề" options={topicInit} onChange={onChooseTopic} />
+                                    <Select allowClear style={{ width: 200 }} placeholder="Chọn từ vựng" options={vocabOption} onChange={(e) => onChangeFilter('vocab', e)} />
+                                    <Input allowClear placeholder="Tìm theo người đăng" onChange={(e) => onChangeFilter("volunteerEmail", e.target.value)} />
                                     <DatePicker
                                         style={{
                                             width: '100%',
                                         }}
+                                        allowClear
                                         format="DD/MM/YYYY"
                                         placeholder="Thời gian đăng từ"
                                         onChange={(e) => {
@@ -403,6 +393,7 @@ const AdminLayout = () => {
                                         style={{
                                             width: '100%',
                                         }}
+                                        allowClear
                                         format="DD/MM/YYYY"
                                         placeholder="Thời gian đăng đến"
                                         onChange={(e) => {
