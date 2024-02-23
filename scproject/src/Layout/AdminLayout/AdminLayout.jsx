@@ -240,7 +240,7 @@ const AdminLayout = () => {
 
     const onChooseTopic = async (e) => {
         setLoading(true);
-        onChangeFilter('topic',e)
+        onChangeFilter('topic', e)
         // let data = {
         //     page: 1,
         //     size: 9999,
