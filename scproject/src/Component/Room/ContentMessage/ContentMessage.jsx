@@ -1,44 +1,55 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import "./ContentMessage.scss";
-import background from "../../../assets/image/zl1.png"
+import { useSelector } from "react-redux";
 
-export default function ContentMessage({ messages, userId }) {
+export default function ContentMessage({ messages, userInfo }) {
+  const userData = useSelector((state) => state.userData.userData);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <>
-      {/* <img className="mx-auto w-[380px] h-[230px]" src={background} alt="" /> */}
-      {Array.from({ length: 10 }).map((mes, i) => {
+    <div className="content-message-container">
+      {messages.map((mes, i) => {
         return (
           <div
             className={
-              // userId === mes.userId
-              "content-massenage content-massenage--user"
-              // : "content-massenage"
+              userData?.id === mes?.id ?
+                "content-massenage content-massenage--user"
+                : "content-massenage"
             }
             key={i}
           >
             <img
-              src="https://picsum.photos/200"
+              src={userData?.id === mes?.id ? userData.avatarLocation : userInfo.avatarLocation}
               alt=""
               className={
-                // userId === mes.userId
-                "content-massenage__img content-massenage__img--user"
-                // : "content-massenage__img"
+                userData?.id === mes?.id ?
+                  "content-massenage__img content-massenage__img--user"
+                  : "content-massenage__img"
               }
             />
             <div
               className={
-                // userId === mes.userId
-                "content-massenage__main content-massenage__main--user"
-                // : "content-massenage__main"
+                userData?.id === mes?.id ?
+                  "content-massenage__main content-massenage__main--user"
+                  : "content-massenage__main"
               }
             >
-              <p className="content-massenage__name">{"mes.__user__.name"}</p>
-              <p className="content-massenage__content">{"mes.content"}</p>
-              <p className="content-massenage__time">10:00 pm</p>
+              <p className="content-massenage__content">{mes?.content}</p>
             </div>
           </div>
         );
       })}
-    </>
+      <div ref={messagesEndRef} />
+    </div>
   );
 }
