@@ -8,7 +8,7 @@ import Dragger from "antd/es/upload/Dragger";
 import TextArea from "antd/es/input/TextArea";
 import { apiLearning } from "../../Services/apiLearning";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
-import { listQuestions } from "../../Containers/ExamContainer/listQuestion";
+import { listQuestion } from "../../Containers/ExamContainer/listQuestion";
 
 const generateUniqueArray = (length, min, max) => {
     const uniqueArray = [];
@@ -25,6 +25,7 @@ const isUnique = (arr, value) => arr.indexOf(value) === -1;
 const Examlayout = () => {
     const [takingExam, setTakingExam] = useState(false);
     const [countdown, setCountdown] = useState(3);
+    const [listQuestions, setListQuestions]= useState(listQuestion)
     const [confirmExamStarted, setConfirmExamStarted] = useState(false);
     const [point, setPoint] = useState(0);
     const [topicChose, setTopicChose] = useState();
@@ -129,8 +130,24 @@ const Examlayout = () => {
         setConfirmExamStarted(false);
     }
 
-    const handleStartTopicExam = () => {
+    const handleStartTopicExam = async () => {
         setShowSelectTopic(false);
+        try {
+            setLoading(false);
+            let response = await apiLearning.getTopic();
+            const items = [];
+            response.data.forEach((element, index) => {
+                items.push({
+                    id: element.id,
+                    value: element.id,
+                    label: element.content,
+                })
+            });
+            setTopicInit(items);
+        } catch (error) {
+            setLoading(false);
+            message.error("Kết nối không ổn định, vui lòng thử lại.")
+        }
         openConfirmExam();
     }
 

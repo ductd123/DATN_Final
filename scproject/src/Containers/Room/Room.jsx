@@ -18,7 +18,6 @@ export default function Room() {
   const [stompClient, setStompClient] = useState(null);
   const [conversationID, setConversationID] = useState();
   const userData = useSelector((state) => state.userData.userData)
-  // Effect để cập nhật conversationID khi URL thay đổi
   useEffect(() => {
     const fetchMessages = async () => {
       setLoading(true);

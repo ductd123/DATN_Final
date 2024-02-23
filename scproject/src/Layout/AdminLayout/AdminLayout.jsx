@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { HeaderBar, MenuTakingExam, Nav } from "../../Component";
+import { HeaderBar, Nav } from "../../Component";
 import { Button, DatePicker, Empty, FloatButton, Input, Modal, Select, Table, Tooltip, message } from "antd";
 import './AdminLayout.scss';
 import LoadingComponent from "../../Component/Common/Loading/Loading";
