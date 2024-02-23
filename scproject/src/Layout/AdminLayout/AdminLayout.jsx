@@ -241,14 +241,6 @@ const AdminLayout = () => {
     const onChooseTopic = async (e) => {
         setLoading(true);
         onChangeFilter('topic', e)
-        // let data = {
-        //     page: 1,
-        //     size: 9999,
-        //     text: "",
-        //     ascending: true,
-        //     // orderBy: "content",
-        //     topicId: e
-        // }
         try {
             setLoading(false);
             let response = await apiLearning.searchVocab(filter);
