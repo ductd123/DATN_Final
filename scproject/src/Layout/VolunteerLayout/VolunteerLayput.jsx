@@ -65,9 +65,9 @@ const VolunterLayout = () => {
     useEffect(() => {
         previewRef.current = recordedVideo;
     }, [recordedVideo]);
-    useEffect(() => {
-        detect();
-    }, [model]);
+    // useEffect(() => {
+    //     detect();
+    // }, [model]);
     useEffect(() => {
         if (recordingTime > 5) {
             stopRecording();
