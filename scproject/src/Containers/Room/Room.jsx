@@ -8,6 +8,7 @@ import { SendOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import apiChat from '../../Services/apiChat';
 import { message } from 'antd';
+import apiUser from '../../Services/apiUser';
 
 export default function Room() {
   const params = useParams();
@@ -25,11 +26,20 @@ export default function Room() {
       try {
         if (ids) {
           const infoUser = await apiChat.getConversationIdByUserId(ids.userId);
-          setUser(infoUser.contactResList[1], () => { console.log(user) })
+          // setUser(infoUser.contactResList[1], () => { console.log(user) })
         }
         setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
+      }
+      try {
+        let response = await apiUser.getUserById(ids.userId);
+        setUser(response);
+      }
+      catch (error) {
+        console.log(error);
+        message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
         setLoading(false);
       }
       try {
@@ -86,6 +96,7 @@ export default function Room() {
     }
     if (stompClient && stompClient.connected) {
       stompClient.send(`/app/chat/${conversationID}`, {}, JSON.stringify({
+        id: userData.id,
         content: mes,
         messageType: "TEXT",
         mediaLocation: null,
@@ -102,6 +113,11 @@ export default function Room() {
       console.log(receivedMessage);
     }
   }
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  };
   return (
     <div className="room">
       <div className="room__header">
@@ -110,7 +126,7 @@ export default function Room() {
         />
       </div>
       <div className="room__content">
-        <ContentMessage messages={messages} />
+        <ContentMessage messages={messages}  userInfo={user}/>
       </div>
       <div className="room__form">
         <div className="form-room">
@@ -120,6 +136,7 @@ export default function Room() {
             className="form-room__input"
             value={mes}
             onChange={(e) => setMes(e.target.value)}
+            onKeyDown={handleKeyPress}
           />
           <Button onClick={sendMessage} className="form-room__btn">
             <SendOutlined />
