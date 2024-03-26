@@ -1,12 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
+import { message } from "antd";
 import React, { useEffect, useState } from "react";
-import "./Contact.scss";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Users } from "react-feather";
-import { render } from "react-dom";
-import apiUser from "../../Services/apiUser";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
-import { Empty, message } from "antd";
 import apiChat from "../../Services/apiChat";
+import apiUser from "../../Services/apiUser";
+import "./Contact.scss";
+import ListContact from "./ListContact";
+
 export default function Contact() {
   const location = useLocation();
   const pathName = location.pathname;
@@ -14,39 +15,54 @@ export default function Contact() {
   const [listRequest, setListRequest] = useState();
   const [listFriends, setListFriends] = useState();
   const navigate = useNavigate();
+
   useEffect(() => {
     fetchListAddFri();
     fetchListFri();
   }, []);
+
+  // API danh sách lời mời đã gửi
+  const {
+    data: listSendingFr,
+    isFetching,
+    refetch,
+  } = useQuery({
+    queryKey: ["listSendingFr"],
+    queryFn: async () => {
+      const res = await apiUser.listSendingFr();
+      return res.data;
+    },
+  });
+
   const fetchListAddFri = async () => {
     setLoading(true);
     try {
       let response = await apiUser.listRequestAddFr();
       setTimeout(() => {
-        setListRequest(response.data)
+        setListRequest(response.data);
         setLoading(false);
       }, 500);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       setLoading(false);
     }
-  }
+  };
+
   const fetchListFri = async () => {
     setLoading(true);
     try {
       let response = await apiUser.getListFriends();
       setTimeout(() => {
-        setListFriends(response.data)
+        setListFriends(response.data);
         setLoading(false);
       }, 500);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       setLoading(false);
     }
-  }
-  const onCancleFriends = async (id) => {
+  };
+
+  const onCancelFriends = async (id, type) => {
     setLoading(true);
     try {
       let response = await apiUser.cancelRequestAddFr(id);
@@ -55,12 +71,22 @@ export default function Contact() {
       }, 500);
       fetchListAddFri();
       fetchListFri();
-    }
-    catch (error) {
+      refetch();
+      if (response.code === 200) {
+        if (type === "cancelFr") {
+          message.success("Huỷ kết bạn thành công");
+        } else if (type === "cancelRequest") {
+          message.success("Huỷ lời mời kết bạn thành công");
+        } else {
+          message.success("Huỷ lời chấp nhận kết bạn thành công");
+        }
+      }
+      return response;
+    } catch (error) {
       console.log(error);
       setLoading(false);
     }
-  }
+  };
 
   const onAcceptFriends = async (id) => {
     setLoading(true);
@@ -68,28 +94,29 @@ export default function Contact() {
       let response = await apiUser.acceptRequestAddFr(id);
       setTimeout(() => {
         setLoading(false);
+        message.success("Xác nhận kết bạn thành công");
       }, 500);
       fetchListAddFri();
       fetchListFri();
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       setLoading(false);
+      message.error("Xác nhận huỷ thành công");
     }
-  }
+  };
+
   const handleRouterChat = async (item) => {
     try {
-      console.log(item.id);
-      const response = await apiChat.getConversationIdByUserId(item.id);
-      if (response) {
+      const response = await apiChat.getConversationIdByUserId(item.userId);
+      if (response.data) {
         setTimeout(() => {
-          navigate(`/room/userId=${item.id}&&conversationId=${response.conversationId}`);
+          navigate(`/room/${item.userId}/${response.data.conversationId}`);
         }, 500);
       }
     } catch (error) {
-      message.error("Có lỗi xảy ra.")
+      message.error("Có lỗi xảy ra.");
     }
-  }
+  };
 
   const fakeData = [
     { name: "Eva", avt: "https://picsum.photos/201" },
@@ -113,127 +140,33 @@ export default function Contact() {
     { name: "Grace", avt: "https://picsum.photos/290" },
     { name: "Frank", avt: "https://picsum.photos/300" },
   ];
-  const sortedData = fakeData.slice().sort((a, b) => a.name.localeCompare(b.name));
 
+  const sortedData = fakeData
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name));
 
-
-  return (<>
-    <LoadingComponent loading={loading} />
-    {pathName === "/friend" || pathName === "/contact" ?
-      <div className="contact">
-        <div className="contact-panel__header">
-          <div className="list-contact__selection">
-            <i className="fa-regular fa-user fa-lg"></i>
-            <div className="list-contact__content">Danh sách bạn bè</div>
-          </div>
-        </div>
-        <div className="contact-panel__details">
-          <div className="list-contact__length">
-            Bạn bè ({listFriends?.length || 0})
-          </div>
-          <div className="list-contact__all">
-            {listFriends?.length ?
-              listFriends.map((item, index) => (<>
-                <button onClick={() => handleRouterChat(item)} className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px', width:'100%' }}>
-                  <div className="conversation__content">
-                    <img
-                      src={item.avatarLocation}
-                      alt=""
-                      className="conversation__img"
-                    />
-                    <div className="conversation__main">
-                      <h4 className="conversation__name">{item.name}</h4>
-                    </div>
-                  </div>
-                </button>
-                <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr>
-              </>
-
-              ))
-              :
-              <Empty />
-            }
-          </div>
-        </div>
-      </div> :
-      pathName === "/group" ?
-        <div className="contact">
-          <div className="contact-panel__header">
-            <div className="list-contact__selection">
-              <Users />
-              <div className="list-contact__content">Danh sách nhóm
-
-              </div>
-            </div>
-          </div>
-          <div className="contact-panel__details">
-            <div className="list-contact__length">
-              Nhóm ({sortedData.length})
-            </div>
-            <div className="list-contact__all">
-              {
-                sortedData.map((item, index) => (<><div className="conversation__container" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
-                  <Link to={`/room/${item.id}`} className="conversation__content">
-                    <img
-                      src={item.avt}
-                      alt=""
-                      className="conversation__img"
-                    />
-                    <div className="conversation__main">
-                      <h4 className="conversation__name">{item.name}</h4>
-                      <h4 className="conversation__member" style={{ fontSize: '13px', color: '#8b8b8b' }}>{sortedData.length} thành viên</h4>
-                    </div>
-                  </Link>
-
-                </div>
-                  <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr></>
-
-                ))
-              }
-            </div>
-          </div>
-        </div> :
-        <div className="contact">
-          <div className="contact-panel__header">
-            <div className="list-contact__selection">
-              <i className="fa-regular fa-envelope-open"></i>
-              <div className="list-contact__content">Lời mời kết bạn</div>
-            </div>
-          </div>
-          <div className="contact-panel__details">
-            <div className="list-contact__length">
-              Lời mời đã nhận ({listRequest?.length || 0})
-            </div>
-            <div className="list-contact__all">
-              {listRequest?.length ?
-                listRequest?.slice(0, 5).map((item, index) => (<><div className="card-wrapper" key={index} style={{ flexDirection: 'column', paddingLeft: '15px' }}>
-                  <div className="conversation__content">
-                    <img
-                      src={item.avatarLocation}
-                      alt=""
-                      className="conversation__img"
-                    />
-                    <div className="conversation__main">
-                      <h4 className="conversation__name">{item.name}</h4>
-                    </div>
-                    <div className="contact_button">
-                      <button className="contact_button-deny" onClick={() => { onCancleFriends(item.id) }}>Từ chối</button>
-                      <button className="contact_button-accept" onClick={() => { onAcceptFriends(item.id) }}>Đồng ý</button>
-                    </div>
-                  </div>
-
-                </div>
-                  <hr style={{ height: '1px', backgroundColor: 'rgb(221, 221, 221)', marginLeft: '65px' }}></hr></>
-                ))
-                :
-                <div style={{ width: '100%', height: '100%', backgroundColor: '#fff', paddingLeft: '15px' }}>
-                  <Empty description="Không có lời mời kết bạn nào." />
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-    }
-  </>
+  return (
+    <>
+      <LoadingComponent loading={loading} />
+      {pathName === "/friend" || pathName === "/contact" ? (
+        <ListContact
+          type="friend"
+          data={listFriends}
+          handleRouterChat={handleRouterChat}
+          onCancelFriends={onCancelFriends}
+        />
+      ) : pathName === "/group" ? (
+        <ListContact type="group" data={sortedData} />
+      ) : (
+        <ListContact
+          type="request"
+          listRequest={listRequest}
+          listSendingFr={listSendingFr}
+          onCancelFriends={onCancelFriends}
+          onAcceptFriends={onAcceptFriends}
+          refetch={refetch}
+        />
+      )}
+    </>
   );
 }
