@@ -25,11 +25,11 @@ const MenuTakingExam = ({
 }) => {
   const [modal, contextHolder] = Modal.useModal();
   const [items, setItems] = useState([
-    getItem(
-      "Kiểm tra theo bảng chữ cái và số",
-      "examABC",
-      <BookOutlined style={{ fontSize: "1.25rem" }} />
-    ),
+    // getItem(
+    //   "Kiểm tra theo bảng chữ cái và số",
+    //   "examABC",
+    //   <BookOutlined style={{ fontSize: "1.25rem" }} />
+    // ),
     getItem(
       "Kiểm tra theo chủ đề",
       "exam_topic",

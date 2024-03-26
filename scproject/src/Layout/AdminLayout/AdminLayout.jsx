@@ -534,7 +534,7 @@ const AdminLayout = () => {
                         >
                           <div className="conversation__content">
                             <img
-                              src={user.avatarLocation || blank}
+                              src={item.dataLocation || blank}
                               alt=""
                               className="w-14 h-14 rounded-full mr-4"
                             />
@@ -546,7 +546,7 @@ const AdminLayout = () => {
                                 className="conversation__name"
                                 style={{ fontWeight: 600 }}
                               >
-                                Nội dung:
+                                Nội dung: {item?.vocabularyContent}
                                 {/* {isImage(item.dataLocation) ? (
                                   <img
                                     src={item?.dataLocation}

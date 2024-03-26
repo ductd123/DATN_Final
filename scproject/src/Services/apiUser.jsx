@@ -57,7 +57,7 @@ const apiUser = {
     return axiosUserClient.get(url);
   },
   uploadAvt: async (data) => {
-    const url = `users/uploadAvatar`;
+    const url = `users/upload-avatar`;
     let response1 = {
       avatarLocation: await apiUploadFile.uploadFile(data),
     };
