@@ -1,148 +1,107 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { HeaderRoom, ContentMessage, Button } from '../../Component';
-import './Room.scss';
-import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
-import { SendOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
-import apiChat from '../../Services/apiChat';
-import { message } from 'antd';
-import apiUser from '../../Services/apiUser';
+import { SendOutlined } from "@ant-design/icons";
+import { QueryCache, useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Button, ContentMessage, HeaderRoom } from "../../Component";
+import apiChat from "../../Services/apiChat";
+import { useSocket } from "../../hooks/useSocket";
+import "./Room.scss";
+import { useUser } from "../../hooks/useUser";
+import apiUser from "../../Services/apiUser";
+import { Spin } from "antd";
 
 export default function Room() {
-  const params = useParams();
-  const [messages, setMessages] = useState([]);
-  const [mes, setMes] = useState('');
-  const [user, setUser] = useState();
-  const [loading, setLoading] = useState(false);
-  const [stompClient, setStompClient] = useState(null);
-  const [conversationID, setConversationID] = useState();
-  const userData = useSelector((state) => state.userData.userData)
-  useEffect(() => {
-    const fetchMessages = async () => {
-      setLoading(true);
-      const ids = getValueAfterHash();
-      try {
-        if (ids) {
-          const infoUser = await apiChat.getConversationIdByUserId(ids.userId);
-          // setUser(infoUser.contactResList[1], () => { console.log(user) })
-        }
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-      try {
-        let response = await apiUser.getUserById(ids.userId);
-        setUser(response);
-      }
-      catch (error) {
-        console.log(error);
-        message.error("Đã xảy ra lỗi, vui lòng thử lại hoặc liên hệ Admin.")
-        setLoading(false);
-      }
-      try {
-        setConversationID(ids.conversationId);
-        let response = '';
-        if (ids) {
-          response = await apiChat.getMessage(ids.conversationId);
-          setMessages(response);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-    };
+  const { userId, conversationId } = useParams();
+  const [mes, setMes] = useState("");
+  const [messageList, setMessageList] = useState([]);
+  const { user, loading } = useUser();
+  const { socketResponse, sendData } = useSocket(conversationId, userId);
+  const [isLoadingMess, setIsLoadingMess] = useState(false);
 
-    fetchMessages();
-  }, [params]);
+  // API lấy thông tin user
+  const { data: userInfo, isFetching: isFetchingUser } = useQuery({
+    queryKey: ["getUserInfo", Number(userId)],
+    queryFn: async () => {
+      const res = await apiUser.getUserById(Number(userId));
+      return res.data;
+    },
+  });
 
   useEffect(() => {
-    if (conversationID) {
-      const sock = new SockJS('https://wetalk.ibme.edu.vn/service-chat/chat-message');
-      const stomp = Stomp.over(sock);
-      stomp.connect({}, () => {
-        console.log('Kết nối STOMP đã được mở.');
-        stomp.subscribe(`/conversation/${conversationID}`, (payload) => receivedMessage(payload));
-      });
-      setStompClient(stomp);
-
-      return () => {
-        if (stomp) {
-          stomp.disconnect();
+    if (userInfo) {
+      const fetchMessages = async () => {
+        setIsLoadingMess(true);
+        const res = await apiChat.getMessage(Number(conversationId));
+        if (res.data) {
+          setMessageList(res.data);
+        } else {
+          setMessageList([]);
         }
+        setIsLoadingMess(false);
       };
+      fetchMessages();
     }
-  }, [conversationID]);
+  }, [userInfo]);
 
-  const getValueAfterHash = () => {
-    const url = window.location.href;
-    const userIdIndex = url.indexOf('userId=');
-    const conversationIdIndex = url.indexOf('conversationId=');
-    if (userIdIndex !== -1 && conversationIdIndex !== -1) {
-      const userId = url.substring(userIdIndex + 7, conversationIdIndex - 2);
-      const conversationId = url.substring(conversationIdIndex + 15);
-      return { userId, conversationId };
-    } else {
-      return null;
-    }
+  useEffect(() => {
+    addMessageToList(socketResponse);
+  }, [socketResponse]);
+
+  const addMessageToList = (val) => {
+    if (!val.content) return;
+    setMessageList((oldMess) => [...oldMess, val]);
   };
 
-  const sendMessage = () => {
-    if (!mes) {
-      return false
-    }
-    if (stompClient && stompClient.connected) {
-      stompClient.send(`/app/chat/${conversationID}`, {}, JSON.stringify({
-        id: userData.id,
+  const sendMessage = (e) => {
+    if (mes !== "") {
+      sendData({
+        contactId: user?.userId,
         content: mes,
         messageType: "TEXT",
         mediaLocation: null,
-      }));
-      setMes('');
-    } else {
-      console.error('Kết nối STOMP chưa được thiết lập hoặc đã bị đóng.');
+      });
+      addMessageToList({
+        contactId: user?.userId,
+        content: mes,
+        messageType: "TEXT",
+        mediaLocation: null,
+        createdAt: new Date(),
+      });
+      setMes("");
     }
   };
-  const receivedMessage = (message) => {
-    if (message.body) {
-      const receivedMessage = JSON.parse(message.body);
-      setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-      console.log(receivedMessage);
-    }
-  }
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       sendMessage();
     }
   };
+
   return (
-    <div className="room">
-      <div className="room__header">
-        <HeaderRoom
-          userInfo={user}
-        />
-      </div>
-      <div className="room__content">
-        <ContentMessage messages={messages}  userInfo={user}/>
-      </div>
-      <div className="room__form">
-        <div className="form-room">
-          <input
-            type="text"
-            placeholder="Nhập tin nhắn của bạn"
-            className="form-room__input"
-            value={mes}
-            onChange={(e) => setMes(e.target.value)}
-            onKeyDown={handleKeyPress}
-          />
-          <Button onClick={sendMessage} className="form-room__btn">
-            <SendOutlined />
-          </Button>
+    <Spin spinning={isFetchingUser || isLoadingMess}>
+      <div className="room">
+        <div className="room__header">
+          <HeaderRoom userInfo={userInfo} conversationId={conversationId} />
+        </div>
+        <div className="room__content">
+          <ContentMessage messages={messageList} user={user} />
+        </div>
+        <div className="room__form">
+          <div className="form-room">
+            <input
+              type="text"
+              placeholder="Nhập tin nhắn của bạn"
+              className="form-room__input"
+              value={mes}
+              onChange={(e) => setMes(e.target.value)}
+              onKeyDown={handleKeyPress}
+            />
+            <Button onClick={sendMessage} className="form-room__btn">
+              <SendOutlined />
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </Spin>
   );
 }

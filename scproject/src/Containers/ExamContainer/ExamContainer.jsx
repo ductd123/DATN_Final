@@ -1,70 +1,72 @@
+import { Tabs } from "antd";
 import React, { useEffect, useState } from "react";
-import "./ExamCOntainer.scss";
-import { useLocation } from "react-router-dom";
-import { CheckCircleTwoTone } from "@ant-design/icons";
 import ExamBlankPage from "./ExamBlankPage";
+import "./ExamCOntainer.scss";
 import QuestionLayout from "./QuestionLayout";
-import { listQuestion } from "./listQuestion";
-const generateUniqueArray = (length, min, max) => {
-    const uniqueArray = [];
-    while (uniqueArray.length < length) {
-        const randomValue = Math.floor(Math.random() * (max - min + 1) + min);
-        if (isUnique(uniqueArray, randomValue)) {
-            uniqueArray.push(randomValue);
-        }
+import QuestionList from "./QuestionList";
+
+const { TabPane } = Tabs;
+export default function ExamContainer({
+  takingExam,
+  point,
+  setPoint,
+  indexx,
+  setIndexx,
+  showPointResult,
+  topicName,
+  listQuestions,
+}) {
+  const [q, setQuestion] = useState();
+
+  useEffect(() => {
+    if (indexx > listQuestions?.length) {
+      showPointResult();
+    } else {
+      if (listQuestions) {
+        setQuestion(listQuestions[indexx]);
+      }
     }
-    return uniqueArray;
-};
-const isUnique = (arr, value) => arr.indexOf(value) === -1;
+  }, [indexx, listQuestions]);
 
-export default function ExamContainer({ takingExam, point, setPoint, indexx, setIndexx, showPointResult, random }) {
-    const location = useLocation();
-    const pathName = location.pathname;
-    const [q, setQuestion] = useState();
-
-    const shuffleArray = (array) => {
-        const shuffledArray = array.slice();
-
-        for (let i = shuffledArray.length - 1; i > 0; i--) {
-            const randomIndex = Math.floor(Math.random() * (i + 1));
-            [shuffledArray[i], shuffledArray[randomIndex]] = [shuffledArray[randomIndex], shuffledArray[i]];
-        }
-
-        return shuffledArray;
-    };
-
-    useEffect(() => {
-        if (random) {
-            let index = random[indexx];
-            if (indexx > 9) {
-                showPointResult();
-            }
-            else {
-                let newAnswers = shuffleArray(listQuestion[index].answers);
-                setQuestion({ ...listQuestion[index], answers: newAnswers });
-            }
-        }
-    }, [indexx, random]);
-
-    return (
-        <>
-            {takingExam && q ?
-                <div className="question-layout">
-                    <QuestionLayout
-                        question={q.question}
-                        type={q.type}
-                        src={q.src}
-                        answers={q.answers}
-                        id={q.id}
-                        setIndexx={setIndexx}
-                        indexx={indexx}
-                        setPoint={setPoint}
-                        point={point}
-                        showPointResult={showPointResult}
-                    />
-                </div>
-                :
-                <ExamBlankPage />}
-        </>
-    );
+  return (
+    <>
+      {takingExam && q ? (
+        <div className="w-full px-4">
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="Danh sách" key="1">
+              <div className="text-xl font-bold text-center">
+                Câu hỏi kiểm tra chủ đề: {topicName}
+              </div>
+              <QuestionList
+                questions={listQuestions}
+                setPoint={setPoint}
+                point={point}
+                showPointResult={showPointResult}
+              />
+            </TabPane>
+            <TabPane tab="Quiz" key="2">
+              <div className="text-xl font-bold text-center">
+                Câu hỏi kiểm tra chủ đề: {topicName}
+              </div>
+              <div className="question-layout">
+                <QuestionLayout
+                  question={q}
+                  answers={q?.answerResList}
+                  id={q.topicId}
+                  setIndexx={setIndexx}
+                  indexx={indexx}
+                  setPoint={setPoint}
+                  point={point}
+                  showPointResult={showPointResult}
+                  maxLength={listQuestions?.length}
+                />
+              </div>
+            </TabPane>
+          </Tabs>
+        </div>
+      ) : (
+        <ExamBlankPage />
+      )}
+    </>
+  );
 }
