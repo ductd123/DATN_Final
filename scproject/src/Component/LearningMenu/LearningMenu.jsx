@@ -72,6 +72,9 @@ const MenuStudyAI = ({
     fetchData1();
   }, []);
 
+  const filterOption = (input, option) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
   useEffect(() => {
     setItems([
       getItem(
@@ -91,6 +94,7 @@ const MenuStudyAI = ({
         [
           getItem(
             <Select
+              showSearch
               placeholder="Chọn chủ đề"
               suffixIcon={null}
               style={{ width: "100%" }}
@@ -99,6 +103,7 @@ const MenuStudyAI = ({
               onChange={(e) => {
                 setLabelForSelect(e);
               }}
+              filterOption={filterOption}
             />,
             "SearchTopic"
           ),

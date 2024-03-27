@@ -1,11 +1,25 @@
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import defaultvideo from "../../assets/image/defaultvideo.png";
-import { Empty, Modal } from "antd";
+import { Empty, Modal, Pagination } from "antd";
+
+const PAGE_SIZE = 10;
 const SearchWord = ({ searchText, files }) => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [fileShow, setFileShow] = useState({});
   const [showFileDetail, setShowFileDetail] = useState(false);
   const videoRef = useRef(null);
+
+  // CHia page
+  useEffect(() => {
+    const totalPages = Math.ceil(files?.length / PAGE_SIZE);
+    setCurrentPage(Math.min(currentPage, totalPages));
+  }, [files, currentPage]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   const handleViewDetail = (file) => {
     setShowFileDetail(true);
     setFileShow(file);
@@ -25,78 +39,92 @@ const SearchWord = ({ searchText, files }) => {
         <div className="searchWord-header-text">Kết quả tìm kiếm cho: </div>
         <span className="searchWord-header-value">"{searchText}"</span>
       </div>
-      <div className="searchWord-container">
-        {files?.length ? (
-          files.map((item, i) => {
-            return (
-              <div key={i} style={{ height: "max-content" }}>
-                {item.type === 1 ? (
-                  <div
-                    key={i}
-                    className="searchWord-item"
-                    style={{
-                      backgroundImage: `url(${item.preview})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  >
-                    <div className="searchWord-item-detail">
-                      <p
+      <div className="">
+        <div className="searchWord-container">
+          {files?.length ? (
+            files
+              ?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+              ?.map((item, i) => {
+                return (
+                  <div key={i} style={{ height: "max-content" }}>
+                    {item.type === 1 ? (
+                      <div
+                        key={i}
+                        className="searchWord-item"
                         style={{
-                          fontWeight: "600",
-                          fontSize: "28px",
-                          marginLeft: "10px",
+                          backgroundImage: `url(${item.preview})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
                         }}
                       >
-                        {item.content}
-                      </p>
-                    </div>
-                    <button
-                      className="searchWord-item-play"
-                      onClick={() => handleViewDetail(item)}
-                    >
-                      Bấm để xem!!!
-                    </button>
-                  </div>
-                ) : (
-                  <div
-                    key={i}
-                    className="searchWord-item"
-                    style={{
-                      backgroundImage: `url(${defaultvideo})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  >
-                    <div className="searchWord-item-detail">
-                      <p
+                        <div className="searchWord-item-detail">
+                          <p
+                            style={{
+                              fontWeight: "600",
+                              fontSize: "28px",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            {item.content}
+                          </p>
+                        </div>
+                        <button
+                          className="searchWord-item-play"
+                          onClick={() => handleViewDetail(item)}
+                        >
+                          Bấm để xem!!!
+                        </button>
+                      </div>
+                    ) : (
+                      <div
+                        key={i}
+                        className="searchWord-item"
                         style={{
-                          fontWeight: "600",
-                          fontSize: "28px",
-                          marginLeft: "10px",
+                          backgroundImage: `url(${defaultvideo})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
                         }}
                       >
-                        {item.content}
-                      </p>
-                    </div>
-                    <button
-                      className="searchWord-item-play"
-                      onClick={() => handleViewDetail(item)}
-                    >
-                      Bấm để xem!!!
-                    </button>
+                        <div className="searchWord-item-detail">
+                          <p
+                            style={{
+                              fontWeight: "600",
+                              fontSize: "28px",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            {item.content}
+                          </p>
+                        </div>
+                        <button
+                          className="searchWord-item-play"
+                          onClick={() => handleViewDetail(item)}
+                        >
+                          Bấm để xem!!!
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })
-        ) : (
-          <Empty
-            style={{ width: "100%" }}
-            description={`Không có dữ liệu cho "${searchText}".`}
-          />
-        )}
+                );
+              })
+          ) : (
+            <Empty
+              style={{ width: "100%" }}
+              description={`Không có dữ liệu cho "${searchText}".`}
+            />
+          )}
+          <div className="flex justify-center w-full pb-3">
+            <Pagination
+              current={currentPage}
+              pageSize={PAGE_SIZE}
+              total={files?.length}
+              onChange={handlePageChange}
+              showSizeChanger={false}
+            />
+          </div>
+        </div>
       </div>
+
       <Modal
         open={showFileDetail}
         footer={[]}

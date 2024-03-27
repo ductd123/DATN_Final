@@ -1,4 +1,5 @@
 import { CallIcon } from "./CallIcon";
 import { EndCallIcon } from "./EndCallIcon";
+import { SearchIcon } from "./SearchIcon";
 
-export { CallIcon, EndCallIcon };
+export { CallIcon, EndCallIcon, SearchIcon };
