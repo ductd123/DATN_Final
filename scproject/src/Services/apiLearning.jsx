@@ -31,6 +31,19 @@ export const apiLearning = {
     const url = `topics`;
     return axiosLearningClient.post(url, data);
   },
+  searchTopic: (data) => {
+    const url = `topics/search`;
+    return axiosLearningClient.post(url, data);
+  },
+  deleteTopic: (id) => {
+    const url = `topics/${id}`;
+    return axiosLearningClient.delete(url);
+  },
+  updateTopic: (data) => {
+    const url = `topics`;
+    return axiosLearningClient.put(url, data);
+  },
+
   addQuestion: (data) => {
     const url = `questions`;
     return axiosLearningClient.post(url, data);
@@ -55,7 +68,7 @@ export const apiUploadFile = {
     return axiosUploadVideoClient.post(url, data);
   },
   rejectData: (data) => {
-    const url = "collect-data/reject";
+    const url = "data-collection/reject";
     return axiosUploadVolunteerClient.post(url, data);
   },
   sendData: (data) => {

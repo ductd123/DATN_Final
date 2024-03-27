@@ -26,7 +26,6 @@ export default function Nav() {
   const [loading, setLoading] = useState(false);
   const userData = useSelector((state) => state.userData.userData);
   const [isShowMenuProfile, setIsShowMenuProfile] = useState(false);
-
   const profileRef = useRef(null);
 
   const handleClickOutside = (event) => {
@@ -181,7 +180,7 @@ export default function Nav() {
             </li>
           </Tooltip>
         </NavLink>
-        {userData?.role && (
+        {userData?.role === "ADMIN" && (
           <NavLink to="/admin" className="nav__link">
             <Tooltip
               title="Admin"

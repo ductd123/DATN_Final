@@ -779,6 +779,7 @@ const AdminLayout = () => {
       >
         {isImage(preview.dataLocation) ? (
           <img
+            alt=""
             src={preview?.dataLocation}
             style={{
               width: "100%",
@@ -790,6 +791,7 @@ const AdminLayout = () => {
           <video
             ref={videoRef}
             controls
+            className="object-cover "
             style={{
               width: "100%",
               height: "auto",

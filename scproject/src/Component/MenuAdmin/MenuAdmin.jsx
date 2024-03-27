@@ -1,26 +1,31 @@
 import {
-  CloseOutlined,
   CloudUploadOutlined,
+  DeleteOutlined,
+  EditOutlined,
   PlusCircleOutlined,
+  PlusOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
 import {
   Button,
   Drawer,
   Image,
+  Input,
   Menu,
   Modal,
+  Popconfirm,
   Radio,
   Select,
   Space,
+  Table,
   Upload,
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useRef, useState } from "react";
-import { Video } from "react-feather";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
-import Input from "../Common/Input/Input";
+import ButtonSystem from "../button/ButtonSystem";
 import "./MenuAdmin.scss";
 
 function getItem(label, key, icon, children, type) {
@@ -32,7 +37,7 @@ function getItem(label, key, icon, children, type) {
     type,
   };
 }
-
+const { Search } = Input;
 const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
   const [modal, contextHolder] = Modal.useModal();
   const [showPanelHistory, setShowPanelHistory] = useState(false);
@@ -55,12 +60,15 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
   const videoRef = useRef(null);
   const [fileType, setFileType] = useState(""); // State để lưu trữ loại file
   const [fileUrl, setFileUrl] = useState(""); // State để lưu trữ URL của file
-  const [showFile, setShowFile] = useState(true);
-
+  const [isShowModalTopic, setIsShowModalTopic] = useState(false);
+  const [listTopic, setListTopic] = useState([]);
+  const [updateTopic, setUpdateTopic] = useState(false);
+  const [urlImageUpdateTopic, setUrlImageUpdateTopic] = useState("");
+  const [topicIdUpdate, setTopicIdUpdate] = useState();
   const items = [
     getItem(
-      "Thêm chủ đề từ vựng",
-      "addTopic",
+      "Chủ đề",
+      "topic",
       <PlusCircleOutlined style={{ fontSize: "1.25rem" }} />
     ),
     getItem(
@@ -74,6 +82,34 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
       <CloudUploadOutlined style={{ fontSize: "1.25rem" }} />
     ),
   ];
+
+  // Tìm kiếm chủ đề
+  const mutation = useMutation({
+    mutationFn: async (data) => await apiLearning.searchTopic(data),
+    onSuccess: (res) => {
+      setListTopic(res.data);
+    },
+  });
+
+  // Xoá chủ đề
+  const mutationDel = useMutation({
+    mutationFn: async (id) => await apiLearning.deleteTopic(id),
+    onSuccess: () => {
+      message.success("Xoá chủ đề thành công");
+      getTopic();
+    },
+  });
+
+  // Cập nhật chủ đề
+  const mutationUpdate = useMutation({
+    mutationFn: async (data) => await apiLearning.updateTopic(data),
+
+    onSuccess: () => {
+      message.success("Cập nhật chủ đề thành công");
+      onCloseAdd();
+      getTopic();
+    },
+  });
 
   useEffect(() => {
     getTopic();
@@ -170,6 +206,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
         message.error(`Thêm từ điển thất bại. Vui lòng thử lại!!!`);
       });
   };
+
   const getTopic = async () => {
     try {
       let response = await apiLearning.getTopic();
@@ -182,6 +219,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
         });
       });
       setTopicInit(items);
+      setListTopic(response.data);
     } catch (error) {}
   };
 
@@ -201,6 +239,8 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
     setValueChecked(0);
     setValueText(["", "", "", ""]);
     setFileUrl("");
+    setUrlImageUpdateTopic("");
+    setUpdateTopic(false);
   };
 
   // Xử lý trước khi upload file
@@ -216,32 +256,85 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
     return false; // Prevent upload action
   };
 
+  const beforeUploadTopic = (file) => {
+    const isImage = file.type.startsWith("image/"); // More accurate check for image types
+
+    if (!isImage) {
+      message.error("Chỉ cho phép chọn file ảnh."); // Informative error message
+      return Upload.LIST_IGNORE; // Prevent upload
+    } else {
+      const fileReader = new FileReader();
+      setFile(file);
+      setIsImage(file.type.includes("image"));
+      fileReader.onload = (e) => {
+        setFileUrl(e.target.result);
+      };
+      fileReader.readAsDataURL(file);
+    }
+
+    return true;
+  };
+
   const addTopic = async () => {
-    setLoading(true);
-    let data = {
-      content: contentTopic,
-      imageLocation: "",
-      videoLocation: "",
-    };
-    await apiLearning.addTopic(data);
-    try {
-      setTimeout(() => {
-        setLoading(false);
-        setshowAddTopic(false);
-        getTopic();
-        onCloseAdd();
-        message.success(`Thêm chủ đề ${data.content} thành công.`);
-      }, 500);
-    } catch (error) {
-      setLoading(false);
-      setshowAddTopic(true);
-      message.error(
-        `Thêm chủ đề ${data.content} thất bại. Vui lòng thử lại!!!`
-      );
+    let data;
+    const formData = new FormData();
+    formData.append("file", file);
+    if (file && !updateTopic) {
+      apiUploadFile
+        .uploadFile(formData)
+        .then((response) => {
+          const imageData = isImage ? response : "";
+          data = {
+            content: contentTopic,
+            imageLocation: imageData || urlImageUpdateTopic,
+          };
+
+          return apiLearning.addTopic(data);
+        })
+        .then(() => {
+          setLoading(false);
+          setshowAddTopic(false);
+          getTopic();
+          onCloseAdd();
+          message.success(`Thêm chủ đề ${data.content} thành công.`);
+        })
+        .catch((error) => {
+          setLoading(false);
+          setshowAddTopic(true);
+          message.error(
+            `Thêm chủ đề ${data.content} thất bại. Vui lòng thử lại!!!`
+          );
+        });
+    } else if (updateTopic && !file) {
+      mutationUpdate.mutate({
+        content: contentTopic,
+        imageLocation: urlImageUpdateTopic,
+        topicId: topicIdUpdate,
+        videoLocation: "",
+      });
+    } else {
+      if (updateTopic && file) {
+        apiUploadFile.uploadFile(formData).then((response) => {
+          const imageData = isImage ? response : "";
+          data = {
+            content: contentTopic,
+            imageLocation: imageData || urlImageUpdateTopic,
+            topicId: topicIdUpdate,
+            videoLocation: "",
+          };
+          return mutationUpdate.mutate(data);
+        });
+      }
     }
   };
+
   const onClick = (e) => {
     switch (e.key) {
+      case "topic":
+        setIsShowModalTopic(true);
+        setVideoTNV(false);
+        // setshowAddTopic(true);
+        break;
       case "addTopic":
         setVideoTNV(false);
         setshowAddTopic(true);
@@ -270,6 +363,72 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
     setShowPreview(true);
     setPreview(item);
   };
+
+  // Column
+  const columns = [
+    {
+      title: "Chủ đề",
+      dataIndex: "content",
+      key: "content",
+      render: (content) => <span style={{ fontWeight: 500 }}>{content}</span>,
+    },
+    {
+      title: "Minh hoạ",
+      dataIndex: "imageLocation",
+      key: "imageLocation",
+      render: (imageLocation, record) => {
+        if (imageLocation) {
+          const isImage =
+            imageLocation.endsWith(".jpg") ||
+            imageLocation.endsWith(".png") ||
+            imageLocation.endsWith(".jpeg"); // Check for common image extensions
+          if (isImage) {
+            return (
+              <Image
+                width={100} // Adjust image width as needed
+                src={imageLocation}
+                alt={record.content + " illustration"}
+              />
+            );
+          } else {
+            // Handle non-image media types (e.g., video preview placeholder)
+            return <span>Video</span>; // Placeholder for now, replace with video preview logic
+          }
+        } else {
+          return <span>Không có minh họa</span>; // Display "No illustration" message
+        }
+      },
+    },
+    {
+      title: "Hành động",
+      dataIndex: "action",
+      key: "action",
+      render: (value, record) => (
+        <>
+          <Button
+            type="link"
+            icon={<EditOutlined />}
+            onClick={() => {
+              setshowAddTopic(true);
+              setContentTopic(record.content);
+              setUrlImageUpdateTopic(record.imageLocation);
+              setTopicIdUpdate(record.topicId);
+              setUpdateTopic(true);
+            }}
+          />
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa chủ đề này?"
+            onConfirm={() => {
+              mutationDel.mutate(record.topicId);
+            }}
+            onCancel={() => console.log("Huỷ")}
+          >
+            <Button type="link" danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="AI-menu-taking">
@@ -435,6 +594,8 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
           }}
         />
       </Modal>
+
+      {/* Thêm chủ đề */}
       <Drawer
         title="Thêm chủ đề"
         placement="right"
@@ -468,10 +629,41 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
           Nhập chủ đề muốn thêm:
         </p>
         <Input
+          placeholder="Nhập tên chủ đề muốn thêm"
           value={contentTopic}
           onChange={(e) => setContentTopic(e.target.value)}
         />
+        {/* Nội dung */}
+        <div className="mt-3">
+          <Upload
+            showUploadList={false}
+            beforeUpload={beforeUploadTopic}
+            accept="image/*"
+          >
+            <Button type="primary" icon={<UploadOutlined />}>
+              Chọn File
+            </Button>
+          </Upload>
+
+          <div className="mt-3 flex justify-center flex-col items-center relative">
+            {(fileUrl || urlImageUpdateTopic) && (
+              <Image
+                src={fileUrl || urlImageUpdateTopic}
+                alt="Uploaded Image"
+              /> // Hiển thị ảnh nếu là loại image
+            )}
+          </div>
+
+          <p
+            className="ant-upload-text"
+            style={{ margin: "10px 0", fontWeight: "500" }}
+          >
+            File: {file ? file.name : ""}
+          </p>
+        </div>
       </Drawer>
+
+      {/* Thêm từ */}
       <Modal
         open={showAddWord}
         title="Bổ sung thư viện ngôn ngữ ký hiệu"
@@ -498,6 +690,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
         <TextArea
           placeholder="Lưu ý viết đúng chính tả và viết thường"
           autoSize
+          onChange={(e) => setContentWord(e.target.value)}
         />
         <p className="ant-upload-text" style={{ margin: "10px 0 10px 0" }}>
           Ngôn ngữ ký hiệu:
@@ -507,16 +700,16 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
             Chọn File
           </Button>
         </Upload>
-        {showFile && (
-          <div className="mt-3 flex justify-center flex-col items-center relative">
-            {fileType === "image" && fileUrl && (
-              <Image src={fileUrl} alt="Uploaded Image" /> // Hiển thị ảnh nếu là loại image
-            )}
-            {fileType === "video" && fileUrl && (
-              <video src={fileUrl} controls style={{ width: 300 }} /> // Hiển thị video nếu là loại video
-            )}
-          </div>
-        )}
+
+        <div className="mt-3 flex justify-center flex-col items-center relative">
+          {fileType === "image" && fileUrl && (
+            <Image src={fileUrl} alt="Uploaded Image" /> // Hiển thị ảnh nếu là loại image
+          )}
+          {fileType === "video" && fileUrl && (
+            <video src={fileUrl} controls style={{ width: 500, height: 500 }} /> // Hiển thị video nếu là loại video
+          )}
+        </div>
+
         <p
           className="ant-upload-text"
           style={{ margin: "10px 0", fontWeight: "500" }}
@@ -528,12 +721,76 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
         </p>
         <Select
           mode=""
+          placeholder="Chọn chủ đề"
           style={{ width: "100%" }}
           options={topicInit}
           onChange={(e) => {
             setTopicChose(e);
           }}
         ></Select>
+      </Modal>
+
+      {/* Danh sách topic */}
+      <Modal
+        open={isShowModalTopic}
+        footer={
+          <>
+            <ButtonSystem
+              className="mr-4"
+              onClick={() => setIsShowModalTopic(false)}
+            >
+              Đóng
+            </ButtonSystem>
+          </>
+        }
+        width={800}
+        closeIcon={null}
+        centered
+        destroyOnClose
+        zIndex={10}
+      >
+        <div className="w-full px-4">
+          {/* Tìm kiếm topic */}
+          <div className="text-xl font-bold mb-2">Danh sách chủ đề</div>
+          <div className="flex items-center justify-between gap-3">
+            <Search
+              placeholder="Tìm kiếm chủ đề"
+              allowClear
+              onSearch={(data) => {
+                if (data) {
+                  mutation.mutate({
+                    page: 1,
+                    size: 999999,
+                    text: data,
+                    ascending: true,
+                    orderBy: "",
+                  });
+                } else {
+                  getTopic();
+                }
+              }}
+              style={{
+                width: 200,
+              }}
+            />
+
+            {/* Thêm mới */}
+            <ButtonSystem
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setVideoTNV(false);
+                setshowAddTopic(true);
+              }}
+            >
+              Thêm mới
+            </ButtonSystem>
+          </div>
+
+          <div className="mt-4">
+            <Table columns={columns} dataSource={listTopic} />
+          </div>
+        </div>
       </Modal>
       {contextHolder}
     </div>

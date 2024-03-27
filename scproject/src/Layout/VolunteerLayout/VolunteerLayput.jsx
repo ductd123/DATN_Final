@@ -327,6 +327,7 @@ const VolunterLayout = () => {
     if (x.videoLocation === "") {
       videoRef.current = null;
     }
+
     setShowDetail({
       id: x.vocabularyId,
       type: x.imageLocation !== "" ? 1 : 2,
@@ -414,33 +415,7 @@ const VolunterLayout = () => {
           <div className="record-container">
             <div className="record-container-child">
               <div className="record-container-child-header">Dữ liệu mẫu</div>
-              <div>
-                {/* {showDetail?.type === 2 ? */}
-                {isShowDetail && (
-                  <>
-                    {showDetail?.type === 1 && (
-                      <img
-                        src={showDetail?.preview}
-                        alt="Uploaded"
-                        className="record-container-child-video"
-                      />
-                    )}
 
-                    {showDetail?.type === 2 && (
-                      <video
-                        ref={videoRef}
-                        key={videoRef}
-                        controls
-                        className="record-container-child-video"
-                      >
-                        <source src={showDetail?.preview} type="video/mp4" />
-                      </video>
-                    )}
-                  </>
-                )}
-
-                {/* } */}
-              </div>
               <div className="record-container-button">
                 <Select
                   options={topicInit}
@@ -458,6 +433,32 @@ const VolunterLayout = () => {
                   style={{ width: "50%" }}
                   onChange={(e) => onChooseVocab(e)}
                 />
+              </div>
+              <div>
+                {isShowDetail && (
+                  <div className="flex justify-center ">
+                    {showDetail?.type === 1 && (
+                      <img
+                        src={showDetail?.preview}
+                        alt="Uploaded"
+                        style={{ width: "80%" }}
+                        className="record-container-child-video"
+                      />
+                    )}
+
+                    {showDetail?.type === 2 && (
+                      <video
+                        ref={videoRef}
+                        key={videoRef}
+                        controls
+                        style={{ width: 500, height: 500 }}
+                        className="record-container-child-video"
+                      >
+                        <source src={showDetail?.preview} type="video/mp4" />
+                      </video>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div className="record-container-child">
