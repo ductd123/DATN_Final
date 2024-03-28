@@ -717,6 +717,7 @@ const AdminLayout = () => {
                     style={{ width: 200 }}
                     placeholder="Trạng thái"
                     options={optionStatus}
+                    value={filter.status}
                     onChange={(e) => onChangeFilter("status", e)}
                   />
                 </div>
