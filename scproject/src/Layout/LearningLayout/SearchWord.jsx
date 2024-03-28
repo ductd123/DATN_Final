@@ -41,7 +41,7 @@ const SearchWord = ({ searchText, files }) => {
         <span className="searchWord-header-value">"{searchText}"</span>
       </div>
       <div className="">
-        <div className="searchWord-container">
+        <div className="flex gap-4 flex-wrap">
           {files?.length ? (
             files
               ?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
@@ -135,6 +135,8 @@ const SearchWord = ({ searchText, files }) => {
         style={{ top: 20 }}
         title={fileShow.content}
         key={fileShow.preview}
+        width={1100}
+        centered
       >
         {fileShow.type === 1 ? (
           <img
@@ -143,13 +145,11 @@ const SearchWord = ({ searchText, files }) => {
             style={{ width: "100%", height: "auto", marginTop: "30px" }}
           />
         ) : (
-          <video
-            ref={videoRef}
-            controls
-            style={{ width: "100%", height: "auto", marginTop: "30px" }}
-          >
-            <source src={fileShow.preview} type="video/mp4" />
-          </video>
+          <div className="justify-center flex w-full items-center">
+            <video ref={videoRef} controls autoPlay className="w-full">
+              <source src={fileShow.preview} type="video/mp4" />
+            </video>
+          </div>
         )}
       </Modal>
     </div>

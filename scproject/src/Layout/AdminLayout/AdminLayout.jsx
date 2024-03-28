@@ -204,7 +204,7 @@ const AdminLayout = () => {
       title: "Chủ đề",
       dataIndex: "topicContent",
       key: "topicContent",
-      width: "10%",
+      width: "20%",
       render: (a) => <span style={{ fontWeight: 500 }}>{a}</span>,
     },
     {
@@ -417,13 +417,12 @@ const AdminLayout = () => {
     });
   };
 
-  const onChooseTopic = async (e) => {
+  const onChooseTopic = async (e, option) => {
     setLoading(true);
-    onChangeFilter("topic", e);
-    try {
-      setLoading(false);
-      let response = await apiLearning.getTuDien(e);
-      const items = [];
+    onChangeFilter("topic", option.text);
+    let response = await apiLearning.getTuDien(e);
+    const items = [];
+    if (response.data?.length) {
       response.data.forEach((element, index) => {
         items.push({
           id: element.vocabularyId,
@@ -431,10 +430,10 @@ const AdminLayout = () => {
           label: element.content,
         });
       });
-      setVocabOption(items);
-    } catch (error) {
-      setLoading(false);
     }
+
+    setVocabOption(items);
+    setLoading(false);
   };
 
   return (
@@ -457,6 +456,7 @@ const AdminLayout = () => {
             onClick={() => {
               setShowPending(false);
               setSimpleMenu(true);
+              setDataTable([]);
             }}
           />
         </Tooltip>
@@ -473,7 +473,10 @@ const AdminLayout = () => {
             }}
             type="primary"
             icon={<HistoryOutlined />}
-            onClick={() => setShowPending(true)}
+            onClick={() => {
+              setShowPending(true);
+              setDataTable([]);
+            }}
           />
         </Tooltip>
       )}
@@ -776,30 +779,27 @@ const AdminLayout = () => {
         style={{ top: 20 }}
         title={preview?.content}
         key={preview?.id}
+        width={800}
+        centered
       >
         {isImage(preview.dataLocation) ? (
-          <img
-            alt=""
-            src={preview?.dataLocation}
-            style={{
-              width: "100%",
-              height: "auto",
-              marginTop: "30px",
-            }}
-          />
+          <div className="w-full  flex justify-center items-cente">
+            <img
+              alt=""
+              src={preview?.dataLocation}
+              style={{
+                width: "60%",
+                height: "auto",
+                marginTop: "30px",
+              }}
+            />
+          </div>
         ) : (
-          <video
-            ref={videoRef}
-            controls
-            className="object-cover "
-            style={{
-              width: "100%",
-              height: "auto",
-              marginTop: "30px",
-            }}
-          >
-            <source src={preview?.dataLocation} type="video/mp4" />
-          </video>
+          <div className="w-full  flex justify-center items-center">
+            <video ref={videoRef} controls style={{ height: 600 }}>
+              <source src={preview?.dataLocation} type="video/mp4" />
+            </video>
+          </div>
         )}
       </Modal>
     </div>

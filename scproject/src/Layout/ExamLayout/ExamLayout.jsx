@@ -47,6 +47,12 @@ const Examlayout = () => {
   const [sizeQuestion, setSizeQuestion] = useState();
   const [isDisabled, setIsDisabled] = useState(false);
 
+  useEffect(() => {
+    if (!topicChose) {
+      setIsDisabled(true);
+    }
+  }, []);
+
   // Lấy số lượng câu hỏi
   const {
     data: maxQuestion,

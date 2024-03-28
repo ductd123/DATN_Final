@@ -279,32 +279,46 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
     let data;
     const formData = new FormData();
     formData.append("file", file);
-    if (file && !updateTopic) {
-      apiUploadFile
-        .uploadFile(formData)
-        .then((response) => {
-          const imageData = isImage ? response : "";
-          data = {
-            content: contentTopic,
-            imageLocation: imageData || urlImageUpdateTopic,
-          };
+    if (!updateTopic) {
+      if (file) {
+        apiUploadFile
+          .uploadFile(formData)
+          .then((response) => {
+            const imageData = isImage ? response : "";
+            data = {
+              content: contentTopic,
+              imageLocation: imageData || urlImageUpdateTopic,
+            };
 
-          return apiLearning.addTopic(data);
-        })
-        .then(() => {
+            return apiLearning.addTopic(data);
+          })
+          .then(() => {
+            setLoading(false);
+            setshowAddTopic(false);
+            getTopic();
+            onCloseAdd();
+            message.success(`Thêm chủ đề ${data.content} thành công.`);
+          })
+          .catch((error) => {
+            setLoading(false);
+            setshowAddTopic(true);
+            message.error(
+              `Thêm chủ đề ${data.content} thất bại. Vui lòng thử lại!!!`
+            );
+          });
+      } else {
+        data = {
+          content: contentTopic,
+        };
+        const res = await apiLearning.addTopic(data);
+        if (res.code === 200) {
+          message.success(`Thêm chủ đề ${data.content} thành công.`);
           setLoading(false);
           setshowAddTopic(false);
           getTopic();
           onCloseAdd();
-          message.success(`Thêm chủ đề ${data.content} thành công.`);
-        })
-        .catch((error) => {
-          setLoading(false);
-          setshowAddTopic(true);
-          message.error(
-            `Thêm chủ đề ${data.content} thất bại. Vui lòng thử lại!!!`
-          );
-        });
+        }
+      }
     } else if (updateTopic && !file) {
       mutationUpdate.mutate({
         content: contentTopic,
@@ -614,14 +628,15 @@ const MenuAdmin = ({ setVideoTNV, getHistory, history }) => {
             >
               Hủy bỏ
             </Button>
-            <Button
+            <ButtonSystem
+              disabled={contentTopic === ""}
               loading={loading}
               onClick={addTopic}
-              className="ant-btn css-dev-only-do-not-override-xu9wm8 ant-btn-primary"
+              className=""
               type="primary"
             >
               Xác nhận
-            </Button>
+            </ButtonSystem>
           </Space>
         }
       >
