@@ -79,7 +79,7 @@ const VolunterLayout = () => {
     topic: "",
     vocabulary: "",
     ascending: true,
-    status: 300,
+    status: 100,
     // createdFrom: "",
     // createdTo: "",
   });
@@ -257,11 +257,7 @@ const VolunterLayout = () => {
           };
           let response = await apiUploadFile.checkAI(data);
           setLoading(false);
-          console.log(
-            "cccc",
-            normalizeString(response.content),
-            normalizeString(content)
-          );
+
           if (normalizeString(response.content) === normalizeString(content)) {
             let body = {
               dataLocation: link,
@@ -579,7 +575,7 @@ const VolunterLayout = () => {
                   options={vocabOption}
                   onChange={(e, option) => {
                     setValueVocabulary(e);
-                    onChangeFilter("vocabulary", option.text);
+                    onChangeFilter("vocabulary", option.label);
                   }}
                 />
                 <DatePicker
@@ -617,6 +613,7 @@ const VolunterLayout = () => {
                   style={{ width: 200 }}
                   placeholder="Trạng thái"
                   options={optionStatus}
+                  value={filter.status}
                   onChange={(e) => onChangeFilter("status", e)}
                 />
               </div>
