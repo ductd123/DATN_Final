@@ -289,12 +289,13 @@ const VolunterLayout = () => {
     setRecordedVideo(mediaBlobUrl);
   };
 
-  const onChooseTopic = async (e) => {
+  const onChooseTopic = async (e, option) => {
     setLoading(true);
     setIsShowDetail(false);
+    setValueVocabulary(null);
     try {
       setLoading(false);
-      onChangeFilter("topic", e);
+      onChangeFilter("topic", option.text);
       let response = await apiLearning.getTuDien(e);
       const items = [];
       if (response.data) {
@@ -305,8 +306,6 @@ const VolunterLayout = () => {
             label: element.content,
           });
         });
-      } else {
-        items = [];
       }
       setVocabOption(items);
       setVocabInit(response.data);
@@ -382,7 +381,10 @@ const VolunterLayout = () => {
             }}
             type="primary"
             icon={<HistoryOutlined />}
-            onClick={() => setRecordedPage(false)}
+            onClick={() => {
+              setRecordedPage(false);
+              setValueVocabulary(null);
+            }}
           />
         </Tooltip>
       ) : (
@@ -398,7 +400,10 @@ const VolunterLayout = () => {
             }}
             type="primary"
             icon={<VideoCameraAddOutlined />}
-            onClick={() => setRecordedPage(true)}
+            onClick={() => {
+              setRecordedPage(true);
+              setValueVocabulary(null);
+            }}
           />
         </Tooltip>
       )}
@@ -421,8 +426,8 @@ const VolunterLayout = () => {
                   options={topicInit}
                   placeholder="Chọn chủ đề"
                   style={{ width: "50%" }}
-                  onChange={(e) => {
-                    onChooseTopic(e);
+                  onChange={(e, option) => {
+                    onChooseTopic(e, option);
                     setValueVocabulary(null);
                   }}
                 />
@@ -568,10 +573,14 @@ const VolunterLayout = () => {
                 />
                 <Select
                   allowClear
+                  value={valueVocabulary}
                   style={{ width: 200 }}
                   placeholder="Chọn từ vựng"
                   options={vocabOption}
-                  onChange={(e) => onChangeFilter("vocabulary", e)}
+                  onChange={(e, option) => {
+                    setValueVocabulary(e);
+                    onChangeFilter("vocabulary", option.text);
+                  }}
                 />
                 <DatePicker
                   style={{
