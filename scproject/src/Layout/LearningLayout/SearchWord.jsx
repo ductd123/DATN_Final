@@ -42,86 +42,86 @@ const SearchWord = ({ searchText, files }) => {
       <div className="">
         <div className="searchWord-container">
           {files?.length ? (
-            files
-              ?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
-              ?.map((item, i) => {
-                return (
-                  <div key={i} style={{ height: "max-content" }}>
-                    {item.type === 1 ? (
-                      <div
-                        key={i}
-                        className="searchWord-item"
-                        style={{
-                          backgroundImage: `url(${item.preview})`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                        }}
-                      >
-                        <div className="searchWord-item-detail">
-                          <p
-                            style={{
-                              fontWeight: "600",
-                              fontSize: "28px",
-                              marginLeft: "10px",
-                            }}
-                          >
-                            {item.content}
-                          </p>
-                        </div>
-                        <button
-                          className="searchWord-item-play"
-                          onClick={() => handleViewDetail(item)}
+            files?.map((item, i) => {
+              return (
+                <div key={i} style={{ height: "max-content" }}>
+                  {item.type === 1 ? (
+                    <div
+                      key={i}
+                      className="searchWord-item"
+                      style={{
+                        backgroundImage: `url(${item.preview})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="searchWord-item-detail">
+                        <p
+                          style={{
+                            fontWeight: "600",
+                            fontSize: "28px",
+                            marginLeft: "10px",
+                          }}
                         >
-                          Bấm để xem!!!
-                        </button>
+                          {item.content}
+                        </p>
                       </div>
-                    ) : (
-                      <div
-                        key={i}
-                        className="searchWord-item"
-                        style={{
-                          backgroundImage: `url(${defaultvideo})`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                        }}
+                      <button
+                        className="searchWord-item-play"
+                        onClick={() => handleViewDetail(item)}
                       >
-                        <div className="searchWord-item-detail">
-                          <p
-                            style={{
-                              fontWeight: "600",
-                              fontSize: "28px",
-                              marginLeft: "10px",
-                            }}
-                          >
-                            {item.content}
-                          </p>
-                        </div>
-                        <button
-                          className="searchWord-item-play"
-                          onClick={() => handleViewDetail(item)}
+                        Bấm để xem!!!
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      key={i}
+                      className="searchWord-item"
+                      style={{
+                        backgroundImage: `url(${defaultvideo})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="searchWord-item-detail">
+                        <p
+                          style={{
+                            fontWeight: "600",
+                            fontSize: "28px",
+                            marginLeft: "10px",
+                          }}
                         >
-                          Bấm để xem!!!
-                        </button>
+                          {item.content}
+                        </p>
                       </div>
-                    )}
-                  </div>
-                );
-              })
+                      <button
+                        className="searchWord-item-play"
+                        onClick={() => handleViewDetail(item)}
+                      >
+                        Bấm để xem!!!
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })
           ) : (
             <Empty
               style={{ width: "100%" }}
               description={`Không có dữ liệu cho "${searchText}".`}
             />
           )}
-          <div className="flex justify-center w-full pb-3">
-            <Pagination
-              current={currentPage}
-              pageSize={PAGE_SIZE}
-              total={files?.length}
-              onChange={handlePageChange}
-              showSizeChanger={false}
-            />
-          </div>
+          {currentPage > 1 && (
+            <div className="flex justify-center w-full pb-3">
+              <Pagination
+                current={currentPage}
+                pageSize={PAGE_SIZE}
+                total={files?.length}
+                onChange={handlePageChange}
+                showSizeChanger={false}
+              />
+            </div>
+          )}
         </div>
       </div>
 
