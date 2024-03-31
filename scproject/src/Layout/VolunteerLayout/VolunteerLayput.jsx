@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Nav } from "../../Component";
-import LoadingComponent from "../../Component/Common/Loading/Loading";
 import {
   HistoryOutlined,
   VideoCameraAddOutlined,
   WarningFilled,
 } from "@ant-design/icons";
-import Webcam from "react-webcam";
+import * as cocossd from "@tensorflow-models/coco-ssd";
 import {
   Button,
   DatePicker,
@@ -16,14 +13,16 @@ import {
   Tooltip,
   message,
 } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
-import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
-import "./VolunteerLayout.scss";
-import TableData from "./TableData";
-import * as tf from "@tensorflow/tfjs";
-import * as cocossd from "@tensorflow-models/coco-ssd";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import Webcam from "react-webcam";
+import { Nav } from "../../Component";
+import LoadingComponent from "../../Component/Common/Loading/Loading";
+import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
+import TableData from "./TableData";
+import "./VolunteerLayout.scss";
+import { isImageLocation } from "../../Component/Modal/QuestionModal";
 function normalizeString(inputString) {
   let lowercasedString = inputString.toLowerCase();
   let strippedString = lowercasedString
@@ -258,12 +257,13 @@ const VolunterLayout = () => {
           let response = await apiUploadFile.checkAI(data);
           setLoading(false);
 
+          let body = {
+            dataLocation: link,
+            vocabularyId: showDetail.id,
+          };
+          await apiUploadFile.sendData(body);
+
           if (normalizeString(response.content) === normalizeString(content)) {
-            let body = {
-              dataLocation: link,
-              vocabularyId: showDetail.id,
-            };
-            await apiUploadFile.sendData(body);
             message.success(`Thêm dữ liệu cho ${showDetail.name} thành công.`);
           } else {
             message.error(
@@ -356,9 +356,14 @@ const VolunterLayout = () => {
   };
 
   const xemLaiData = (link) => {
-    setRecordedVideo(link);
+    if (isImageLocation(link)) {
+      setViewImg(true);
+      setImageSrc(link);
+    } else {
+      setViewImg(false);
+      setRecordedVideo(link);
+    }
     setShowPreviewRecord(true);
-    setViewImg(false);
   };
   return (
     <div className="main-layout">

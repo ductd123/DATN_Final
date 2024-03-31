@@ -47,7 +47,7 @@ const TableData = ({ data, xemLaiData }) => {
       dataIndex: "status",
       width: "20%",
       render: (status) =>
-        status == "0" ? (
+        status === 100 ? (
           <div style={{ display: "table" }}>
             <div style={{ display: "table-cell", verticalAlign: "top" }}>
               <div
@@ -63,7 +63,7 @@ const TableData = ({ data, xemLaiData }) => {
               Đang chờ xét duyệt
             </div>
           </div>
-        ) : status == "200" ? (
+        ) : status === 300 ? (
           <div style={{ display: "table" }}>
             <div style={{ display: "table-cell", verticalAlign: "top" }}>
               <div
