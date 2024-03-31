@@ -6,6 +6,10 @@ import {
 } from "./axiosClient";
 
 export const apiLearning = {
+  getByContentVocabulary: (data) => {
+    const url = "vocabularies/get-by-content";
+    return axiosLearningClient.post(url, data);
+  },
   themTuDien: (data) => {
     const url = "vocabularies";
     return axiosLearningClient.post(url, data);

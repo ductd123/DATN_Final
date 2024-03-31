@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
   FileAddOutlined,
   FileImageOutlined,
@@ -5,19 +6,10 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { Input, Menu, Select, message } from "antd";
-import React, { useEffect, useRef, useState } from "react";
 import { apiLearning } from "../../Services/apiLearning";
 import LoadingComponent from "../Common/Loading/Loading";
 import "./StudyAI.scss";
-function getItem(label, key, icon, children, type) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  };
-}
+
 const BangChuCai = [
   "A",
   "Ă",
@@ -49,8 +41,11 @@ const BangChuCai = [
   "X",
   "Y",
 ];
+
 const BangChuSo = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
 const dau = ["Dấu sắc", "Dấu huyền", "Dấu hỏi", "Dấu Ngã", "Dấu nặng"];
+
 const MenuStudyAI = ({
   onUploadVideo,
   openPanelHistory,
@@ -67,91 +62,29 @@ const MenuStudyAI = ({
   const [loading, setLoading] = useState(true);
   const [openAddTopic, setOpenAddTopic] = useState(false);
   const webcamRef = useRef(null);
+  const [valueTopic, setValueTopic] = useState();
+  const [valueVocabulary, setValueVocabulary] = useState();
+  const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    fetchData1();
-  }, []);
+  const fetchDataAndSetItems = async () => {
+    setLoading(true);
+    try {
+      const response = await apiLearning.getTopic();
+      const items = response.data?.map((element) => ({
+        id: element.topicId,
+        value: element.topicId,
+        label: element.content,
+      }));
+      setTopicItems(items);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      message.error(`Kết nối không ổn định. Vui lòng thử lại!!!`);
+    }
+  };
 
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-
-  useEffect(() => {
-    setItems([
-      getItem(
-        "Học tập theo bảng chữ cái",
-        "sub1",
-        <FileWordOutlined style={{ fontSize: "1.25rem" }} />,
-        [
-          getItem("Theo chữ cái", "chucai"),
-          getItem("Theo chữ số", "chuso"),
-          // getItem('Theo dấu', "dau"),
-        ]
-      ),
-      getItem(
-        "Học tập theo chủ đề",
-        "sub2",
-        <FileImageOutlined style={{ fontSize: "1.25rem" }} />,
-        [
-          getItem(
-            <Select
-              showSearch
-              placeholder="Chọn chủ đề"
-              suffixIcon={null}
-              style={{ width: "100%" }}
-              mode=""
-              options={topicItems}
-              onChange={(e) => {
-                setLabelForSelect(e);
-              }}
-              filterOption={filterOption}
-            />,
-            "SearchTopic"
-          ),
-        ]
-      ),
-      getItem(
-        "Học tập theo từ ngữ",
-        "sub4",
-        <FileAddOutlined style={{ fontSize: "1.25rem" }} />,
-        [
-          getItem(
-            <Input
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Nhập từ ngữ muốn tìm?"
-            />,
-            "Search",
-            <SearchOutlined style={{ fontSize: "1rem" }} />
-          ),
-        ]
-      ),
-    ]);
-  }, [topicItems]);
-
-  const [items, setItems] = useState();
-
-  const fetchData1 = async () => {
-    const items = [];
-    setLoading(true);
-    try {
-      let response = await apiLearning.getTopic();
-      setTimeout(() => {
-        response.data?.forEach((element, index) => {
-          items.push({
-            id: element.topicId,
-            value: element.topicId,
-            label: element.content,
-          });
-        });
-        setLoading(false);
-        setTopicItems(items);
-      }, 500);
-    } catch (error) {
-      setTimeout(() => {
-        setLoading(false);
-        message.error(`Kết nối không ổn định. Vui lòng thử lại!!!`);
-      }, 3000);
-    }
-  };
 
   const setLabelForSelect = (e) => {
     setIdTopic(e);
@@ -176,10 +109,14 @@ const MenuStudyAI = ({
       case "chucai":
         setValueOptions(BangChuCai);
         handleClickMenu();
+        setValueTopic(null);
+        setValueVocabulary(null);
         break;
       case "chuso":
         setValueOptions(BangChuSo);
         handleClickMenu();
+        setValueTopic(null);
+        setValueVocabulary(null);
         break;
       case "AddTopic":
         setOpenAddTopic(true);
@@ -191,6 +128,81 @@ const MenuStudyAI = ({
         break;
     }
   };
+
+  const initializeMenuItems = () => {
+    const menuItems = [
+      {
+        key: "sub1",
+        icon: <FileWordOutlined style={{ fontSize: "1.25rem" }} />,
+        children: [
+          { key: "chucai", label: "Theo chữ cái" },
+          { key: "chuso", label: "Theo chữ số" },
+        ],
+        label: "Học tập theo bảng chữ cái",
+        type: "subMenu",
+      },
+      {
+        key: "sub2",
+        icon: <FileImageOutlined style={{ fontSize: "1.25rem" }} />,
+        children: [
+          {
+            key: "SearchTopic",
+            label: (
+              <Select
+                showSearch
+                placeholder="Chọn chủ đề"
+                suffixIcon={null}
+                style={{ width: "100%" }}
+                mode=""
+                options={topicItems}
+                value={valueTopic}
+                onChange={(e) => {
+                  setValueTopic(e);
+                  setLabelForSelect(e);
+                  setValueVocabulary(null);
+                }}
+                filterOption={filterOption}
+              />
+            ),
+          },
+        ],
+        label: "Học tập theo chủ đề",
+        type: "subMenu",
+      },
+      {
+        key: "sub4",
+        icon: <FileAddOutlined style={{ fontSize: "1.25rem" }} />,
+        children: [
+          {
+            key: "Search",
+            label: (
+              <Input
+                value={valueVocabulary}
+                onChange={(e) => {
+                  setValueVocabulary(e.target.value);
+                  setValueTopic(null);
+                  handleSearch(e.target.value);
+                }}
+                placeholder="Nhập từ ngữ muốn tìm?"
+              />
+            ),
+            icon: <SearchOutlined style={{ fontSize: "1rem" }} />,
+          },
+        ],
+        label: "Học tập theo từ ngữ",
+        type: "subMenu",
+      },
+    ];
+    setItems(menuItems);
+  };
+
+  useEffect(() => {
+    fetchDataAndSetItems();
+  }, []);
+
+  useEffect(() => {
+    initializeMenuItems();
+  }, [topicItems, valueTopic, valueVocabulary]);
 
   return (
     <div className="AI-menu-study">

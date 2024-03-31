@@ -72,17 +72,7 @@ export default function LearningLayout() {
       let response = await apiLearning.getTuDien(idTopic);
       setLoading(false);
       if (response.data) {
-        let listResponse = response?.data?.map((item) => {
-          return {
-            content: item.content,
-            type: item.videoLocation === "" ? 1 : 2,
-            preview:
-              item.videoLocation === ""
-                ? item.imageLocation
-                : item.videoLocation,
-          };
-        });
-        setShowFile(listResponse);
+        setShowFile(response.data);
       } else {
         setShowFile(null);
         message.error(`Không có từ nào theo chủ đề`);
@@ -118,28 +108,15 @@ export default function LearningLayout() {
     openSearchWord();
     setLoading(true);
     let data = {
-      page: 1,
-      size: 10,
-      text: e,
-      ascending: true,
-      topicId: idTopic,
+      content: e,
     };
     try {
-      let response = await apiLearning.searchVocab(data);
+      let response = await apiLearning.getByContentVocabulary(data);
       if (response?.data) {
         setTimeout(() => {
           setLoading(false);
 
-          const data1 = response?.data?.map((item) => ({
-            content: item.content,
-            preview:
-              item.imageLocation !== ""
-                ? item.imageLocation
-                : item.videoLocation,
-            type: item.imageLocation !== "" ? 1 : 2,
-            id: item.id,
-          }));
-          setShowFile(data1);
+          setShowFile(response?.data);
         }, 500);
       } else {
         setLoading(false);
