@@ -60,6 +60,9 @@ const MenuAdmin = ({ setVideoTNV, getHistory }) => {
   const [locationUrl, setLocationUrl] = useState("");
   const [showStatistical, setShowStatistical] = useState(false);
 
+  // Từ vựng
+  const [showModalVocabulary, setShowModalVocabulary] = useState(false);
+
   const items = [
     getItem(
       "Chủ đề",
@@ -102,29 +105,6 @@ const MenuAdmin = ({ setVideoTNV, getHistory }) => {
       setVideoLocations(res);
     },
   });
-
-  const handleOkWord = async () => {
-    setLoading(true);
-    setTopicInit([]);
-    const data = {
-      content: contentWord,
-      imageLocation: imageLocations,
-      videoLocation: videoLocations,
-      topicId: topicChose,
-    };
-    const res = await apiLearning.themTuDien(data);
-    if (res.code === 200) {
-      setLoading(false);
-      onCloseAdd();
-      getTopic();
-      setShowAddWord(false);
-      message.success(`Thêm từ điển lên thành công.`);
-    } else {
-      setLoading(false);
-      setShowAddWord(false);
-      message.error(`Thêm từ điển thất bại. Vui lòng thử lại!!!`);
-    }
-  };
 
   const getTopic = async () => {
     try {
@@ -181,7 +161,9 @@ const MenuAdmin = ({ setVideoTNV, getHistory }) => {
         break;
       case "addWord":
         setVideoTNV(false);
-        setShowAddWord(true);
+        setShowModalVocabulary(true);
+
+        // setShowAddWord(true);
         break;
       case "history":
         setVideoTNV(false);
@@ -235,8 +217,9 @@ const MenuAdmin = ({ setVideoTNV, getHistory }) => {
       {/* Từ vụng */}
       <VocabularyModal
         showAddWord={showAddWord}
-        handleOkWord={handleOkWord}
+        setShowAddWord={setShowAddWord}
         setContentWord={setContentWord}
+        contentWord={contentWord}
         urlImage={urlImage}
         setUrlImage={setUrlImage}
         setIsImage={setIsImage}
@@ -244,10 +227,20 @@ const MenuAdmin = ({ setVideoTNV, getHistory }) => {
         setFileUrl={setFileUrl}
         topicInit={topicInit}
         setTopicChose={setTopicChose}
+        topicChose={topicChose}
         uploadMutation={uploadMutation}
         uploadMutationVideo={uploadMutationVideo}
         loading={loading}
         onCloseAdd={onCloseAdd}
+        showModalVocabulary={showModalVocabulary}
+        setShowVocabulary={setShowModalVocabulary}
+        setLoading={setLoading}
+        setTopicInit={setTopicInit}
+        imageLocations={imageLocations}
+        setImageLocations={setImageLocations}
+        setVideoLocations={setVideoLocations}
+        videoLocations={videoLocations}
+        getTopic={getTopic}
       />
 
       {/* Chủ đề */}
