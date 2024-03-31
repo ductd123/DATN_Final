@@ -11,12 +11,30 @@ export const apiLearning = {
     return axiosLearningClient.post(url, data);
   },
   getAllVocalizations: () => {
-    const url = "vocabularies/all";
+    const url = `vocabularies/all`;
+    return axiosLearningClient.get(url);
+  },
+  searchAllVocalizations: (data) => {
+    let url;
+    if (data.topicId) {
+      url = `vocabularies/all?topicId=${data.topicId}`;
+    }
+    if (data.content) {
+      url = `vocabularies/all?content=${data.content}`;
+    }
+    if (data.topicId && data.content) {
+      url = `vocabularies/all?topicId=${data.topicId}&content=${data.content}`;
+    }
+
     return axiosLearningClient.get(url);
   },
   themTuDien: (data) => {
     const url = "vocabularies";
     return axiosLearningClient.post(url, data);
+  },
+  updateVocabulary: (data) => {
+    const url = "vocabularies";
+    return axiosLearningClient.put(url, data);
   },
   getTuDien: (id) => {
     const url = `vocabularies/${id}`;
