@@ -13,8 +13,17 @@ const StatisticalModal = (props) => {
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
+  const { data: lengthAllVocabulary } = useQuery({
+    queryKey: ["listVocabulary"],
+    queryFn: async () => {
+      const response = await apiLearning.getAllVocalizations();
+      return response.data?.length;
+    },
+    enabled: showStatistical,
+  });
+
   const { data: optionTopic } = useQuery({
-    queryKey: ["repoData"],
+    queryKey: ["optionTopic"],
     queryFn: async () => {
       const response = await apiLearning.getTopic();
       return response.data?.map((element) => ({
@@ -83,7 +92,7 @@ const StatisticalModal = (props) => {
                 className="font-bold flex items-center cursor-pointer text-[34px]"
                 aria-hidden="true"
               >
-                {listTopic.length}
+                {lengthAllVocabulary}
               </div>
               <div
                 className="flex items-center justify-center rounded-full"
