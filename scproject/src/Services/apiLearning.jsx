@@ -10,6 +10,10 @@ export const apiLearning = {
     const url = "vocabularies/get-by-content";
     return axiosLearningClient.post(url, data);
   },
+  getAllVocalizations: () => {
+    const url = "vocabularies/all";
+    return axiosLearningClient.get(url);
+  },
   themTuDien: (data) => {
     const url = "vocabularies";
     return axiosLearningClient.post(url, data);

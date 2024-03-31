@@ -67,7 +67,7 @@ const MenuAdmin = ({ setVideoTNV, getHistory }) => {
       <PlusCircleOutlined style={{ fontSize: "1.25rem" }} />
     ),
     getItem(
-      "Thêm từ điển ký hiệu",
+      "Ký hiệu",
       "addWord",
       <CloudUploadOutlined style={{ fontSize: "1.25rem" }} />
     ),

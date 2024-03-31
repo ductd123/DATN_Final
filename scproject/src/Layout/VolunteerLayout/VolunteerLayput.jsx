@@ -23,6 +23,7 @@ import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import TableData from "./TableData";
 import "./VolunteerLayout.scss";
 import { isImageLocation } from "../../Component/Modal/QuestionModal";
+import ButtonSystem from "../../Component/button/ButtonSystem";
 function normalizeString(inputString) {
   let lowercasedString = inputString.toLowerCase();
   let strippedString = lowercasedString
@@ -82,6 +83,7 @@ const VolunterLayout = () => {
     // createdFrom: "",
     // createdTo: "",
   });
+  const [videoTypeLocation, setViewTypeLocation] = useState();
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
@@ -314,6 +316,7 @@ const VolunterLayout = () => {
   const onChooseVocab = (e) => {
     setIsShowDetail(true);
     const x = vocabInit.find((i) => i.vocabularyId === e);
+    console.log("x", x);
     if (!x) {
       setValueVocabulary(null);
     } else {
@@ -325,8 +328,8 @@ const VolunterLayout = () => {
 
     setShowDetail({
       id: x.vocabularyId,
-      type: x.imageLocation !== "" ? 1 : 2,
-      preview: x.imageLocation !== "" ? x.imageLocation : x.videoLocation,
+      imageLocation: x.imageLocation,
+      videoLocation: x.videoLocation,
       name: x.content,
     });
     try {
@@ -442,28 +445,76 @@ const VolunterLayout = () => {
               </div>
               <div>
                 {isShowDetail && (
-                  <div className="flex justify-center ">
-                    {showDetail?.type === 1 && (
-                      <img
-                        src={showDetail?.preview}
-                        alt="Uploaded"
-                        style={{ width: "80%" }}
-                        className="record-container-child-video"
-                      />
-                    )}
+                  <>
+                    {showDetail.imageLocation !== "" &&
+                      showDetail.videoLocation !== "" && (
+                        <>
+                          <div className="flex items-center gap-2 mt-2">
+                            <ButtonSystem
+                              onClick={() => setViewTypeLocation(2)}
+                            >
+                              Dữ liệu mẫu theo video
+                            </ButtonSystem>
+                            <ButtonSystem
+                              onClick={() => setViewTypeLocation(1)}
+                            >
+                              Dữ liệu mẫu theo ảnh
+                            </ButtonSystem>
+                          </div>
+                          <div className="mt-3">
+                            {videoTypeLocation === 1 && (
+                              <img
+                                src={showDetail.imageLocation}
+                                alt="Uploaded"
+                                style={{ width: "90%" }}
+                                className=""
+                              />
+                            )}
+                            {videoTypeLocation === 2 && (
+                              <video
+                                ref={videoRef}
+                                key={videoRef}
+                                controls
+                                style={{ width: 800 }}
+                                className="flex justify-start items-start"
+                              >
+                                <source
+                                  src={showDetail.videoLocation}
+                                  type="video/mp4"
+                                />
+                              </video>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    <div className=" flex justify-center mt-6">
+                      {showDetail.imageLocation !== "" &&
+                        showDetail.videoLocation === "" && (
+                          <img
+                            src={showDetail.imageLocation}
+                            alt="Uploaded"
+                            style={{ width: "90%" }}
+                            className=""
+                          />
+                        )}
 
-                    {showDetail?.type === 2 && (
-                      <video
-                        ref={videoRef}
-                        key={videoRef}
-                        controls
-                        style={{ width: 500, height: 500 }}
-                        className="record-container-child-video"
-                      >
-                        <source src={showDetail?.preview} type="video/mp4" />
-                      </video>
-                    )}
-                  </div>
+                      {showDetail.imageLocation === "" &&
+                        showDetail.videoLocation !== "" && (
+                          <video
+                            ref={videoRef}
+                            key={videoRef}
+                            controls
+                            style={{ width: 800 }}
+                            className="flex justify-start items-start"
+                          >
+                            <source
+                              src={showDetail.videoLocation}
+                              type="video/mp4"
+                            />
+                          </video>
+                        )}
+                    </div>
+                  </>
                 )}
               </div>
             </div>
