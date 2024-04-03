@@ -24,6 +24,7 @@ export default function LearningLayout() {
   const [valueOptions, setValueOptions] = useState([]);
   const [showDetail, setShowDetail] = useState({});
   const [searchText, setSearchText] = useState("");
+  const [typeSearch, setTypeSearch] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -71,10 +72,10 @@ export default function LearningLayout() {
       setLoading(false);
       let response = await apiLearning.getTuDien(idTopic);
       setLoading(false);
-      if (response.data) {
-        setShowFile(response.data);
+      if (response?.data) {
+        setShowFile(response?.data);
       } else {
-        setShowFile(null);
+        setShowFile([]);
         message.error(`Không có từ nào theo chủ đề`);
         setLoading(false);
       }
@@ -111,7 +112,17 @@ export default function LearningLayout() {
       content: e,
     };
     try {
-      let response = await apiLearning.getByContentVocabulary(data);
+      let response;
+      if (typeSearch === "Vocabulary") {
+        response = await apiLearning.searchVocab({
+          page: 1,
+          size: 9999999,
+          text: e,
+          ascending: true,
+        });
+      } else {
+        response = await apiLearning.getByContentVocabulary(data);
+      }
       if (response?.data) {
         setTimeout(() => {
           setLoading(false);
@@ -146,6 +157,7 @@ export default function LearningLayout() {
             setIdTopic={setIdTopic}
             fetchData={fetchData}
             setSearchText={setSearchText}
+            setTypeSearch={setTypeSearch}
           />
         </div>
         <div className="main-layout__children flex-center">
