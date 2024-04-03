@@ -66,7 +66,7 @@ const SearchWord = ({ searchText, files }) => {
                   <div key={i} style={{ height: "max-content" }}>
                     <div
                       key={i}
-                      className="searchWord-item w-1/2"
+                      className="searchWord-item "
                       style={{
                         backgroundImage: `url(${
                           item.imageLocation !== ""
