@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import defaultvideo from "../../assets/image/defaultvideo.png";
 import { Button, Empty, Modal, Pagination } from "antd";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 12;
 const SearchWord = ({ searchText, files }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showFileDetail, setShowFileDetail] = useState(false);
@@ -12,7 +12,7 @@ const SearchWord = ({ searchText, files }) => {
   const [isSingleColumn, setIsSingleColumn] = useState(false);
 
   const handleNext = () => {
-    setFileIndex((prevIndex) => Math.min(prevIndex + 1, files.length - 1));
+    setFileIndex((prevIndex) => Math.min(prevIndex + 1, files?.length - 1));
   };
 
   const handlePrevious = () => {
@@ -37,7 +37,7 @@ const SearchWord = ({ searchText, files }) => {
     setCurrentPage(pageNumber);
   };
 
-  const handleViewDetail = (file) => {
+  const handleViewDetail = () => {
     setShowFileDetail(true);
   };
 
@@ -58,7 +58,7 @@ const SearchWord = ({ searchText, files }) => {
       </div>
       <div className="">
         <div className="flex gap-4 flex-wrap">
-          {files?.length ? (
+          {files && files?.length ? (
             files
               ?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
               ?.map((item, i) => {
@@ -66,15 +66,16 @@ const SearchWord = ({ searchText, files }) => {
                   <div key={i} style={{ height: "max-content" }}>
                     <div
                       key={i}
-                      className="searchWord-item"
+                      className="searchWord-item w-1/2"
                       style={{
                         backgroundImage: `url(${
                           item.imageLocation !== ""
                             ? item.imageLocation
                             : defaultvideo
                         })`,
-                        backgroundSize: "cover",
+                        backgroundSize: "contain",
                         backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
                       }}
                     >
                       <div className="searchWord-item-detail">
@@ -92,7 +93,7 @@ const SearchWord = ({ searchText, files }) => {
                         className="searchWord-item-play"
                         onClick={() => {
                           handleViewDetail(item);
-                          setFileIndex(i);
+                          setFileIndex(i + (currentPage - 1) * PAGE_SIZE);
                         }}
                       >
                         Bấm để xem!!!
@@ -154,16 +155,17 @@ const SearchWord = ({ searchText, files }) => {
             </div>
           ) : (
             <>
-              <div className="w-1/2">
+              <div className="w-1/3 flex justify-center items-center">
                 {files[fileIndex]?.imageLocation !== "" && (
                   <img
                     src={files[fileIndex]?.imageLocation}
                     alt="Uploaded"
+                    className="object-contain"
                     style={{ width: "100%", height: "auto" }}
                   />
                 )}
               </div>
-              <div className="w-1/2">
+              <div className="w-2/3">
                 {files[fileIndex]?.videoLocation !== "" && (
                   <div className="justify-center flex w-full items-center">
                     <video ref={videoRef} controls autoPlay className="w-full">
@@ -183,7 +185,7 @@ const SearchWord = ({ searchText, files }) => {
             Previous (Lùi lại)
           </Button>
           <Button
-            disabled={fileIndex === files.length - 1}
+            disabled={fileIndex === files?.length - 1}
             onClick={handleNext}
           >
             Next (Kế tiếp)
