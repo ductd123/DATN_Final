@@ -20,11 +20,10 @@ export default function ListConversation() {
     queryKey: ["getListConversations"],
     queryFn: async () => {
       if (!user) return; // Return early if user is not available
-
       try {
         const res = await apiChat.getListChat();
-        const flattenedArray = res.data
-          .flatMap((item) =>
+        const flattenedArray = res?.data
+          ?.flatMap((item) =>
             item.grouAttachConvResList.map((val) => ({
               conversationId: item.conversationId,
               ...val,
