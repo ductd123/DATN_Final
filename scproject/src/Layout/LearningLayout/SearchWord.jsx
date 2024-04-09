@@ -1,7 +1,7 @@
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useState, useRef, useEffect } from "react";
 import defaultvideo from "../../assets/image/defaultvideo.png";
-import { Button, Empty, Modal, Pagination } from "antd";
+import { Button, Empty, Modal, Pagination, Carousel } from "antd";
 
 const PAGE_SIZE = 12;
 const SearchWord = ({ searchText, files }) => {
@@ -9,7 +9,7 @@ const SearchWord = ({ searchText, files }) => {
   const [showFileDetail, setShowFileDetail] = useState(false);
   const videoRef = useRef(null);
   const [fileIndex, setFileIndex] = useState(0);
-  const [isSingleColumn, setIsSingleColumn] = useState(false);
+
 
   const handleNext = () => {
     setFileIndex((prevIndex) => Math.min(prevIndex + 1, files?.length - 1));
@@ -18,13 +18,6 @@ const SearchWord = ({ searchText, files }) => {
   const handlePrevious = () => {
     setFileIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
-
-  useEffect(() => {
-    setIsSingleColumn(
-      files[fileIndex]?.imageLocation === "" ||
-        files[fileIndex]?.videoLocation === ""
-    );
-  }, [fileIndex, files]);
 
   // CHia page
   useEffect(() => {
@@ -49,6 +42,10 @@ const SearchWord = ({ searchText, files }) => {
     setShowFileDetail(false);
   };
 
+  const onChange = (currentSlide) => {
+    console.log(currentSlide);
+  };
+
   return (
     <div className="searchWord">
       <div className="searchWord-header flex-center">
@@ -69,8 +66,8 @@ const SearchWord = ({ searchText, files }) => {
                       className="searchWord-item "
                       style={{
                         backgroundImage: `url(${
-                          item.imageLocation !== ""
-                            ? item.imageLocation
+                          item?.vocabularyMediumRes[0]?.imageLocation !== ""
+                            ? item?.vocabularyMediumRes[0]?.imageLocation
                             : defaultvideo
                         })`,
                         backgroundSize: "contain",
@@ -133,54 +130,53 @@ const SearchWord = ({ searchText, files }) => {
         centered
       >
         <div className="w-full flex gap-4">
-          {isSingleColumn ? (
-            <div className="w-full">
-              {files[fileIndex]?.imageLocation !== "" && (
-                <img
-                  src={files[fileIndex]?.imageLocation}
-                  alt="Uploaded"
-                  style={{ width: "100%", height: "auto" }}
-                />
-              )}
-              {files[fileIndex]?.videoLocation !== "" && (
-                <div className="justify-center flex w-full items-center">
-                  <video ref={videoRef} controls autoPlay className="w-full">
-                    <source
-                      src={files[fileIndex]?.videoLocation}
-                      type="video/mp4"
-                    />
-                  </video>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <div className="w-1/3 flex justify-center items-center">
-                {files[fileIndex]?.imageLocation !== "" && (
-                  <img
-                    src={files[fileIndex]?.imageLocation}
-                    alt="Uploaded"
-                    className="object-contain"
-                    style={{ width: "100%", height: "auto" }}
-                  />
-                )}
-              </div>
-              <div className="w-2/3">
-                {files[fileIndex]?.videoLocation !== "" && (
-                  <div className="justify-center flex w-full items-center">
-                    <video ref={videoRef} controls autoPlay className="w-full">
-                      <source
-                        src={files[fileIndex]?.videoLocation}
-                        type="video/mp4"
+          <div className="w-full ">
+            {files[fileIndex]?.vocabularyMediumRes?.map((item, index) => (
+              <div key={index}>
+                {item.imageLocation && item.videoLocation ? (
+                  <div className="flex gap-4">
+                    <div className="w-1/3 flex justify-center items-center">
+                      <img
+                        src={item.imageLocation}
+                        alt="Uploaded"
+                        style={{ width: "100%", height: "auto" }}
                       />
-                    </video>
+                    </div>
+                    <div className="w-2/3">
+                      <div className="justify-center flex w-full items-center">
+                        <video controls autoPlay className="w-full">
+                          <source src={item.videoLocation} type="video/mp4" />
+                        </video>
+                      </div>
+                    </div>
                   </div>
+                ) : (
+                  <>
+                    {item.imageLocation && (
+                      <div className="flex justify-center items-center">
+                        <img
+                          src={item.imageLocation}
+                          alt="Uploaded"
+                          style={{ width: "50%", height: "auto" }}
+                        />
+                      </div>
+                    )}
+                    {item.videoLocation && (
+                      <div className="w-full">
+                        <div className="justify-center flex w-full items-center">
+                          <video controls autoPlay className="w-full">
+                            <source src={item.videoLocation} type="video/mp4" />
+                          </video>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
-            </>
-          )}
+            ))}
+          </div>
         </div>
-        <div className="w-full flex justify-center mt-4">
+        <div className="w-full flex justify-center mt-4 gap-3">
           <Button disabled={fileIndex === 0} onClick={handlePrevious}>
             Previous (Lùi lại)
           </Button>
