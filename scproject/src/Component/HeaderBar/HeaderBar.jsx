@@ -103,7 +103,7 @@ export default function HeaderBar({ disableSearch, setIsRefetchSending }) {
         let response = await apiUser.searchUser(data);
         setTimeout(() => {
           setLoading(false);
-          const data = response.data?.map((item) => ({
+          const data = response.data?.data?.map((item) => ({
             email: item.email,
             name: item.name,
             id: item.userId,

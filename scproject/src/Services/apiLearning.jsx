@@ -32,6 +32,10 @@ export const apiLearning = {
     const url = "vocabularies";
     return axiosLearningClient.post(url, data);
   },
+  addListVocabulary: (data) => {
+    const url = "vocabularies/add-list";
+    return axiosLearningClient.post(url, data);
+  },
   updateVocabulary: (data) => {
     const url = "vocabularies";
     return axiosLearningClient.put(url, data);
@@ -120,6 +124,12 @@ export const apiUploadFile = {
   checkAI: (data) => {
     const url = "ai/detection";
     return axiosCheckAIClient.post(url, data);
+  },
+
+  // Upload nhiều ảnh/ video
+  upLoadVocabulary: (data) => {
+    const url = "/upload-vocabularies/upload-list";
+    return axiosUploadVideoClient.post(url, data);
   },
 };
 

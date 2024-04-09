@@ -4,13 +4,15 @@ import { axiosLoginClient, axiosUserClient } from "./axiosClient";
 const apiUser = {
   getUserInfo: () => {
     // const url = "users/getUserInfor";
-    const url = "users/me";
+
+    const url = "users/me/v2";
     return axiosUserClient.get(url);
   },
   searchUser: (data) => {
     // const url = "users/api/search";
-    const url = "users/search";
-    return axiosUserClient.post(url, data);
+
+    const url = `users/search/v2?page=${data.page}&size=${data.size}&text=${data.text}&ascending=${data.ascending}`;
+    return axiosUserClient.get(url);
   },
   updateUser: (data) => {
     const url = "users";

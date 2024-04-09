@@ -28,6 +28,7 @@ export default function Nav() {
   const [isShowMenuProfile, setIsShowMenuProfile] = useState(false);
   const profileRef = useRef(null);
 
+
   const handleClickOutside = (event) => {
     if (profileRef.current && !profileRef.current.contains(event.target)) {
       setIsShowMenuProfile(false);
@@ -53,9 +54,9 @@ export default function Nav() {
       try {
         let response = await apiUser.getUserInfo();
         setLoading(false);
-        localStorage.setItem("user", JSON.stringify(response));
+        localStorage.setItem("user", JSON.stringify(response.data));
         setTimeout(() => {
-          dispatch(setDataUser(response));
+          dispatch(setDataUser(response.data));
           setLoading(false);
         }, 500);
       } catch (error) {

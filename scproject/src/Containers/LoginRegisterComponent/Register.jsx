@@ -1,11 +1,25 @@
 import React, { useState } from "react";
 import "./Login.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { Spin, Tooltip, message } from "antd";
+import { Spin, Tooltip, message, Select } from "antd";
 import { WarningTwoTone } from "@ant-design/icons";
+import styled from "styled-components";
 import logo from "../../assets/image/logo.png";
 import apiSignUp from "../../Services/apiRegister";
 import { apiLogin } from "../../Services";
+
+const CustomSelect = styled(Select)`
+  .ant-select-selector {
+    border: 1px solid black;
+    border-radius: 25px;
+  }
+  &.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    border: 1px solid black;
+    border-radius: 25px;
+    background-color: #e6e7e8;
+  }
+`;
+
 const Register = () => {
   const [step1, setStep1] = useState(true);
   const navigate = useNavigate();
@@ -267,6 +281,27 @@ const Register = () => {
                       </Tooltip>
                     )}
                   </div>
+                  <CustomSelect
+                    defaultValue={"ADMIN"}
+                    className="mx-[16px] h-[50px]  w-[300px] flex "
+                    placeholder="Chọn vai trò"
+                    onChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        role: value,
+                      })
+                    }
+                    options={[
+                      {
+                        label: "Admin",
+                        value: "ADMIN",
+                      },
+                      {
+                        label: "User",
+                        value: "USER",
+                      },
+                    ]}
+                  />
                 </div>
               </div>
             </div>
