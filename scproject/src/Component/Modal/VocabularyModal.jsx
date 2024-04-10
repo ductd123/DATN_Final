@@ -13,6 +13,7 @@ import {
   Upload,
   message,
   Tabs,
+  Popover,
 } from "antd";
 import React, { useMemo, useState } from "react";
 import {
@@ -20,6 +21,7 @@ import {
   EditOutlined,
   EyeOutlined,
   UploadOutlined,
+  PlusSquareOutlined,
 } from "@ant-design/icons";
 import styled from "styled-components";
 import ButtonSystem from "../button/ButtonSystem";
@@ -76,7 +78,10 @@ const VocabularyModal = (props) => {
     setFilter({ ...filter, content: e.target.value });
   };
 
+
   // Up nhiều
+  const [isShowModalAddMedia, setIsShowAddMedia] = useState(false);
+  const [recordMedia, setRecordMedia] = useState();
   const [fileList, setFileList] = useState([]); // State để lưu trữ danh sách tệp tin đã chọn
   const [previewFile, setPreviewFile] = useState(null); // State để lưu trữ file đang được xem trước
   const [previewVisible, setPreviewVisible] = useState(false); // State để điều khiển hiển thị của modal xem trước
@@ -112,6 +117,17 @@ const VocabularyModal = (props) => {
     onSuccess: () => {
       message.success("Xoá từ thành công");
       refetch();
+    },
+  });
+
+  // Cập nhật media cho từ
+  const mutationUpdateMedia = useMutation({
+    mutationFn: async (data) => await apiLearning.addMediaVocabulary(data),
+    onSuccess: () => {
+      message.success("Cập nhật hình ảnh/video thành công");
+      refetch();
+      setIsShowAddMedia(false);
+      onCloseAdd();
     },
   });
 
@@ -220,6 +236,20 @@ const VocabularyModal = (props) => {
       key: "action",
       render: (content, record) => (
         <div className="">
+          <Popover
+            placement="topLeft"
+            title={"Thêm hình ảnh video minh hoạ cho từ"}
+          >
+            <Button
+              type="link"
+              icon={<PlusSquareOutlined />}
+              onClick={() => {
+                setIsShowAddMedia(true);
+                setRecordMedia(record);
+              }}
+            />
+          </Popover>
+
           <Button
             type="link"
             icon={<EditOutlined />}
@@ -229,13 +259,13 @@ const VocabularyModal = (props) => {
               setItemVocabulary(record);
               setContentWord(record?.content);
               setTopicChose(record?.topicId);
-              if (record.imageLocation !== "") {
-                setUrlImage(record.imageLocation);
-                setImageLocations(record.imageLocation);
+              if (record.vocabularyMediumRes[0].imageLocation !== "") {
+                setUrlImage(record.vocabularyMediumRes[0].imageLocation);
+                setImageLocations(record.vocabularyMediumRes[0].imageLocation);
               }
-              if (record.videoLocation !== "") {
-                setFileUrl(record.videoLocation);
-                setVideoLocations(record.videoLocation);
+              if (record.vocabularyMediumRes[0].videoLocation !== "") {
+                setFileUrl(record.vocabularyMediumRes[0].videoLocation);
+                setVideoLocations(record.vocabularyMediumRes[0].videoLocation);
               }
             }}
           />
@@ -383,9 +413,18 @@ const VocabularyModal = (props) => {
             : "Bổ sung thư viện ngôn ngữ ký hiệu"
         }
         onOk={handleOkWord}
-        onCancel={onCloseAdd}
+        onCancel={() => {
+          onCloseAdd();
+          setIsUpdate(false);
+        }}
         footer={[
-          <ButtonSystem key="back" onClick={onCloseAdd}>
+          <ButtonSystem
+            key="back"
+            onClick={() => {
+              onCloseAdd();
+              setIsUpdate(false);
+            }}
+          >
             Hủy bỏ
           </ButtonSystem>,
           <ButtonSystem
@@ -407,8 +446,8 @@ const VocabularyModal = (props) => {
         centered
       >
         <Spin spinning={uploading}>
-          <Tabs activeKey={tabKey} onChange={handleTabChange}>
-            <TabPane tab="Thêm một" key="1">
+          {isUpdate ? (
+            <div className="">
               <p
                 className="ant-upload-text"
                 style={{ margin: "25px 0 10px 0" }}
@@ -521,32 +560,149 @@ const VocabularyModal = (props) => {
                   setTopicChose(e);
                 }}
               ></Select>
-            </TabPane>
-            <TabPane tab="Thêm nhiều" key="2">
-              <div className="overflow-y-scroll max-h-[600px]">
-                <CustomUpload
-                  listType="text"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  onChange={handleChange}
-                  multiple
-                  customRequest={async ({ file }) => {
-                    const isImageOrVideo =
-                      file.type.startsWith("image/") ||
-                      file.type.startsWith("video/");
-                    if (!isImageOrVideo) {
-                      message.error("Chỉ được chọn file video hoặc ảnh.");
-                    }
-                  }}
-                  accept="image/*,video/*"
+            </div>
+          ) : (
+            <Tabs activeKey={tabKey} onChange={handleTabChange}>
+              <TabPane tab="Thêm một" key="1">
+                <p
+                  className="ant-upload-text"
+                  style={{ margin: "25px 0 10px 0" }}
                 >
-                  <ButtonSystem icon={<UploadOutlined />}>
-                    Chọn File
-                  </ButtonSystem>
-                </CustomUpload>
-              </div>
-            </TabPane>
-          </Tabs>
+                  Ngôn ngữ văn bản:
+                </p>
+                <TextArea
+                  placeholder="Lưu ý viết đúng chính tả và viết thường"
+                  autoSize
+                  value={contentWord}
+                  className="w-1/2"
+                  onChange={(e) => setContentWord(e.target.value)}
+                />
+                <div className="flex gap-3">
+                  <div className="w-1/2">
+                    <p
+                      className="ant-upload-text"
+                      style={{ margin: "10px 0 10px 0" }}
+                    >
+                      Ảnh minh hoạ:
+                    </p>
+                    <Upload
+                      showUploadList={false}
+                      // beforeUpload={beforeUploadImage}
+                      accept="image/*"
+                      customRequest={({ file }) => {
+                        const isImg = file.type.includes("image");
+                        const formData = new FormData();
+                        formData.append("file", file);
+                        if (isImg) {
+                          const fileReader = new FileReader();
+                          setIsImage(file.type.includes("image"));
+                          fileReader.onload = (e) => {
+                            setUrlImage(e.target.result);
+                          };
+                          fileReader.readAsDataURL(file);
+                          uploadMutation.mutate(formData);
+                        } else {
+                          message.error("Sai định dạng ảnh");
+                        }
+                      }}
+                    >
+                      <Button type="primary" icon={<UploadOutlined />}>
+                        Chọn File
+                      </Button>
+                    </Upload>
+
+                    <div className="mt-3 flex justify-center flex-col items-center relative">
+                      {urlImage && (
+                        <Image
+                          src={urlImage}
+                          alt="Uploaded Image"
+                          className="flex justify-center items-center"
+                          style={{ width: 300 }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="w-1/2">
+                    <p
+                      className="ant-upload-text"
+                      style={{ margin: "10px 0 10px 0" }}
+                    >
+                      Video minh hoạ:
+                    </p>
+                    <Upload
+                      showUploadList={false}
+                      customRequest={({ file }) => {
+                        const isVideo = file.type.startsWith("video/");
+                        if (!isVideo) {
+                          message.error("Sai định dạng video.");
+                        } else {
+                          const fileReader = new FileReader();
+                          fileReader.onload = (e) => {
+                            setFileUrl(e.target.result); // Lưu URL của file
+                          };
+                          fileReader.readAsDataURL(file); // Đọc file thành URL
+                        }
+                        const formData = new FormData();
+                        formData.append("file", file);
+                        uploadMutationVideo.mutate(formData);
+                      }}
+                    >
+                      <Button type="primary" icon={<UploadOutlined />}>
+                        Chọn File
+                      </Button>
+                    </Upload>
+
+                    <div className="mt-3 flex justify-center flex-col items-center relative">
+                      {fileUrl && (
+                        <video src={fileUrl} controls /> // Hiển thị video nếu là loại video
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <p
+                  className="ant-upload-text"
+                  style={{ margin: "10px 0 10px 0" }}
+                >
+                  Chủ đề liên quan:
+                </p>
+                <Select
+                  mode=""
+                  placeholder="Chọn chủ đề"
+                  style={{ width: "100%" }}
+                  options={topicInit}
+                  value={topicChose}
+                  onChange={(e) => {
+                    setTopicChose(e);
+                  }}
+                ></Select>
+              </TabPane>
+              <TabPane tab="Thêm nhiều" key="2">
+                <div className="overflow-y-scroll max-h-[600px]">
+                  <CustomUpload
+                    listType="text"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
+                    multiple
+                    customRequest={async ({ file }) => {
+                      const isImageOrVideo =
+                        file.type.startsWith("image/") ||
+                        file.type.startsWith("video/");
+                      if (!isImageOrVideo) {
+                        message.error("Chỉ được chọn file video hoặc ảnh.");
+                      }
+                    }}
+                    accept="image/*,video/*"
+                  >
+                    <ButtonSystem icon={<UploadOutlined />}>
+                      Chọn File
+                    </ButtonSystem>
+                  </CustomUpload>
+                </div>
+              </TabPane>
+            </Tabs>
+          )}
         </Spin>
       </Modal>
 
@@ -594,6 +750,139 @@ const VocabularyModal = (props) => {
             style={{ width: 800 }}
           ></video>
         </div>
+      </Modal>
+
+      {/* Thêm nhiều media cho từ */}
+      <Modal
+        open={isShowModalAddMedia}
+        title={
+          <div>
+            {" "}
+            Bổ sung hình ảnh/ video cho từ{" "}
+            <span className="text-bold text-red-500">
+              {recordMedia?.content}
+            </span>
+          </div>
+        }
+        onOk={handleOkWord}
+        onCancel={() => {
+          setIsShowAddMedia(false);
+        }}
+        footer={[
+          <ButtonSystem
+            key="back"
+            onClick={() => {
+              setIsShowAddMedia(false);
+            }}
+          >
+            Hủy bỏ
+          </ButtonSystem>,
+          <ButtonSystem
+            type="primary"
+            loading={loading}
+            onClick={() => {
+              const req = {
+                vocabularyId: recordMedia.vocabularyId,
+                primary: true,
+                imageLocation: imageLocations,
+                videoLocation: videoLocations,
+              };
+              mutationUpdateMedia.mutate(req);
+            }}
+          >
+            Tải lên
+          </ButtonSystem>,
+        ]}
+        destroyOnClose
+        width={1000}
+        centered
+      >
+        <Spin spinning={uploading}>
+          <div className="">
+            <div className="flex gap-3">
+              <div className="w-1/2">
+                <p
+                  className="ant-upload-text"
+                  style={{ margin: "10px 0 10px 0" }}
+                >
+                  Ảnh minh hoạ:
+                </p>
+                <Upload
+                  showUploadList={false}
+                  // beforeUpload={beforeUploadImage}
+                  accept="image/*"
+                  customRequest={({ file }) => {
+                    const isImg = file.type.includes("image");
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    if (isImg) {
+                      const fileReader = new FileReader();
+                      setIsImage(file.type.includes("image"));
+                      fileReader.onload = (e) => {
+                        setUrlImage(e.target.result);
+                      };
+                      fileReader.readAsDataURL(file);
+                      uploadMutation.mutate(formData);
+                    } else {
+                      message.error("Sai định dạng ảnh");
+                    }
+                  }}
+                >
+                  <Button type="primary" icon={<UploadOutlined />}>
+                    Chọn File
+                  </Button>
+                </Upload>
+
+                <div className="mt-3 flex justify-center flex-col items-center relative">
+                  {urlImage && (
+                    <Image
+                      src={urlImage}
+                      alt="Uploaded Image"
+                      className="flex justify-center items-center"
+                      style={{ width: 300 }}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="w-1/2">
+                <p
+                  className="ant-upload-text"
+                  style={{ margin: "10px 0 10px 0" }}
+                >
+                  Video minh hoạ:
+                </p>
+                <Upload
+                  showUploadList={false}
+                  customRequest={({ file }) => {
+                    const isVideo = file.type.startsWith("video/");
+                    if (!isVideo) {
+                      message.error("Sai định dạng video.");
+                    } else {
+                      const fileReader = new FileReader();
+                      fileReader.onload = (e) => {
+                        setFileUrl(e.target.result); // Lưu URL của file
+                      };
+                      fileReader.readAsDataURL(file); // Đọc file thành URL
+                    }
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    uploadMutationVideo.mutate(formData);
+                  }}
+                >
+                  <Button type="primary" icon={<UploadOutlined />}>
+                    Chọn File
+                  </Button>
+                </Upload>
+
+                <div className="mt-3 flex justify-center flex-col items-center relative">
+                  {fileUrl && (
+                    <video src={fileUrl} controls /> // Hiển thị video nếu là loại video
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Spin>
       </Modal>
     </>
   );
