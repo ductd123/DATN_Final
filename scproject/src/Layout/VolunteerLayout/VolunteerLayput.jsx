@@ -316,7 +316,6 @@ const VolunterLayout = () => {
   const onChooseVocab = (e) => {
     setIsShowDetail(true);
     const x = vocabInit.find((i) => i.vocabularyId === e);
-    console.log("x", x);
     if (!x) {
       setValueVocabulary(null);
     } else {
