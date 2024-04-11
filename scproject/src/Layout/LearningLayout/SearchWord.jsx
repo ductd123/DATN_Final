@@ -1,10 +1,12 @@
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import defaultvideo from "../../assets/image/defaultvideo.png";
-import { Button, Empty, Modal, Pagination, Carousel } from "antd";
+import { Button, Empty, Modal, Pagination, Carousel, Select } from "antd";
 import ButtonSystem from "../../Component/button/ButtonSystem";
+import { filterOption } from "../../Component/LearningMenu/LearningMenu";
+import { apiLearning } from "../../Services/apiLearning";
 
 const PAGE_SIZE = 12;
 const CustomSlider = styled(Carousel)`
@@ -18,6 +20,10 @@ const SearchWord = ({ searchText, files }) => {
   const [showFileDetail, setShowFileDetail] = useState(false);
   const videoRef = useRef(null);
   const [fileIndex, setFileIndex] = useState(0);
+  const [topicItems, setTopicItems] = useState([]);
+  const [valueTopic, setValueTopic] = useState();
+
+  const [isOpenSelectTopic, setIsOpenSelectTopic] = useState(false);
 
   const handleNext = () => {
     setFileIndex((prevIndex) => Math.min(prevIndex + 1, files?.length - 1));
@@ -57,6 +63,10 @@ const SearchWord = ({ searchText, files }) => {
   const slider = useRef(null);
   const slider1 = useRef(null);
 
+  console.log(
+    "files[fileIndex]?.vocabularyMediumRes",
+    files[fileIndex]?.vocabularyMediumRes
+  );
   return (
     <div className="searchWord">
       <div className="searchWord-header flex-center">
@@ -132,7 +142,27 @@ const SearchWord = ({ searchText, files }) => {
 
       <Modal
         open={showFileDetail}
-        footer={[]}
+        // footer={
+        //   <div className="">
+        //     <ButtonSystem
+        //       className="flex items-center"
+        //       type="primary"
+        //       onClick={async () => {
+        //         setIsOpenSelectTopic(true);
+        //         const response = await apiLearning.getTopic();
+        //         const items = response.data?.map((element) => ({
+        //           id: element.topicId,
+        //           value: element.topicId,
+        //           label: element.content,
+        //         }));
+        //         setTopicItems(items);
+        //       }}
+        //     >
+        //       Thêm vào chủ đề
+        //     </ButtonSystem>
+        //   </div>
+        // }
+        footer={null}
         onCancel={onCloseDetail}
         style={{ top: 20 }}
         title={files[fileIndex]?.content}
@@ -140,7 +170,7 @@ const SearchWord = ({ searchText, files }) => {
         key={files[fileIndex]?.content}
         centered
       >
-        <div className="w-full px-4 ">
+        <div className="w-full px-4  ">
           <div className="w-full flex gap-6">
             <div className="relative w-1/3 flex justify-center items-center">
               <CustomSlider ref={slider} className="w-full" dots={false}>
@@ -184,11 +214,18 @@ const SearchWord = ({ searchText, files }) => {
               </div>
             </div>
             <div className="relative w-2/3">
-              <Carousel ref={slider1} className="w-full" dots={false}>
+              <Carousel
+                ref={slider1}
+                className="w-full"
+                dots={false}
+                afterChange={(currentSlide) =>
+                  console.log("Slide đã thay đổi thành: ", currentSlide)
+                }
+              >
                 {files[fileIndex]?.vocabularyMediumRes?.map((item, index) => (
                   <>
                     {item.videoLocation ? (
-                      <video controls autoPlay className="w-full">
+                      <video autoPlay={index === 0} controls className="w-full">
                         <source src={item.videoLocation} type="video/mp4" />
                       </video>
                     ) : (
@@ -235,6 +272,32 @@ const SearchWord = ({ searchText, files }) => {
             Next (Kế tiếp)
           </ButtonSystem>
         </div>
+      </Modal>
+
+      <Modal
+        title="Lựa chọn topic muốn thêm từ"
+        open={isOpenSelectTopic}
+        okText="Xác nhận"
+        cancelText="Huỷ bỏ"
+        centered
+        onOk={() => {
+          //  Thực hiện thêm từ đó vào
+        }}
+        onCancel={() => setIsOpenSelectTopic(false)}
+      >
+        <Select
+          showSearch
+          placeholder="Chọn chủ đề"
+          suffixIcon={null}
+          style={{ width: "100%" }}
+          mode=""
+          options={topicItems}
+          value={valueTopic}
+          onChange={(e) => {
+            setValueTopic(e);
+          }}
+          filterOption={filterOption}
+        />
       </Modal>
     </div>
   );

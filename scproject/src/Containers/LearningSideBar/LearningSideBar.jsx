@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import HeaderBar from "../../Component/HeaderBar/HeaderBar";
 import { MenuStudyAI } from "..";
-import logoHeader from "../../assets/image/LogoHeaderBar.png";
 export default class LearningSideBar extends Component {
   constructor(props) {
     super(props);
