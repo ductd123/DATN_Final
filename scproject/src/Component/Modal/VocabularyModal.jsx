@@ -14,6 +14,7 @@ import {
   message,
   Tabs,
   Popover,
+  Switch,
 } from "antd";
 import React, { useMemo, useState } from "react";
 import {
@@ -27,6 +28,7 @@ import styled from "styled-components";
 import ButtonSystem from "../button/ButtonSystem";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
+import { CaretRightIcon } from "../../assets/icon";
 
 const { TextArea } = Input;
 const { TabPane } = Tabs;
@@ -78,7 +80,6 @@ const VocabularyModal = (props) => {
     setFilter({ ...filter, content: e.target.value });
   };
 
-
   // Up nhiều
   const [isShowModalAddMedia, setIsShowAddMedia] = useState(false);
   const [recordMedia, setRecordMedia] = useState();
@@ -87,6 +88,9 @@ const VocabularyModal = (props) => {
   const [previewVisible, setPreviewVisible] = useState(false); // State để điều khiển hiển thị của modal xem trước
   const [uploading, setUploading] = useState(false);
 
+  //  Table dạng cha con
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+  const [isUpdateMedia, setIsUpdateMedia] = useState(false);
   // APi danh sách
   const {
     data: listVocabulary,
@@ -111,7 +115,7 @@ const VocabularyModal = (props) => {
     enabled: showModalVocabulary,
   });
 
-  // Xoá chủ đề
+  // Xoá từ vựng
   const mutationDel = useMutation({
     mutationFn: async (id) => await apiLearning.deleteTuDien(id),
     onSuccess: () => {
@@ -120,14 +124,12 @@ const VocabularyModal = (props) => {
     },
   });
 
-  // Cập nhật media cho từ
-  const mutationUpdateMedia = useMutation({
-    mutationFn: async (data) => await apiLearning.addMediaVocabulary(data),
+  // Xoá media
+  const mutationDelMedia = useMutation({
+    mutationFn: async (id) => await apiLearning.deleteMediaVocabulary(id),
     onSuccess: () => {
-      message.success("Cập nhật hình ảnh/video thành công");
+      message.success("Xoá hình ảnh/video minh hoạ thành công");
       refetch();
-      setIsShowAddMedia(false);
-      onCloseAdd();
     },
   });
 
@@ -143,6 +145,33 @@ const VocabularyModal = (props) => {
     },
   });
 
+  // Insert media
+  const mutationInsertMedia = useMutation({
+    mutationFn: async (data) => await apiLearning.addMediaVocabulary(data),
+    onSuccess: () => {
+      message.success("Thêm mới hình ảnh/ video minh hoạ thành công");
+      setShowAddWord(false);
+      setLoading(false);
+      setIsUpdate(false);
+      setIsUpdateMedia(false);
+      setIsShowAddMedia(false);
+      refetch();
+    },
+  });
+
+  // Update media
+  const mutationUpdateMedia = useMutation({
+    mutationFn: async (data) => await apiLearning.updateMediaVocabulary(data),
+    onSuccess: () => {
+      message.success("Cập nhật hình ảnh/ video minh hoạ thành công");
+      setShowAddWord(false);
+      setLoading(false);
+      setIsUpdate(false);
+      setIsUpdateMedia(false);
+      refetch();
+    },
+  });
+
   // APi thêm mới
   const handleOkWord = async () => {
     setLoading(true);
@@ -152,10 +181,17 @@ const VocabularyModal = (props) => {
       videoLocation: videoLocations,
       topicId: topicChose,
     };
-    if (isUpdate) {
+    if (isUpdate && !isUpdateMedia) {
       return mutationUpdate.mutate({
         ...data,
         vocabularyId: ItemVocabulary.vocabularyId,
+      });
+    } else if (isUpdateMedia) {
+      return mutationUpdateMedia.mutate({
+        imageLocation: imageLocations,
+        videoLocation: videoLocations,
+        vocabularyMediumId: ItemVocabulary.vocabularyMediumId,
+        primary: ItemVocabulary.primary,
       });
     } else {
       setTopicInit([]);
@@ -195,12 +231,15 @@ const VocabularyModal = (props) => {
       dataIndex: "imageLocation",
       key: "imageLocation",
       render: (imageLocation, record) => {
-        if (imageLocation) {
+        if (
+          record.vocabularyMediumRes?.length &&
+          record.vocabularyMediumRes[0].imageLocation
+        ) {
           return (
             <Image
               width={100} // Adjust image width as needed
-              src={imageLocation}
-              alt={record.content + " illustration"}
+              src={record.vocabularyMediumRes[0].imageLocation}
+              alt={record.content}
             />
           );
         } else {
@@ -214,7 +253,10 @@ const VocabularyModal = (props) => {
       key: "videoLocation",
       align: "center",
       render: (videoLocation, record) => {
-        if (videoLocation) {
+        if (
+          record.vocabularyMediumRes?.length &&
+          record.vocabularyMediumRes[0].videoLocation
+        ) {
           return (
             <EyeOutlined
               style={{ fontSize: "1.5rem" }}
@@ -250,25 +292,31 @@ const VocabularyModal = (props) => {
             />
           </Popover>
 
-          <Button
-            type="link"
-            icon={<EditOutlined />}
-            onClick={() => {
-              setIsUpdate(true);
-              setShowAddWord(true);
-              setItemVocabulary(record);
-              setContentWord(record?.content);
-              setTopicChose(record?.topicId);
-              if (record.vocabularyMediumRes[0].imageLocation !== "") {
-                setUrlImage(record.vocabularyMediumRes[0].imageLocation);
-                setImageLocations(record.vocabularyMediumRes[0].imageLocation);
-              }
-              if (record.vocabularyMediumRes[0].videoLocation !== "") {
-                setFileUrl(record.vocabularyMediumRes[0].videoLocation);
-                setVideoLocations(record.vocabularyMediumRes[0].videoLocation);
-              }
-            }}
-          />
+          <Popover placement="topLeft" title={"Chỉnh sửa ảnh minh hoạ cho từ "}>
+            <Button
+              type="link"
+              icon={<EditOutlined />}
+              onClick={() => {
+                setIsUpdate(true);
+                setShowAddWord(true);
+                setItemVocabulary(record);
+                setContentWord(record?.content);
+                setTopicChose(record?.topicId);
+                if (record.vocabularyMediumRes[0].imageLocation !== "") {
+                  setUrlImage(record.vocabularyMediumRes[0].imageLocation);
+                  setImageLocations(
+                    record.vocabularyMediumRes[0].imageLocation
+                  );
+                }
+                if (record.vocabularyMediumRes[0].videoLocation !== "") {
+                  setFileUrl(record.vocabularyMediumRes[0].videoLocation);
+                  setVideoLocations(
+                    record.vocabularyMediumRes[0].videoLocation
+                  );
+                }
+              }}
+            />
+          </Popover>
           <Popconfirm
             title="Bạn có chắc chắn muốn xóa chủ đề này?"
             onConfirm={() => {
@@ -282,6 +330,121 @@ const VocabularyModal = (props) => {
       ),
     },
   ];
+
+  const renderMediaValue = (listValue) => {
+    const columns = [
+      {
+        title: "Ảnh minh hoạ",
+        dataIndex: "imageLocation",
+        key: "imageLocation",
+        render: (imageLocation, record) => {
+          if (imageLocation) {
+            return (
+              <Image
+                width={100} // Adjust image width as needed
+                src={imageLocation}
+                alt={record.content}
+              />
+            );
+          } else {
+            return <span>Không có minh họa</span>; // Display "No illustration" message
+          }
+        },
+        width: "30%",
+        align: "center",
+      },
+      {
+        title: "Video minh hoạ",
+        dataIndex: "videoLocation",
+        key: "videoLocation",
+        align: "center",
+        render: (videoLocation, record) => {
+          if (videoLocation) {
+            return (
+              <EyeOutlined
+                style={{ fontSize: "1.5rem" }}
+                onClick={() => {
+                  setOpenPreviewVideo(true);
+                  setItemVocabulary(record);
+                }}
+              />
+            );
+          } else {
+            return <span>Không video có minh họa</span>; // Display "No illustration" message
+          }
+        },
+        width: "40%",
+      },
+      {
+        title: "Minh hoạ chính",
+        dataIndex: "primary",
+        align: "center",
+        render: (value) => <Switch checked={value} />,
+        width: 200,
+      },
+      {
+        title: "Hành động",
+        dataIndex: "action",
+        key: "action",
+        render: (content, record) => (
+          <div className="">
+            <Popover placement="topLeft">
+              <Button
+                type="link"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  setIsUpdateMedia(true);
+                  setIsUpdate(true);
+                  setShowAddWord(true);
+                  setItemVocabulary(record);
+                  setContentWord(record?.content);
+                  setTopicChose(record?.topicId);
+                  if (record.imageLocation !== "") {
+                    setUrlImage(record.imageLocation);
+                    setImageLocations(record.imageLocation);
+                  }
+                  if (record.videoLocation !== "") {
+                    setFileUrl(record.videoLocation);
+                    setVideoLocations(record.videoLocation);
+                  }
+                }}
+              />
+            </Popover>
+            <Popconfirm
+              title="Bạn có chắc chắn muốn xóa hình ảnh/ video này?"
+              onConfirm={() => {
+                mutationDelMedia.mutate(record.vocabularyMediumId);
+              }}
+              onCancel={() => console.log("Huỷ")}
+            >
+              <Button type="link" danger icon={<DeleteOutlined />} />
+            </Popconfirm>
+          </div>
+        ),
+      },
+    ];
+
+    return (
+      <div className="flex flex-col gap-y-3 bg-white">
+        <div className="caption-12-semibold text-neutral1100">
+          Danh sách media của từ
+        </div>
+        <Table
+          columns={columns.filter((item) => !item.hidden)}
+          dataSource={listValue}
+        />
+      </div>
+    );
+  };
+
+  // hàm toggle đóng mở 1 hàng
+  const toggleExpandRow = (key) => {
+    if (expandedRowKeys.includes(key)) {
+      setExpandedRowKeys(expandedRowKeys.filter((item) => item !== key));
+    } else {
+      setExpandedRowKeys([...expandedRowKeys, key]);
+    }
+  };
 
   const handleTabChange = (key) => {
     setTabKey(key);
@@ -400,6 +563,30 @@ const VocabularyModal = (props) => {
             className="mt-4"
             columns={columns}
             dataSource={listVocabulary}
+            rowKey={(record) => record.vocabularyId}
+            expandable={{
+              rowExpandable: (record) =>
+                record?.vocabularyMediumRes?.length > 0,
+              expandedRowKeys,
+              expandedRowRender: (record) =>
+                renderMediaValue(record?.vocabularyMediumRes),
+              expandIcon: ({ expanded, record }) => {
+                if (record?.vocabularyMediumRes?.length === 0)
+                  return <div className="w-2 mr-3" />;
+
+                return (
+                  <div
+                    className={`flex items-center justify-center transform ${
+                      expanded ? "rotate-90" : ""
+                    } duration-300 transition-all`}
+                    onClick={() => toggleExpandRow(record.vocabularyId)}
+                  >
+                    <CaretRightIcon />
+                  </div>
+                );
+              },
+            }}
+            pagination={{ pageSize: 8 }}
           />
         </Spin>
       </Modal>
@@ -416,6 +603,7 @@ const VocabularyModal = (props) => {
         onCancel={() => {
           onCloseAdd();
           setIsUpdate(false);
+          setIsUpdateMedia(false);
         }}
         footer={[
           <ButtonSystem
@@ -423,6 +611,7 @@ const VocabularyModal = (props) => {
             onClick={() => {
               onCloseAdd();
               setIsUpdate(false);
+              setIsUpdateMedia(false);
             }}
           >
             Hủy bỏ
@@ -438,7 +627,7 @@ const VocabularyModal = (props) => {
               }
             }}
           >
-            Tải lên
+            {isUpdateMedia ? "Xác nhận" : "Tải lên"}
           </ButtonSystem>,
         ]}
         destroyOnClose
@@ -448,19 +637,24 @@ const VocabularyModal = (props) => {
         <Spin spinning={uploading}>
           {isUpdate ? (
             <div className="">
-              <p
-                className="ant-upload-text"
-                style={{ margin: "25px 0 10px 0" }}
-              >
-                Ngôn ngữ văn bản:
-              </p>
-              <TextArea
-                placeholder="Lưu ý viết đúng chính tả và viết thường"
-                autoSize
-                value={contentWord}
-                className="w-1/2"
-                onChange={(e) => setContentWord(e.target.value)}
-              />
+              {!isUpdateMedia && (
+                <>
+                  <p
+                    className="ant-upload-text"
+                    style={{ margin: "25px 0 10px 0" }}
+                  >
+                    Ngôn ngữ văn bản:
+                  </p>
+                  <TextArea
+                    placeholder="Lưu ý viết đúng chính tả và viết thường"
+                    autoSize
+                    value={contentWord}
+                    className="w-1/2"
+                    onChange={(e) => setContentWord(e.target.value)}
+                  />
+                </>
+              )}
+
               <div className="flex gap-3">
                 <div className="w-1/2">
                   <p
@@ -543,23 +737,26 @@ const VocabularyModal = (props) => {
                   </div>
                 </div>
               </div>
-
-              <p
-                className="ant-upload-text"
-                style={{ margin: "10px 0 10px 0" }}
-              >
-                Chủ đề liên quan:
-              </p>
-              <Select
-                mode=""
-                placeholder="Chọn chủ đề"
-                style={{ width: "100%" }}
-                options={topicInit}
-                value={topicChose}
-                onChange={(e) => {
-                  setTopicChose(e);
-                }}
-              ></Select>
+              {!isUpdateMedia && (
+                <>
+                  <p
+                    className="ant-upload-text"
+                    style={{ margin: "10px 0 10px 0" }}
+                  >
+                    Chủ đề liên quan:
+                  </p>
+                  <Select
+                    mode=""
+                    placeholder="Chọn chủ đề"
+                    style={{ width: "100%" }}
+                    options={topicInit}
+                    value={topicChose}
+                    onChange={(e) => {
+                      setTopicChose(e);
+                    }}
+                  ></Select>
+                </>
+              )}
             </div>
           ) : (
             <Tabs activeKey={tabKey} onChange={handleTabChange}>
@@ -744,11 +941,19 @@ const VocabularyModal = (props) => {
         width={1000}
       >
         <div className="flex justify-center items-center mt-4 py-4">
-          <video
-            src={ItemVocabulary?.videoLocation}
-            controls
-            style={{ width: 800 }}
-          ></video>
+          {ItemVocabulary?.vocabularyMediumRes?.length ? (
+            <video
+              src={ItemVocabulary?.vocabularyMediumRes[0]?.videoLocation}
+              controls
+              style={{ width: 800 }}
+            ></video>
+          ) : (
+            <video
+              src={ItemVocabulary?.videoLocation}
+              controls
+              style={{ width: 800 }}
+            ></video>
+          )}
         </div>
       </Modal>
 
@@ -787,7 +992,7 @@ const VocabularyModal = (props) => {
                 imageLocation: imageLocations,
                 videoLocation: videoLocations,
               };
-              mutationUpdateMedia.mutate(req);
+              mutationInsertMedia.mutate(req);
             }}
           >
             Tải lên

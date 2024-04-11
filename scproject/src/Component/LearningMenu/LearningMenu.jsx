@@ -9,6 +9,7 @@ import { Input, Menu, Select, message } from "antd";
 import { apiLearning } from "../../Services/apiLearning";
 import LoadingComponent from "../Common/Loading/Loading";
 import "./StudyAI.scss";
+import { useParams } from "react-router-dom";
 
 const BangChuCai = [
   "A",
@@ -47,6 +48,9 @@ const BangChuSo = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const dau = ["Dấu sắc", "Dấu huyền", "Dấu hỏi", "Dấu Ngã", "Dấu nặng"];
 const { SubMenu } = Menu;
 
+export const filterOption = (input, option) =>
+  (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
 const MenuStudyAI = ({
   onUploadVideo,
   openPanelHistory,
@@ -62,12 +66,25 @@ const MenuStudyAI = ({
 }) => {
   const [topicItems, setTopicItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { topicId } = useParams();
+
   const [openAddTopic, setOpenAddTopic] = useState(false);
   const webcamRef = useRef(null);
-  const [valueTopic, setValueTopic] = useState();
+  const [valueTopic, setValueTopic] = useState(topicId);
   const [valueVocabulary, setValueVocabulary] = useState("");
   const [items, setItems] = useState([]);
   const [timeoutId, setTimeoutId] = useState(null);
+  useEffect(() => {
+    if (topicId && topicItems.length) {
+      const itemSelected = topicItems?.find(
+        (item) => item.id === Number(topicId)
+      );
+      if (itemSelected) {
+        setValueTopic(itemSelected.label);
+        setSearchText(itemSelected.label);
+      }
+    }
+  }, [topicId, topicItems]);
 
   const fetchDataAndSetItems = async () => {
     setLoading(true);
@@ -85,9 +102,6 @@ const MenuStudyAI = ({
       message.error(`Kết nối không ổn định. Vui lòng thử lại!!!`);
     }
   };
-
-  const filterOption = (input, option) =>
-    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   const setLabelForSelect = (e) => {
     setIdTopic(e);
@@ -165,6 +179,7 @@ const MenuStudyAI = ({
           label: (
             <Select
               showSearch
+              defaultValue={topicId}
               placeholder="Chọn chủ đề"
               suffixIcon={null}
               style={{ width: "100%" }}

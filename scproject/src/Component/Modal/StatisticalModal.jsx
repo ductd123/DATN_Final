@@ -1,15 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { Modal, Select } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import React, { useState } from "react";
 import { apiLearning } from "../../Services/apiLearning";
 
 const StatisticalModal = (props) => {
+  const navigate = useNavigate();
   const { showStatistical, setShowStatistical, listTopic } = props;
   const [valueTopic, setValueTopic] = useState();
   const [numberVocal, setNumberVocal] = useState();
   const [topicName, setTopicName] = useState();
   const [showNumberVocal, setShowNumberVocal] = useState(false);
-
+  console.log("====================================");
+  console.log("valueTopic", valueTopic);
+  console.log("====================================");
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
@@ -133,7 +138,7 @@ const StatisticalModal = (props) => {
         {showNumberVocal && (
           <div className="flex gap-4 items-center justify-center pb-10">
             <div
-              className="w-64 h-32 p-3 bg-white rounded-xl mt-6"
+              className="w-64 h-32 p-3 bg-white rounded-xl mt-6 hover:cursor-pointer"
               style={{
                 border: "3px solid #f6f6f6",
               }}
@@ -160,10 +165,11 @@ const StatisticalModal = (props) => {
             </div>
 
             <div
-              className="w-64 h-32 p-3 bg-white rounded-xl mt-6"
+              className="w-64 h-32 p-3 bg-white rounded-xl mt-6 hover:cursor-pointer"
               style={{
                 border: "3px solid #f6f6f6",
               }}
+              onClick={() => navigate(`/learn/${valueTopic}`)}
             >
               <div className="flex justify-between mb-5 text-sm text-gray-500">
                 <div>Tổng</div>

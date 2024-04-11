@@ -11,6 +11,14 @@ export const apiLearning = {
     const url = "vocabulary-media";
     return axiosLearningClient.post(url, data);
   },
+  updateMediaVocabulary: (data) => {
+    const url = "vocabulary-media";
+    return axiosLearningClient.put(url, data);
+  },
+  deleteMediaVocabulary: (id) => {
+    const url = `vocabulary-media/${id}`;
+    return axiosLearningClient.delete(url);
+  },
   getByContentVocabulary: (data) => {
     const url = "vocabularies/get-by-content";
     return axiosLearningClient.post(url, data);

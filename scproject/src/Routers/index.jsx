@@ -52,6 +52,10 @@ export default function Routers() {
         element={<PrivateRouter component={Contact} layout={MainLayout} />}
       />
       <Route
+        path="/learn/:topicId"
+        element={<LearningRouter layout={LearningLayout} />}
+      />
+      <Route
         path="/learn"
         element={<LearningRouter layout={LearningLayout} />}
       />

@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import LoadingComponent from "../../Component/Common/Loading/Loading";
 import { LearningSideBar, Nav } from "../../Component/index";
 import { VolunteerSlider } from "../../Containers";
+import { useParams } from "react-router-dom";
 import { apiLearning } from "../../Services/apiLearning";
 import "./LearningLayout.scss";
 import SearchWord from "./SearchWord";
@@ -26,9 +27,16 @@ export default function LearningLayout() {
   const [searchText, setSearchText] = useState("");
   const [typeSearch, setTypeSearch] = useState("");
 
+  const { topicId } = useParams();
+
+  useEffect(() => {
+    setIdTopic(topicId);
+  }, [topicId]);
+
   useEffect(() => {
     fetchData();
   }, []);
+
   useEffect(() => {
     if (idTopic) {
       handleGetListFile();
