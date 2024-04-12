@@ -7,8 +7,8 @@ import {
 
 export const apiLearning = {
   //media
-  addMediaVocabulary: (data) => {
-    const url = "vocabulary-media";
+  addListMediaVocabulary: (data) => {
+    const url = "vocabulary-media/add-list";
     return axiosLearningClient.post(url, data);
   },
   updateMediaVocabulary: (data) => {
@@ -19,6 +19,12 @@ export const apiLearning = {
     const url = `vocabulary-media/${id}`;
     return axiosLearningClient.delete(url);
   },
+  // Sét primary
+  setPrimaryMediaVocabulary: (data) => {
+    const url = "vocabulary-media/set-primary";
+    return axiosLearningClient.put(url, data);
+  },
+
   getByContentVocabulary: (data) => {
     const url = "vocabularies/get-by-content";
     return axiosLearningClient.post(url, data);
@@ -130,9 +136,9 @@ export const apiUploadFile = {
     const url = "data-collection/approved-list-me";
     return axiosUploadVolunteerClient.get(url, data);
   },
-  approvedData: (id) => {
-    const url = `data-collection/approve/${id}`;
-    return axiosUploadVolunteerClient.post(url);
+  approvedData: (body) => {
+    const url = `data-collection/approve`;
+    return axiosUploadVolunteerClient.post(url, body);
   },
   checkAI: (data) => {
     const url = "ai/detection";
