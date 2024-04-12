@@ -81,6 +81,12 @@ export default function LearningLayout() {
       let response = await apiLearning.getTuDien(idTopic);
       setLoading(false);
       if (response?.data) {
+        response?.data.forEach((item) => {
+          item.vocabularyMediumRes.sort((a, b) => {
+            // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
+            return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
+          });
+        });
         setShowFile(response?.data);
       } else {
         setShowFile([]);
@@ -134,7 +140,12 @@ export default function LearningLayout() {
       if (response?.data) {
         setTimeout(() => {
           setLoading(false);
-
+          response?.data.forEach((item) => {
+            item.vocabularyMediumRes.sort((a, b) => {
+              // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
+              return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
+            });
+          });
           setShowFile(response?.data);
         }, 500);
       } else {

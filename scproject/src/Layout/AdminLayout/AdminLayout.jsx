@@ -14,6 +14,7 @@ import {
   Input,
   Modal,
   Select,
+  Slider,
   Table,
   Tooltip,
   message,
@@ -70,6 +71,15 @@ const AdminLayout = () => {
     // createdTo: "",
   });
 
+  const [showFeedback, setShowFeedBack] = useState(false);
+  const [idDataCollection, setIdDataCollection] = useState(false);
+  const [typeCollection, setTypeCollection] = useState("");
+  const [valueFeedback, setValueFeedback] = useState("");
+  const [score, setScore] = useState(1);
+
+  const onChangeScore = (newValue) => {
+    setScore(newValue);
+  };
   function isImage(url) {
     const extension = url?.split(".").pop().toLowerCase();
 
@@ -367,34 +377,35 @@ const AdminLayout = () => {
     }
   };
 
-  const approvedData = async (id) => {
+  const approvedData = async (body) => {
     try {
       setLoading(false);
-      await apiUploadFile.approvedData(id);
+      await apiUploadFile.approvedData(body);
       message.success("Đã chấp nhận dữ liệu thành công");
       initPendingData();
       getHistory();
+      setShowFeedBack(false);
     } catch (error) {
       setLoading(false);
       console.log(error);
       message.error("Kết nối không ổn định, vui lòng thử lại.");
+      setShowFeedBack(false);
     }
   };
 
-  const rejectData = async (id) => {
+  const rejectData = async (body) => {
     setLoading(true);
     try {
       setLoading(false);
-      let data = {
-        dataCollectionId: id,
-        feedBack: "",
-      };
-      await apiUploadFile.rejectData(data);
+
+      await apiUploadFile.rejectData(body);
       message.success("Đã từ chối dữ liệu thành công");
       initPendingData();
+      setShowFeedBack(false);
     } catch (error) {
       setLoading(false);
       message.error("Kết nối không ổn định, vui lòng thử lại.");
+      setShowFeedBack(false);
     }
   };
   const xemLaiData = (link) => {
@@ -418,22 +429,26 @@ const AdminLayout = () => {
   };
 
   const onChooseTopic = async (e, option) => {
-    setLoading(true);
-    onChangeFilter("topic", option.text);
-    let response = await apiLearning.getTuDien(e);
-    const items = [];
-    if (response.data?.length) {
-      response.data.forEach((element, index) => {
-        items.push({
-          id: element.vocabularyId,
-          value: element.content,
-          label: element.content,
+    if (e) {
+      setLoading(true);
+      onChangeFilter("topic", option?.text);
+      let response = await apiLearning.getTuDien(e);
+      const items = [];
+      if (response.data?.length) {
+        response.data?.forEach((element, index) => {
+          items.push({
+            id: element.vocabularyId,
+            value: element.content,
+            label: element.content,
+          });
         });
-      });
-    }
+      }
 
-    setVocabOption(items);
-    setLoading(false);
+      setVocabOption(items);
+      setLoading(false);
+    } else {
+      setVocabOption([]);
+    }
   };
 
   return (
@@ -591,18 +606,22 @@ const AdminLayout = () => {
                               <Button
                                 className="contact_button-deny"
                                 key={`tuchoi ${item.id}`}
-                                onClick={() =>
-                                  rejectData(item.dataCollectionId)
-                                }
+                                onClick={() => {
+                                  setTypeCollection("Reject");
+                                  setShowFeedBack(true);
+                                  setIdDataCollection(item.dataCollectionId);
+                                }}
                               >
                                 Từ chối
                               </Button>
                               <Button
                                 className="contact_button-accept"
                                 key={`chapnhan ${item.id}`}
-                                onClick={() =>
-                                  approvedData(item.dataCollectionId)
-                                }
+                                onClick={() => {
+                                  setTypeCollection("Approve");
+                                  setShowFeedBack(true);
+                                  setIdDataCollection(item.dataCollectionId);
+                                }}
                               >
                                 Đồng ý
                               </Button>
@@ -731,6 +750,7 @@ const AdminLayout = () => {
           </div>
         )}
       </div>
+
       <Modal
         open={showFilter}
         onCancel={() => setShowFilter(false)}
@@ -802,6 +822,49 @@ const AdminLayout = () => {
             </video>
           </div>
         )}
+      </Modal>
+
+      {/* Feeback */}
+      <Modal
+        open={showFeedback}
+        onCancel={() => {
+          setShowFeedBack(false);
+        }}
+        maskClosable={false}
+        onOk={() => {
+          if (typeCollection === "Approve") {
+            approvedData({
+              dataCollectionId: idDataCollection,
+              feedBack: valueFeedback,
+              score: score,
+            });
+          } else {
+            rejectData({
+              dataCollectionId: idDataCollection,
+              feedBack: valueFeedback,
+              score: score,
+            });
+          }
+        }}
+        okText="Xác nhận"
+        cancelText="Huỷ"
+        destroyOnClose
+        width={600}
+        closeIcon={null}
+      >
+        <Input.TextArea
+          placeholder="Nhận xét"
+          rows={4}
+          onChange={(e) => setValueFeedback(e.target.value)}
+        />
+        <div className="mt-4">Thang điểm</div>
+        <Slider
+          min={1}
+          max={10}
+          step={0.5}
+          onChange={onChangeScore}
+          value={typeof score === "number" ? score : 0}
+        />
       </Modal>
     </div>
   );

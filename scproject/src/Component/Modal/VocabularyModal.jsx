@@ -15,6 +15,7 @@ import {
   Tabs,
   Popover,
   Switch,
+  Collapse,
 } from "antd";
 import React, { useMemo, useState } from "react";
 import {
@@ -29,11 +30,12 @@ import ButtonSystem from "../button/ButtonSystem";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import { CaretRightIcon } from "../../assets/icon";
+import ModalAddMedia from "./ModalAddMedia";
 
 const { TextArea } = Input;
 const { TabPane } = Tabs;
 
-const CustomUpload = styled(Upload)`
+export const CustomUpload = styled(Upload)`
   .ant-upload-icon {
     display: none;
   }
@@ -112,7 +114,7 @@ const VocabularyModal = (props) => {
       }
       return res.data;
     },
-    enabled: showModalVocabulary,
+    enabled: !!showModalVocabulary,
   });
 
   // Xoá từ vựng
@@ -145,20 +147,6 @@ const VocabularyModal = (props) => {
     },
   });
 
-  // Insert media
-  const mutationInsertMedia = useMutation({
-    mutationFn: async (data) => await apiLearning.addMediaVocabulary(data),
-    onSuccess: () => {
-      message.success("Thêm mới hình ảnh/ video minh hoạ thành công");
-      setShowAddWord(false);
-      setLoading(false);
-      setIsUpdate(false);
-      setIsUpdateMedia(false);
-      setIsShowAddMedia(false);
-      refetch();
-    },
-  });
-
   // Update media
   const mutationUpdateMedia = useMutation({
     mutationFn: async (data) => await apiLearning.updateMediaVocabulary(data),
@@ -168,6 +156,17 @@ const VocabularyModal = (props) => {
       setLoading(false);
       setIsUpdate(false);
       setIsUpdateMedia(false);
+      refetch();
+    },
+  });
+
+  // setPrimary
+  const mutationSetPrimary = useMutation({
+    mutationFn: async (data) =>
+      await apiLearning.setPrimaryMediaVocabulary(data),
+    onSuccess: () => {
+      message.success("Cập nhật hình ảnh/ video hiển thị chính thành công");
+
       refetch();
     },
   });
@@ -205,6 +204,8 @@ const VocabularyModal = (props) => {
         message.success(`Thêm từ điển lên thành công.`);
       } else {
         setLoading(false);
+        onCloseAdd();
+        getTopic();
         setShowAddWord(false);
         message.error(`Thêm từ điển thất bại. Vui lòng thử lại!!!`);
       }
@@ -379,7 +380,17 @@ const VocabularyModal = (props) => {
         title: "Minh hoạ chính",
         dataIndex: "primary",
         align: "center",
-        render: (value) => <Switch checked={value} />,
+        render: (value, record) => (
+          <Switch
+            checked={value}
+            onChange={(item) => {
+              mutationSetPrimary.mutate({
+                vocabularyMediumId: record.vocabularyMediumId,
+                primary: item,
+              });
+            }}
+          />
+        ),
         width: 200,
       },
       {
@@ -432,6 +443,7 @@ const VocabularyModal = (props) => {
         <Table
           columns={columns.filter((item) => !item.hidden)}
           dataSource={listValue}
+          pagination={{ pageSize: 5 }}
         />
       </div>
     );
@@ -554,7 +566,12 @@ const VocabularyModal = (props) => {
         </div>
         <div className="flex justify-between items-center">
           Danh sách từ vựng
-          <ButtonSystem type="primary" onClick={() => setShowAddWord(true)}>
+          <ButtonSystem
+            type="primary"
+            onClick={() => {
+              setShowAddWord(true);
+            }}
+          >
             Thêm mới
           </ButtonSystem>
         </div>
@@ -612,6 +629,8 @@ const VocabularyModal = (props) => {
               onCloseAdd();
               setIsUpdate(false);
               setIsUpdateMedia(false);
+              getTopic();
+              setFileList([]);
             }}
           >
             Hủy bỏ
@@ -622,6 +641,7 @@ const VocabularyModal = (props) => {
             onClick={() => {
               if (tabKey === "1") {
                 handleOkWord();
+                getTopic();
               } else {
                 handleUpload();
               }
@@ -958,137 +978,20 @@ const VocabularyModal = (props) => {
       </Modal>
 
       {/* Thêm nhiều media cho từ */}
-      <Modal
-        open={isShowModalAddMedia}
-        title={
-          <div>
-            {" "}
-            Bổ sung hình ảnh/ video cho từ{" "}
-            <span className="text-bold text-red-500">
-              {recordMedia?.content}
-            </span>
-          </div>
-        }
-        onOk={handleOkWord}
-        onCancel={() => {
-          setIsShowAddMedia(false);
-        }}
-        footer={[
-          <ButtonSystem
-            key="back"
-            onClick={() => {
-              setIsShowAddMedia(false);
-            }}
-          >
-            Hủy bỏ
-          </ButtonSystem>,
-          <ButtonSystem
-            type="primary"
-            loading={loading}
-            onClick={() => {
-              const req = {
-                vocabularyId: recordMedia.vocabularyId,
-                primary: true,
-                imageLocation: imageLocations,
-                videoLocation: videoLocations,
-              };
-              mutationInsertMedia.mutate(req);
-            }}
-          >
-            Tải lên
-          </ButtonSystem>,
-        ]}
-        destroyOnClose
-        width={1000}
-        centered
-      >
-        <Spin spinning={uploading}>
-          <div className="">
-            <div className="flex gap-3">
-              <div className="w-1/2">
-                <p
-                  className="ant-upload-text"
-                  style={{ margin: "10px 0 10px 0" }}
-                >
-                  Ảnh minh hoạ:
-                </p>
-                <Upload
-                  showUploadList={false}
-                  // beforeUpload={beforeUploadImage}
-                  accept="image/*"
-                  customRequest={({ file }) => {
-                    const isImg = file.type.includes("image");
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    if (isImg) {
-                      const fileReader = new FileReader();
-                      setIsImage(file.type.includes("image"));
-                      fileReader.onload = (e) => {
-                        setUrlImage(e.target.result);
-                      };
-                      fileReader.readAsDataURL(file);
-                      uploadMutation.mutate(formData);
-                    } else {
-                      message.error("Sai định dạng ảnh");
-                    }
-                  }}
-                >
-                  <Button type="primary" icon={<UploadOutlined />}>
-                    Chọn File
-                  </Button>
-                </Upload>
-
-                <div className="mt-3 flex justify-center flex-col items-center relative">
-                  {urlImage && (
-                    <Image
-                      src={urlImage}
-                      alt="Uploaded Image"
-                      className="flex justify-center items-center"
-                      style={{ width: 300 }}
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="w-1/2">
-                <p
-                  className="ant-upload-text"
-                  style={{ margin: "10px 0 10px 0" }}
-                >
-                  Video minh hoạ:
-                </p>
-                <Upload
-                  showUploadList={false}
-                  customRequest={({ file }) => {
-                    const isVideo = file.type.startsWith("video/");
-                    if (!isVideo) {
-                      message.error("Sai định dạng video.");
-                    } else {
-                      const fileReader = new FileReader();
-                      fileReader.onload = (e) => {
-                        setFileUrl(e.target.result); // Lưu URL của file
-                      };
-                      fileReader.readAsDataURL(file); // Đọc file thành URL
-                    }
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    uploadMutationVideo.mutate(formData);
-                  }}
-                >
-                  <Button type="primary" icon={<UploadOutlined />}>
-                    Chọn File
-                  </Button>
-                </Upload>
-
-                <div className="mt-3 flex justify-center flex-col items-center relative">
-                  {fileUrl && (
-                    <video src={fileUrl} controls /> // Hiển thị video nếu là loại video
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Spin>
-      </Modal>
+      <ModalAddMedia
+        isShowModalAddMedia={isShowModalAddMedia}
+        recordMedia={recordMedia}
+        setIsShowAddMedia={setIsShowAddMedia}
+        setLoading={setLoading}
+        loading={loading}
+        setShowAddWord={setShowAddWord}
+        setIsUpdate={setIsUpdate}
+        setIsUpdateMedia={setIsUpdateMedia}
+        refetch={refetch}
+        handleOkWord={handleOkWord}
+        setPreviewFile={setPreviewFile}
+        setPreviewVisible={setPreviewVisible}
+      />
     </>
   );
 };

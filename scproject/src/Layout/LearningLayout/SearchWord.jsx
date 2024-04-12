@@ -63,10 +63,7 @@ const SearchWord = ({ searchText, files }) => {
   const slider = useRef(null);
   const slider1 = useRef(null);
 
-  console.log(
-    "files[fileIndex]?.vocabularyMediumRes",
-    files[fileIndex]?.vocabularyMediumRes
-  );
+  console.log("files[fileIndex]?.vocabularyMediumRes", files);
   return (
     <div className="searchWord">
       <div className="searchWord-header flex-center">
