@@ -16,6 +16,7 @@ import {
   Popover,
   Switch,
   Collapse,
+  Dropdown,
 } from "antd";
 import React, { useMemo, useState } from "react";
 import {
@@ -24,6 +25,7 @@ import {
   EyeOutlined,
   UploadOutlined,
   PlusSquareOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 import styled from "styled-components";
 import ButtonSystem from "../button/ButtonSystem";
@@ -31,6 +33,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import { CaretRightIcon } from "../../assets/icon";
 import ModalAddMedia from "./ModalAddMedia";
+import ModalListMedia from "./ModalListMedia";
+import { colors } from "../../assets/colors";
 
 const { TextArea } = Input;
 const { TabPane } = Tabs;
@@ -82,6 +86,21 @@ const VocabularyModal = (props) => {
     setFilter({ ...filter, content: e.target.value });
   };
 
+  // Thêm từ vào chủ để
+  const [selectedRowKey, setSelectedRowKey] = useState([]);
+  const [recordSelected, setRecordSelected] = useState();
+  const [openModalAddVocabulary, setOpenModalAddVocabulary] = useState(false);
+  const [topicSelected, setTopiSelected] = useState();
+
+  // Checkbox item table
+  const rowSelection = {
+    selectedRowKey,
+    onChange: (selectedRowKeys, record) => {
+      setSelectedRowKey(selectedRowKeys);
+      setRecordSelected(record);
+    },
+  };
+
   // Up nhiều
   const [isShowModalAddMedia, setIsShowAddMedia] = useState(false);
   const [recordMedia, setRecordMedia] = useState();
@@ -91,8 +110,10 @@ const VocabularyModal = (props) => {
   const [uploading, setUploading] = useState(false);
 
   //  Table dạng cha con
-  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const [isUpdateMedia, setIsUpdateMedia] = useState(false);
+  const [showModalLstMedia, setShowModalLstMedia] = useState(false);
+  const [recordImageVideo, setRecordImageVideo] = useState();
+
   // APi danh sách
   const {
     data: listVocabulary,
@@ -112,9 +133,32 @@ const VocabularyModal = (props) => {
       if (filter.topicId || filter.content !== "") {
         res = await apiLearning.searchAllVocalizations(filter);
       }
+      // Sắp xếp priamry lên đầu
+      res?.data.forEach((item) => {
+        item.vocabularyImageResList.sort((a, b) => {
+          // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
+          return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
+        });
+        item.vocabularyVideoResList.sort((a, b) => {
+          // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
+          return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
+        });
+      });
       return res.data;
     },
     enabled: !!showModalVocabulary,
+  });
+
+  // Thêm từ vào chủ đề
+  const mutationAddNewTopic = useMutation({
+    mutationFn: async (body) => await apiLearning.addNewTopic(body),
+    onSuccess: () => {
+      message.success("Thêm thành công");
+      setOpenModalAddVocabulary(false);
+      setSelectedRowKey([]);
+      setTopiSelected(null);
+      refetch();
+    },
   });
 
   // Xoá từ vựng
@@ -122,15 +166,6 @@ const VocabularyModal = (props) => {
     mutationFn: async (id) => await apiLearning.deleteTuDien(id),
     onSuccess: () => {
       message.success("Xoá từ thành công");
-      refetch();
-    },
-  });
-
-  // Xoá media
-  const mutationDelMedia = useMutation({
-    mutationFn: async (id) => await apiLearning.deleteMediaVocabulary(id),
-    onSuccess: () => {
-      message.success("Xoá hình ảnh/video minh hoạ thành công");
       refetch();
     },
   });
@@ -156,17 +191,6 @@ const VocabularyModal = (props) => {
       setLoading(false);
       setIsUpdate(false);
       setIsUpdateMedia(false);
-      refetch();
-    },
-  });
-
-  // setPrimary
-  const mutationSetPrimary = useMutation({
-    mutationFn: async (data) =>
-      await apiLearning.setPrimaryMediaVocabulary(data),
-    onSuccess: () => {
-      message.success("Cập nhật hình ảnh/ video hiển thị chính thành công");
-
       refetch();
     },
   });
@@ -212,18 +236,61 @@ const VocabularyModal = (props) => {
     }
   };
 
+  // Item dropwdown tuỳ chọn
+  const items = [
+    {
+      key: "1",
+      label: (
+        <div
+          className="hover:text-blue-700"
+          onClick={() => {
+            setShowAddWord(true);
+          }}
+        >
+          Thêm mới
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <div
+          className="hover:text-blue-700"
+          style={{
+            cursor: selectedRowKey.length > 0 ? "pointer" : "not-allowed",
+            color: selectedRowKey.length > 0 ? "black" : "#cccc",
+          }}
+          onClick={() => setOpenModalAddVocabulary(true)}
+        >
+          Thêm từ vào chủ đề
+        </div>
+      ),
+    },
+  ];
+
   // Column
   const columns = [
-    {
-      title: "Chủ đề",
-      dataIndex: "topicContent",
-      key: "topicContent",
-      render: (content) => <span style={{ fontWeight: 500 }}>{content}</span>,
-    },
     {
       title: "Từ vựng",
       dataIndex: "content",
       key: "content",
+      render: (content, record) => (
+        <span
+          className="cursor-pointer "
+          style={{ fontWeight: 500, color: colors.primary600 }}
+          onClick={() => {
+            setRecordImageVideo(record);
+            setShowModalLstMedia(true);
+          }}
+        >
+          {content}
+        </span>
+      ),
+    },
+    {
+      title: "Chủ đề",
+      dataIndex: "topicContent",
+      key: "topicContent",
       render: (content) => <span style={{ fontWeight: 500 }}>{content}</span>,
     },
 
@@ -233,13 +300,13 @@ const VocabularyModal = (props) => {
       key: "imageLocation",
       render: (imageLocation, record) => {
         if (
-          record.vocabularyMediumRes?.length &&
-          record.vocabularyMediumRes[0].imageLocation
+          record.vocabularyImageResList?.length &&
+          record.vocabularyImageResList[0].imageLocation
         ) {
           return (
             <Image
               width={100} // Adjust image width as needed
-              src={record.vocabularyMediumRes[0].imageLocation}
+              src={record.vocabularyImageResList[0].imageLocation}
               alt={record.content}
             />
           );
@@ -255,8 +322,8 @@ const VocabularyModal = (props) => {
       align: "center",
       render: (videoLocation, record) => {
         if (
-          record.vocabularyMediumRes?.length &&
-          record.vocabularyMediumRes[0].videoLocation
+          record.vocabularyVideoResList?.length &&
+          record.vocabularyVideoResList[0].videoLocation
         ) {
           return (
             <EyeOutlined
@@ -303,16 +370,16 @@ const VocabularyModal = (props) => {
                 setItemVocabulary(record);
                 setContentWord(record?.content);
                 setTopicChose(record?.topicId);
-                if (record.vocabularyMediumRes[0].imageLocation !== "") {
-                  setUrlImage(record.vocabularyMediumRes[0].imageLocation);
+                if (record.vocabularyImageResList[0].imageLocation !== "") {
+                  setUrlImage(record.vocabularyImageResList[0].imageLocation);
                   setImageLocations(
-                    record.vocabularyMediumRes[0].imageLocation
+                    record.vocabularyImageResList[0].imageLocation
                   );
                 }
-                if (record.vocabularyMediumRes[0].videoLocation !== "") {
-                  setFileUrl(record.vocabularyMediumRes[0].videoLocation);
+                if (record.vocabularyVideoResList[0].videoLocation !== "") {
+                  setFileUrl(record.vocabularyVideoResList[0].videoLocation);
                   setVideoLocations(
-                    record.vocabularyMediumRes[0].videoLocation
+                    record.vocabularyVideoResList[0].videoLocation
                   );
                 }
               }}
@@ -331,132 +398,6 @@ const VocabularyModal = (props) => {
       ),
     },
   ];
-
-  const renderMediaValue = (listValue) => {
-    const columns = [
-      {
-        title: "Ảnh minh hoạ",
-        dataIndex: "imageLocation",
-        key: "imageLocation",
-        render: (imageLocation, record) => {
-          if (imageLocation) {
-            return (
-              <Image
-                width={100} // Adjust image width as needed
-                src={imageLocation}
-                alt={record.content}
-              />
-            );
-          } else {
-            return <span>Không có minh họa</span>; // Display "No illustration" message
-          }
-        },
-        width: "30%",
-        align: "center",
-      },
-      {
-        title: "Video minh hoạ",
-        dataIndex: "videoLocation",
-        key: "videoLocation",
-        align: "center",
-        render: (videoLocation, record) => {
-          if (videoLocation) {
-            return (
-              <EyeOutlined
-                style={{ fontSize: "1.5rem" }}
-                onClick={() => {
-                  setOpenPreviewVideo(true);
-                  setItemVocabulary(record);
-                }}
-              />
-            );
-          } else {
-            return <span>Không video có minh họa</span>; // Display "No illustration" message
-          }
-        },
-        width: "40%",
-      },
-      {
-        title: "Minh hoạ chính",
-        dataIndex: "primary",
-        align: "center",
-        render: (value, record) => (
-          <Switch
-            checked={value}
-            onChange={(item) => {
-              mutationSetPrimary.mutate({
-                vocabularyMediumId: record.vocabularyMediumId,
-                primary: item,
-              });
-            }}
-          />
-        ),
-        width: 200,
-      },
-      {
-        title: "Hành động",
-        dataIndex: "action",
-        key: "action",
-        render: (content, record) => (
-          <div className="">
-            <Popover placement="topLeft">
-              <Button
-                type="link"
-                icon={<EditOutlined />}
-                onClick={() => {
-                  setIsUpdateMedia(true);
-                  setIsUpdate(true);
-                  setShowAddWord(true);
-                  setItemVocabulary(record);
-                  setContentWord(record?.content);
-                  setTopicChose(record?.topicId);
-                  if (record.imageLocation !== "") {
-                    setUrlImage(record.imageLocation);
-                    setImageLocations(record.imageLocation);
-                  }
-                  if (record.videoLocation !== "") {
-                    setFileUrl(record.videoLocation);
-                    setVideoLocations(record.videoLocation);
-                  }
-                }}
-              />
-            </Popover>
-            <Popconfirm
-              title="Bạn có chắc chắn muốn xóa hình ảnh/ video này?"
-              onConfirm={() => {
-                mutationDelMedia.mutate(record.vocabularyMediumId);
-              }}
-              onCancel={() => console.log("Huỷ")}
-            >
-              <Button type="link" danger icon={<DeleteOutlined />} />
-            </Popconfirm>
-          </div>
-        ),
-      },
-    ];
-
-    return (
-      <div className="flex flex-col gap-y-3 bg-white">
-        <div className="caption-12-semibold text-neutral1100">
-          Danh sách media của từ
-        </div>
-        <Table
-          columns={columns.filter((item) => !item.hidden)}
-          dataSource={listValue}
-          pagination={{ pageSize: 5 }}
-        />
-      </div>
-    );
-  };
-
-  // hàm toggle đóng mở 1 hàng
-  const toggleExpandRow = (key) => {
-    if (expandedRowKeys.includes(key)) {
-      setExpandedRowKeys(expandedRowKeys.filter((item) => item !== key));
-    } else {
-      setExpandedRowKeys([...expandedRowKeys, key]);
-    }
-  };
 
   const handleTabChange = (key) => {
     setTabKey(key);
@@ -566,14 +507,11 @@ const VocabularyModal = (props) => {
         </div>
         <div className="flex justify-between items-center">
           Danh sách từ vựng
-          <ButtonSystem
-            type="primary"
-            onClick={() => {
-              setShowAddWord(true);
-            }}
-          >
-            Thêm mới
-          </ButtonSystem>
+          <Dropdown menu={{ items }} placement="bottomLeft">
+            <ButtonSystem type="primary" icon={<DownOutlined />}>
+              Tuỳ chọn
+            </ButtonSystem>
+          </Dropdown>
         </div>
         <Spin spinning={isFetching}>
           <Table
@@ -581,28 +519,8 @@ const VocabularyModal = (props) => {
             columns={columns}
             dataSource={listVocabulary}
             rowKey={(record) => record.vocabularyId}
-            expandable={{
-              rowExpandable: (record) =>
-                record?.vocabularyMediumRes?.length > 0,
-              expandedRowKeys,
-              expandedRowRender: (record) =>
-                renderMediaValue(record?.vocabularyMediumRes),
-              expandIcon: ({ expanded, record }) => {
-                if (record?.vocabularyMediumRes?.length === 0)
-                  return <div className="w-2 mr-3" />;
-
-                return (
-                  <div
-                    className={`flex items-center justify-center transform ${
-                      expanded ? "rotate-90" : ""
-                    } duration-300 transition-all`}
-                    onClick={() => toggleExpandRow(record.vocabularyId)}
-                  >
-                    <CaretRightIcon />
-                  </div>
-                );
-              },
-            }}
+            rowSelection={rowSelection}
+            expandIconColumnIndex={1}
             pagination={{ pageSize: 8 }}
           />
         </Spin>
@@ -769,7 +687,7 @@ const VocabularyModal = (props) => {
                     mode=""
                     placeholder="Chọn chủ đề"
                     style={{ width: "100%" }}
-                    options={topicInit}
+                    options={topicInit?.filter((e) => e.id !== 1)}
                     value={topicChose}
                     onChange={(e) => {
                       setTopicChose(e);
@@ -887,7 +805,7 @@ const VocabularyModal = (props) => {
                   mode=""
                   placeholder="Chọn chủ đề"
                   style={{ width: "100%" }}
-                  options={topicInit}
+                  options={topicInit?.filter((e) => e.id !== 1)}
                   value={topicChose}
                   onChange={(e) => {
                     setTopicChose(e);
@@ -961,9 +879,9 @@ const VocabularyModal = (props) => {
         width={1000}
       >
         <div className="flex justify-center items-center mt-4 py-4">
-          {ItemVocabulary?.vocabularyMediumRes?.length ? (
+          {ItemVocabulary?.vocabularyVideoResList?.length ? (
             <video
-              src={ItemVocabulary?.vocabularyMediumRes[0]?.videoLocation}
+              src={ItemVocabulary?.vocabularyVideoResList[0]?.videoLocation}
               controls
               style={{ width: 800 }}
             ></video>
@@ -992,6 +910,43 @@ const VocabularyModal = (props) => {
         setPreviewFile={setPreviewFile}
         setPreviewVisible={setPreviewVisible}
       />
+      {/* Modal hiển thị list media */}
+      <ModalListMedia
+        record={recordImageVideo}
+        showModalLstMedia={showModalLstMedia}
+        setShowModalLstMedia={setShowModalLstMedia}
+        refetch={refetch}
+        setOpenPreviewVideo={setOpenPreviewVideo}
+        setItemVocabulary={setItemVocabulary}
+      />
+
+      {/* Modal chọn topic thêm từ vào */}
+      <Modal
+        open={openModalAddVocabulary}
+        onCancel={() => {
+          setOpenModalAddVocabulary(false);
+        }}
+        okText="Xác nhận"
+        cancelText="Huỷ"
+        title="Thêm từ vào chủ đề"
+        onOk={() => {
+          mutationAddNewTopic.mutate({
+            id: selectedRowKey[0],
+            topicId: topicSelected,
+          });
+        }}
+      >
+        <Select
+          allowClear
+          className="w-full"
+          placeholder="Chọn chủ đề muốn thêm"
+          value={topicSelected}
+          options={topicInit?.filter((e) => e.id !== 1)}
+          onChange={(e) => {
+            setTopiSelected(e);
+          }}
+        />
+      </Modal>
     </>
   );
 };

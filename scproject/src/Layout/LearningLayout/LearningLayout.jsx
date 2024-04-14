@@ -81,8 +81,13 @@ export default function LearningLayout() {
       let response = await apiLearning.getTuDien(idTopic);
       setLoading(false);
       if (response?.data) {
+        debugger;
         response?.data.forEach((item) => {
-          item.vocabularyMediumRes.sort((a, b) => {
+          item.vocabularyImageResList.sort((a, b) => {
+            // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
+            return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
+          });
+          item.vocabularyVideoResList.sort((a, b) => {
             // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
             return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
           });
@@ -141,7 +146,11 @@ export default function LearningLayout() {
         setTimeout(() => {
           setLoading(false);
           response?.data.forEach((item) => {
-            item.vocabularyMediumRes.sort((a, b) => {
+            item.vocabularyImageResList.sort((a, b) => {
+              // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
+              return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
+            });
+            item.vocabularyVideoResList.sort((a, b) => {
               // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
               return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
             });

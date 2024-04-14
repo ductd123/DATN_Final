@@ -12,9 +12,7 @@ const StatisticalModal = (props) => {
   const [numberVocal, setNumberVocal] = useState();
   const [topicName, setTopicName] = useState();
   const [showNumberVocal, setShowNumberVocal] = useState(false);
-  console.log("====================================");
-  console.log("valueTopic", valueTopic);
-  console.log("====================================");
+
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 

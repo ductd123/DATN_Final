@@ -23,10 +23,8 @@ const CustomCollapse = styled(Collapse)`
     line-height: 20px; /* 142.857% */
     letter-spacing: 0.07px;
   }
-  &.ant-collapse > .ant-collapse-item > .ant-collapse-header:not(:last-child) {
-    span {
-      color: red;
-    }
+  &.ant-collapse > .ant-collapse-item:first-child .ant-collapse-header {
+    color: red;
   }
   &.ant-collapse > .ant-collapse-item > .ant-collapse-header {
     padding: 0px 0px 8px 0px;
@@ -70,8 +68,6 @@ const ModalAddMedia = (props) => {
   const [fileUrl, setFileUrl] = useState(""); // State để lưu trữ URL của file
   const [fileList, setFileList] = useState([]); // State để lưu trữ danh sách tệp tin đã chọn
 
-  console.log("fileList", imageLocations, videoLocations);
-
   const handleUpload = async () => {
     // Tạo FormData để truyền danh sách file cho API upload
     const formData = new FormData();
@@ -82,38 +78,77 @@ const ModalAddMedia = (props) => {
     // Gọi API upload với danh sách file đã chọn
     // Ví dụ sử dụng Fetch:
     const res = await apiUploadFile.upLoadVocabulary(formData);
+    // Lọc ra imageLocation không phải null
+    const images = res.data
+      ?.filter((item) => item.imageLocation !== null)
+      .map((item) => item.imageLocation);
+
+    // Lọc ra videoLocation không phải null
+    const videos = res.data
+      ?.filter((item) => item.videoLocation !== null)
+      .map((item) => item.videoLocation);
+
+    // Đóng gói upload list image
+    let bodyLitsImage = [
+      {
+        imageLocation: imageLocations,
+        primary: true,
+        vocabularyId: recordMedia.vocabularyId,
+      },
+    ];
+    images?.map((e) =>
+      bodyLitsImage.push({
+        imageLocation: e,
+        primary: false,
+        vocabularyId: recordMedia.vocabularyId,
+      })
+    );
+
+    // Đóng gói list video
+    let bodyLitsVideo = [
+      {
+        videoLocation: videoLocations,
+        primary: true,
+        vocabularyId: recordMedia.vocabularyId,
+      },
+    ];
+    videos?.map((e) =>
+      bodyLitsVideo.push({
+        videoLocation: e,
+        primary: false,
+        vocabularyId: recordMedia.vocabularyId,
+      })
+    );
 
     if (res.code === 200) {
-      let body = [
-        {
-          imageLocation: imageLocations,
-          videoLocation: videoLocations,
-          primary: true,
-          vocabularyId: recordMedia.vocabularyId,
-        },
-      ];
-
-      res.data?.map((e) => {
-        body.push({
-          imageLocation: e.imageLocation,
-          videoLocation: e.videoLocation,
-          primary: false,
-          vocabularyId: recordMedia.vocabularyId,
-        });
-      });
-
-      const response = await apiLearning.addListMediaVocabulary(body);
-      if (response.code === 200) {
+      const responseImage = await apiLearning.addListImageVocabulary(
+        bodyLitsImage
+      );
+      const responseVideo = await apiLearning.addListVideoVocabulary(
+        bodyLitsVideo
+      );
+      if (responseImage.code === 200 && responseVideo.code === 200) {
         message.success("Thêm danh sách hình anh/ video thành công");
         setFileList([]);
         setIsShowAddMedia(false);
+        onCloseAdd();
+        refetch();
+      } else if (responseImage.code === 200 && responseVideo.code !== 200) {
+        message.error("Lỗi upload video");
       } else {
-        message.error("Thêm thất bại");
-        setIsShowAddMedia(false);
+        message.error("Lỗi upload images");
       }
     } else {
-      message.error("Lỗi tải file");
+      message.error("Lỗi upload files");
     }
+  };
+
+  const onCloseAdd = () => {
+    setFileList([]);
+    setImageLocations(null);
+    setVideoLocations(null);
+    setFileUrl(null);
+    setUrlImage(null);
   };
 
   // Hàm xử lý sự kiện khi click vào file để xem trước
@@ -157,20 +192,6 @@ const ModalAddMedia = (props) => {
     mutationFn: async (formData) => apiUploadFile.uploadFile(formData),
     onSuccess: (res) => {
       setVideoLocations(res);
-    },
-  });
-
-  // Insert media
-  const mutationInsertMedia = useMutation({
-    mutationFn: async (data) => await apiLearning.addListMediaVocabulary(data),
-    onSuccess: () => {
-      message.success("Thêm mới hình ảnh/ video minh hoạ thành công");
-      setShowAddWord(false);
-      setLoading(false);
-      setIsUpdate(false);
-      setIsUpdateMedia(false);
-      setIsShowAddMedia(false);
-      refetch();
     },
   });
 
@@ -313,12 +334,14 @@ const ModalAddMedia = (props) => {
         onOk={handleOkWord}
         onCancel={() => {
           setIsShowAddMedia(false);
+          onCloseAdd();
         }}
         footer={[
           <ButtonSystem
             key="back"
             onClick={() => {
               setIsShowAddMedia(false);
+              onCloseAdd();
             }}
           >
             Hủy bỏ
@@ -329,14 +352,6 @@ const ModalAddMedia = (props) => {
             disabled={!imageLocations && !videoLocations}
             onClick={() => {
               handleUpload();
-              // const req = {
-              //   vocabularyId: recordMedia.vocabularyId,
-              //   primary: true,
-              //   imageLocation: imageLocations,
-              //   videoLocation: videoLocations,
-              // };
-              // console.log("check");
-              // mutationInsertMedia.mutate(req);
             }}
           >
             Tải lên

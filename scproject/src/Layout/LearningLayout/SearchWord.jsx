@@ -25,6 +25,45 @@ const SearchWord = ({ searchText, files }) => {
 
   const [isOpenSelectTopic, setIsOpenSelectTopic] = useState(false);
 
+  // video
+  const slider = useRef(null);
+  const [autoplayEnabled, setAutoplay] = useState(false);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [videoCurrent, setVideoCurrent] = useState();
+
+  useEffect(() => {
+    if (showFileDetail) {
+      setAutoplay(true);
+      setVideoCurrent(
+        files[fileIndex]?.vocabularyVideoResList[0].videoLocation
+      );
+      setCurrentVideoIndex(0);
+    }
+  }, [showFileDetail, fileIndex, files]);
+
+  const handleNextVideo = () => {
+    const nextIndex = currentVideoIndex + 1;
+    if (nextIndex < files[fileIndex]?.vocabularyVideoResList?.length) {
+      setCurrentVideoIndex(nextIndex);
+      setAutoplay(true);
+      setVideoCurrent(
+        files[fileIndex]?.vocabularyVideoResList[nextIndex].videoLocation
+      );
+    }
+  };
+
+  const handlePreviousVideo = () => {
+    const previousIndex = currentVideoIndex - 1;
+    if (previousIndex >= 0) {
+      setCurrentVideoIndex(previousIndex);
+      setAutoplay(true);
+      setVideoCurrent(
+        files[fileIndex]?.vocabularyVideoResList[previousIndex].videoLocation
+      );
+    }
+  };
+
+  //  next files
   const handleNext = () => {
     setFileIndex((prevIndex) => Math.min(prevIndex + 1, files?.length - 1));
   };
@@ -53,17 +92,11 @@ const SearchWord = ({ searchText, files }) => {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
     }
+    setAutoplay(false);
+    setVideoCurrent(null);
     setShowFileDetail(false);
   };
 
-  const onChange = (currentSlide) => {
-    console.log(currentSlide);
-  };
-
-  const slider = useRef(null);
-  const slider1 = useRef(null);
-
-  console.log("files[fileIndex]?.vocabularyMediumRes", files);
   return (
     <div className="searchWord">
       <div className="searchWord-header flex-center">
@@ -84,8 +117,8 @@ const SearchWord = ({ searchText, files }) => {
                       className="searchWord-item "
                       style={{
                         backgroundImage: `url(${
-                          item?.vocabularyMediumRes[0]?.imageLocation !== ""
-                            ? item?.vocabularyMediumRes[0]?.imageLocation
+                          item?.vocabularyImageResList[0]?.imageLocation !== ""
+                            ? item?.vocabularyImageResList[0]?.imageLocation
                             : defaultvideo
                         })`,
                         backgroundSize: "contain",
@@ -159,103 +192,102 @@ const SearchWord = ({ searchText, files }) => {
         //     </ButtonSystem>
         //   </div>
         // }
+
         footer={null}
         onCancel={onCloseDetail}
         style={{ top: 20 }}
-        title={files[fileIndex]?.content}
+        title={
+          <div className="text-[32px] font-bold">
+            {files[fileIndex]?.content}
+          </div>
+        }
         width={1300}
         key={files[fileIndex]?.content}
         centered
       >
         <div className="w-full px-4  ">
-          <div className="w-full flex gap-6">
-            <div className="relative w-1/3 flex justify-center items-center">
-              <CustomSlider ref={slider} className="w-full" dots={false}>
-                {files[fileIndex]?.vocabularyMediumRes?.map((item, index) => (
-                  <div>
-                    {item.imageLocation ? (
-                      <img
-                        src={item.imageLocation}
-                        alt="Uploaded"
-                        style={{ width: "100%", height: "auto" }}
-                      />
-                    ) : (
-                      <div className="text-xl text-center">
-                        Chưa có hình ảnh minh hoạ
+          <div className="w-full ">
+            <div className="grid grid-cols-3 gap-4">
+              {/* image */}
+              <div className="col-span-1 flex items-center justify-center">
+                <CustomSlider ref={slider} className="w-full" dots={false}>
+                  {files[fileIndex]?.vocabularyImageResList?.map(
+                    (item, index) => (
+                      <div>
+                        {item.imageLocation ? (
+                          <img
+                            src={item.imageLocation}
+                            alt="Uploaded"
+                            style={{ width: "100%", height: "auto" }}
+                          />
+                        ) : (
+                          <div className="text-xl text-center">
+                            Chưa có hình ảnh minh hoạ
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                ))}
-              </CustomSlider>
-              <div className="absolute bottom-10 flex">
-                <Button
-                  style={{
-                    display:
-                      files[fileIndex]?.vocabularyMediumRes?.length < 2
-                        ? "none"
-                        : "block",
-                  }}
-                  icon={<LeftOutlined />}
-                  onClick={() => slider.current.prev()}
-                />
-                <Button
-                  style={{
-                    display:
-                      files[fileIndex]?.vocabularyMediumRes?.length < 2
-                        ? "none"
-                        : "block",
-                  }}
-                  icon={<RightOutlined />}
-                  onClick={() => slider.current.next()}
-                />
+                    )
+                  )}
+                </CustomSlider>
+              </div>
+              {/* video */}
+              <div className="col-span-2">
+                {videoCurrent && (
+                  <video
+                    key={videoCurrent}
+                    controls
+                    ref={videoRef}
+                    autoPlay={autoplayEnabled}
+                    className="w-full"
+                    onEnded={() => setAutoplay(false)}
+                  >
+                    <source src={videoCurrent} type="video/mp4" />
+                  </video>
+                )}
               </div>
             </div>
-            <div className="relative w-2/3">
-              <Carousel
-                ref={slider1}
-                className="w-full"
-                dots={false}
-                afterChange={(currentSlide) =>
-                  console.log("Slide đã thay đổi thành: ", currentSlide)
-                }
-              >
-                {files[fileIndex]?.vocabularyMediumRes?.map((item, index) => (
-                  <>
-                    {item.videoLocation ? (
-                      <video autoPlay={index === 0} controls className="w-full">
-                        <source src={item.videoLocation} type="video/mp4" />
-                      </video>
-                    ) : (
-                      <div className="text-xl text-center">
-                        Chưa có video minh hoạ
-                      </div>
-                    )}
-                  </>
-                ))}
-              </Carousel>
-              <div className="absolute -top-8 left-1/2 flex">
-                <Button
-                  style={{
-                    display:
-                      files[fileIndex]?.vocabularyMediumRes?.length < 2
-                        ? "none"
-                        : "block",
-                  }}
-                  icon={<LeftOutlined />}
-                  onClick={() => slider1.current.prev()}
-                />
-                <Button
-                  style={{
-                    display:
-                      files[fileIndex]?.vocabularyMediumRes?.length < 2
-                        ? "none"
-                        : "block",
-                  }}
-                  icon={<RightOutlined />}
-                  onClick={() => slider1.current.next()}
-                />
-              </div>
-            </div>
+          </div>
+        </div>
+        <div className="flex px-4 justify-between">
+          <div className="flex w-1/3 justify-center">
+            <Button
+              style={{
+                display:
+                  files[fileIndex]?.vocabularyImageResList?.length < 2
+                    ? "none"
+                    : "block",
+              }}
+              icon={<LeftOutlined />}
+              onClick={() => slider.current.prev()}
+            />
+            <Button
+              style={{
+                display:
+                  files[fileIndex]?.vocabularyImageResList?.length < 2
+                    ? "none"
+                    : "block",
+              }}
+              icon={<RightOutlined />}
+              onClick={() => slider.current.next()}
+            />
+          </div>
+          <div className="flex w-2/3 justify-center mt-4">
+            <Button
+              style={{ display: currentVideoIndex === 0 ? "none" : "block" }}
+              icon={<LeftOutlined />}
+              onClick={handlePreviousVideo}
+            />
+            <Button
+              style={{
+                display:
+                  currentVideoIndex ===
+                  files[fileIndex]?.vocabularyVideoResList?.length - 1
+                    ? "none"
+                    : "block",
+              }}
+              icon={<RightOutlined />}
+              onClick={handleNextVideo}
+            />
           </div>
         </div>
         <div className="w-full flex justify-center mt-4 gap-3">
