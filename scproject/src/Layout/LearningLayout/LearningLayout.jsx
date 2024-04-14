@@ -81,7 +81,6 @@ export default function LearningLayout() {
       let response = await apiLearning.getTuDien(idTopic);
       setLoading(false);
       if (response?.data) {
-        debugger;
         response?.data.forEach((item) => {
           item.vocabularyImageResList.sort((a, b) => {
             // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
