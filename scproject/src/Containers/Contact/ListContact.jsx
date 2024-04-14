@@ -40,7 +40,6 @@ const ListContact = ({
 
   // Huỷ kết bạn
   const handleDeleteFr = (item) => {
-    console.log(item);
     Modal.confirm({
       title: `Xác nhận huỷ kết bạn ?`,
       icon: <ExclamationCircleFilled />,

@@ -7,21 +7,40 @@ import {
 
 export const apiLearning = {
   //media
-  addListMediaVocabulary: (data) => {
-    const url = "vocabulary-media/add-list";
+  addListImageVocabulary: (data) => {
+    const url = "vocabulary-images/add-list";
     return axiosLearningClient.post(url, data);
   },
-  updateMediaVocabulary: (data) => {
-    const url = "vocabulary-media";
+  addListVideoVocabulary: (data) => {
+    const url = "vocabulary-videos/add-list";
+    return axiosLearningClient.post(url, data);
+  },
+  // update
+  updateVideoVocabulary: (data) => {
+    const url = "vocabulary-videos";
     return axiosLearningClient.put(url, data);
   },
-  deleteMediaVocabulary: (id) => {
-    const url = `vocabulary-media/${id}`;
+  updateImageVocabulary: (data) => {
+    const url = "vocabulary-images";
+    return axiosLearningClient.put(url, data);
+  },
+  // delete
+  deleteVideoVocabulary: (id) => {
+    const url = `vocabulary-videos/${id}`;
+    return axiosLearningClient.delete(url);
+  },
+
+  deleteImageVocabulary: (id) => {
+    const url = `vocabulary-images/${id}`;
     return axiosLearningClient.delete(url);
   },
   // Sét primary
-  setPrimaryMediaVocabulary: (data) => {
-    const url = "vocabulary-media/set-primary";
+  setPrimaryVideoVocabulary: (data) => {
+    const url = "vocabulary-videos/set-primary";
+    return axiosLearningClient.put(url, data);
+  },
+  setPrimaryImageVocabulary: (data) => {
+    const url = "vocabulary-images/set-primary";
     return axiosLearningClient.put(url, data);
   },
 
@@ -46,6 +65,12 @@ export const apiLearning = {
     }
 
     return axiosLearningClient.get(url);
+  },
+
+  // Thêm từ vào chủ đề
+  addNewTopic: (data) => {
+    const url = "vocabularies/add-new-topic";
+    return axiosLearningClient.post(url, data);
   },
   themTuDien: (data) => {
     const url = "vocabularies";
@@ -147,7 +172,7 @@ export const apiUploadFile = {
 
   // Upload nhiều ảnh/ video
   upLoadVocabulary: (data) => {
-    const url = "/upload-vocabularies/upload-list";
+    const url = "upload-vocabularies/upload-list";
     return axiosUploadVideoClient.post(url, data);
   },
 };
