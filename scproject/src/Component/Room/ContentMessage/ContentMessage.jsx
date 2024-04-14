@@ -1,8 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import blank from "../../../assets/image/AvtBlank.jpg";
 import "./ContentMessage.scss";
+import { Skeleton } from "antd";
 
-export default function ContentMessage({ messages, user, isFetching }) {
+export default function ContentMessage({
+  messages,
+  user,
+  isFetching,
+  isTyping,
+}) {
   const messagesEndRef = useRef(null);
   const [latestMessageTime, setLatestMessageTime] = useState("");
 
@@ -43,7 +49,7 @@ export default function ContentMessage({ messages, user, isFetching }) {
   }, [messages]);
 
   // Sắp xếp theo thời gian
-  messages.sort((a, b) => new Date(a.created) - new Date(b.created));
+  // messages.sort((a, b) => new Date(a.created) - new Date(b.created));
 
   const renderMess = messages.map((mes, index) => (
     <div
@@ -76,8 +82,19 @@ export default function ContentMessage({ messages, user, isFetching }) {
     <div className="content-message-container">
       <div className="">
         <div className="flex gap-4 flex-col">
-          {messages ? renderMess : <></>}
+          {messages ? renderMess : <> </>}
         </div>
+        {/* Typing */}
+        {isTyping && (
+          <div className="flex gap-3 items-center mt-4">
+            <img src={blank} alt="" className="mt-1 w-7 h-7 rounded-full " />
+            <span className="typing-dots ">
+              <span className="typing-dot" />
+              <span className="typing-dot" />
+              <span className="typing-dot" />
+            </span>
+          </div>
+        )}
         {latestMessageTime && messages.length > 0 && (
           <div className="text-xs text-gray-500">{`Last message: ${latestMessageTime}`}</div>
         )}

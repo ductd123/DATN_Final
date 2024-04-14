@@ -1,21 +1,28 @@
 import { SendOutlined } from "@ant-design/icons";
-import { QueryCache, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, ContentMessage, HeaderRoom } from "../../Component";
 import apiChat from "../../Services/apiChat";
-import { useSocket } from "../../hooks/useSocket";
-import "./Room.scss";
-import { useUser } from "../../hooks/useUser";
 import apiUser from "../../Services/apiUser";
-import { Spin } from "antd";
+import { useSocket } from "../../hooks/useSocket";
+import { useUser } from "../../hooks/useUser";
+import "./Room.scss";
 
 export default function Room() {
   const { userId, conversationId } = useParams();
   const [mes, setMes] = useState("");
   const [messageList, setMessageList] = useState([]);
   const { user, loading } = useUser();
-  const { socketResponse, sendData } = useSocket(conversationId, userId);
+  const {
+    socketResponse,
+    sendData,
+    sendTypingEvent,
+    sendStopTypingEvent,
+    isTyping,
+    setIsTyping,
+  } = useSocket(conversationId, userId);
   const [isLoadingMess, setIsLoadingMess] = useState(false);
 
   // API lấy thông tin user
@@ -31,9 +38,15 @@ export default function Room() {
     if (userInfo) {
       const fetchMessages = async () => {
         setIsLoadingMess(true);
+
         const res = await apiChat.getMessage(Number(conversationId));
         if (res.data) {
-          setMessageList(res.data);
+          const sortedMessages = res.data?.sort((a, b) => {
+            const dateA = new Date(a.created);
+            const dateB = new Date(b.created);
+            return dateA - dateB;
+          });
+          setMessageList(sortedMessages);
         } else {
           setMessageList([]);
         }
@@ -44,7 +57,12 @@ export default function Room() {
   }, [userInfo]);
 
   useEffect(() => {
-    addMessageToList(socketResponse);
+    if (socketResponse) {
+      if (isTyping) {
+        setIsTyping(false);
+      }
+      addMessageToList(socketResponse);
+    }
   }, [socketResponse]);
 
   const addMessageToList = (val) => {
@@ -58,15 +76,9 @@ export default function Room() {
         contactId: user?.userId,
         content: mes,
         messageType: "TEXT",
-        mediaLocation: null,
+        mediaLocation: user?.avatarLocation,
       });
-      addMessageToList({
-        contactId: user?.userId,
-        content: mes,
-        messageType: "TEXT",
-        mediaLocation: null,
-        createdAt: new Date(),
-      });
+
       setMes("");
     }
   };
@@ -77,6 +89,23 @@ export default function Room() {
     }
   };
 
+  const handleInputChange = (e) => {
+    // Xử lý khi giá trị của input thay đổi
+    const value = e.target.value;
+    setMes(value); // Cập nhật giá trị của input
+    if (value.trim() !== "") {
+      // setIsTyping(true);
+      // Nếu có giá trị nhập liệu thì gửi sự kiện "typing" tới server
+      sendTypingEvent({
+        contactId: userId,
+        avatarLocation: user?.avatarLocation,
+      });
+    } else {
+      setIsTyping(false);
+      sendStopTypingEvent();
+    }
+  };
+
   return (
     <Spin spinning={isFetchingUser || isLoadingMess}>
       <div className="room">
@@ -84,7 +113,11 @@ export default function Room() {
           <HeaderRoom userInfo={userInfo} conversationId={conversationId} />
         </div>
         <div className="room__content">
-          <ContentMessage messages={messageList} user={user} />
+          <ContentMessage
+            messages={messageList}
+            user={user}
+            isTyping={isTyping}
+          />
         </div>
         <div className="room__form">
           <div className="form-room">
@@ -93,8 +126,11 @@ export default function Room() {
               placeholder="Nhập tin nhắn của bạn"
               className="form-room__input"
               value={mes}
-              onChange={(e) => setMes(e.target.value)}
+              onChange={handleInputChange}
               onKeyDown={handleKeyPress}
+              onBlur={() => {
+                sendStopTypingEvent();
+              }}
             />
             <Button onClick={sendMessage} className="form-room__btn">
               <SendOutlined />
