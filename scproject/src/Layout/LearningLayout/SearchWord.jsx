@@ -232,7 +232,7 @@ const SearchWord = ({ searchText, files }) => {
               </div>
               {/* video */}
               <div className="col-span-2">
-                {videoCurrent && (
+                {videoCurrent ? (
                   <video
                     key={videoCurrent}
                     controls
@@ -243,6 +243,10 @@ const SearchWord = ({ searchText, files }) => {
                   >
                     <source src={videoCurrent} type="video/mp4" />
                   </video>
+                ) : (
+                  <div className="text-xl text-center">
+                    Chưa có video minh hoạ
+                  </div>
                 )}
               </div>
             </div>

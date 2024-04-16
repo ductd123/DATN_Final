@@ -74,7 +74,6 @@ const ModalAddMedia = (props) => {
     fileList.forEach((file) => {
       formData.append("files", file.originFileObj); // originFileObj chứa thông tin về file gốc
     });
-
     // Gọi API upload với danh sách file đã chọn
     // Ví dụ sử dụng Fetch:
     const res = await apiUploadFile.upLoadVocabulary(formData);
