@@ -327,8 +327,8 @@ const VolunterLayout = () => {
 
     setShowDetail({
       id: x.vocabularyId,
-      imageLocation: x.vocabularyMediumRes[0]?.imageLocation,
-      videoLocation: x.vocabularyMediumRes[0]?.videoLocation,
+      imageLocation: x.vocabularyImageResList[0]?.imageLocation,
+      videoLocation: x.vocabularyVideoResList[0]?.videoLocation,
       name: x.content,
     });
     try {

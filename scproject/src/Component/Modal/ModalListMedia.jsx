@@ -1,3 +1,9 @@
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
@@ -12,13 +18,6 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import ButtonSystem from "../button/ButtonSystem";
 import BasicDrawer from "../drawer/Drawer";
 
 const ModalListMedia = ({
@@ -42,13 +41,28 @@ const ModalListMedia = ({
       setPrimaryMedia(recordUpdated?.primary);
     }
   }, [recordUpdated]);
+
+  console.log("record", record);
+  // Chi tiết từ
+  const {
+    data: detailVocabulary,
+    isFetching,
+    refetch: refetchDetail,
+  } = useQuery({
+    queryKey: ["getDetailVocabulary", record?.vocabularyId],
+    queryFn: async () => {
+      const res = await apiLearning.getDetailVocabulary(record?.vocabularyId);
+      return res.data;
+    },
+    enabled: !!showModalLstMedia,
+  });
   // setPrimary
   const mutationSetPrimaryVideo = useMutation({
     mutationFn: async (data) =>
       await apiLearning.setPrimaryVideoVocabulary(data),
     onSuccess: () => {
       message.success("Cập nhật video hiển thị chính thành công");
-      setShowModalLstMedia(false);
+      refetchDetail();
 
       refetch();
     },
@@ -59,7 +73,7 @@ const ModalListMedia = ({
       await apiLearning.setPrimaryImageVocabulary(data),
     onSuccess: () => {
       message.success("Cập nhật hình ảnh hiển thị chính thành công");
-      setShowModalLstMedia(false);
+      refetchDetail();
 
       refetch();
     },
@@ -70,9 +84,8 @@ const ModalListMedia = ({
     mutationFn: async (body) => await apiLearning.updateImageVocabulary(body),
     onSuccess: () => {
       message.success("Cập nhật hình ảnh minh hoạ thành công");
+      refetchDetail();
       setIsShowModalUpdateMedia(false);
-      setShowModalLstMedia(false);
-
       refetch();
     },
   });
@@ -82,10 +95,9 @@ const ModalListMedia = ({
     mutationFn: async (body) => await apiLearning.updateVideoVocabulary(body),
     onSuccess: () => {
       message.success("Cập nhật video minh hoạ thành công");
-      setIsShowModalUpdateMedia(false);
-      setShowModalLstMedia(false);
-
+      refetchDetail();
       refetch();
+      setIsShowModalUpdateMedia(false);
     },
   });
 
@@ -95,8 +107,7 @@ const ModalListMedia = ({
     onSuccess: () => {
       message.success("Xoá hình ảnh minh hoạ thành công");
       setIsShowModalUpdateMedia(false);
-      setShowModalLstMedia(false);
-
+      refetchDetail();
       refetch();
     },
   });
@@ -106,8 +117,7 @@ const ModalListMedia = ({
     onSuccess: () => {
       message.success("Xoá video minh hoạ thành công");
       setIsShowModalUpdateMedia(false);
-      setShowModalLstMedia(false);
-
+      refetchDetail();
       refetch();
     },
   });
@@ -285,7 +295,7 @@ const ModalListMedia = ({
             Danh sách hình ảnh
             <Table
               columns={columns(true, false)?.filter((e) => !e.hidden)}
-              dataSource={record?.vocabularyImageResList}
+              dataSource={detailVocabulary?.vocabularyImageResList}
               pagination={{ pageSize: 4, position: ["bottomCenter"] }}
             />
           </div>
@@ -293,7 +303,7 @@ const ModalListMedia = ({
             Dánh sách video
             <Table
               columns={columns(false, true)?.filter((e) => !e.hidden)}
-              dataSource={record?.vocabularyVideoResList}
+              dataSource={detailVocabulary?.vocabularyVideoResList}
               pagination={{ pageSize: 6, position: ["bottomCenter"] }}
             />
           </div>
@@ -423,10 +433,13 @@ const ModalListMedia = ({
                       Chọn File
                     </Button>
                   </Upload>
-
-                  <div className="mt-3 flex justify-center flex-col items-center relative">
-                    <video src={fileUrlVideo} controls />
-                  </div>
+                  {fileUrlVideo ? (
+                    <div className="mt-3 flex justify-center flex-col items-center relative">
+                      <video src={fileUrlVideo} controls />
+                    </div>
+                  ) : (
+                    <>Chưa có video minh hoạ</>
+                  )}
                 </div>
               )}
             </div>

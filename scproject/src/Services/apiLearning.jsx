@@ -67,9 +67,15 @@ export const apiLearning = {
     return axiosLearningClient.get(url);
   },
 
+  // CHi tiết từ
+  getDetailVocabulary: (id) => {
+    const url = `vocabularies/get-by-id/${id}`;
+    return axiosLearningClient.get(url);
+  },
+
   // Thêm từ vào chủ đề
   addNewTopic: (data) => {
-    const url = "vocabularies/add-new-topic";
+    const url = "vocabularies/add-vocab-list-to-new-topic";
     return axiosLearningClient.post(url, data);
   },
   themTuDien: (data) => {

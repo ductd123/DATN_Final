@@ -454,9 +454,16 @@ const VocabularyModal = (props) => {
     if (res.code === 200) {
       const body = res.data?.map((e) => ({
         content: e.content,
-        vocabularyMediumReqs: [
+        vocabularyImageReqs: [
           {
             imageLocation: e.imageLocation,
+            vocabularyId: e.vocabularyId,
+            primary: true,
+          },
+        ],
+        vocabularyVideoReqs: [
+          {
+            vocabularyId: e.vocabularyId,
             videoLocation: e.videoLocation,
             primary: true,
           },
@@ -466,6 +473,7 @@ const VocabularyModal = (props) => {
       const response = await apiLearning.addListVocabulary(body);
       if (response.code === 200) {
         message.success("Thêm danh sách từ vựng thành công");
+        refetch();
         onCloseAdd();
         setFileList([]);
       } else {
@@ -930,10 +938,11 @@ const VocabularyModal = (props) => {
         cancelText="Huỷ"
         title="Thêm từ vào chủ đề"
         onOk={() => {
-          mutationAddNewTopic.mutate({
-            id: selectedRowKey[0],
+          const req = selectedRowKey?.map((key) => ({
+            id: key,
             topicId: topicSelected,
-          });
+          }));
+          mutationAddNewTopic.mutate(req);
         }}
       >
         <Select
