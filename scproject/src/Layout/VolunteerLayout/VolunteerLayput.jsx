@@ -316,6 +316,15 @@ const VolunterLayout = () => {
   const onChooseVocab = (e) => {
     setIsShowDetail(true);
     const x = vocabInit.find((i) => i.vocabularyId === e);
+
+    x.vocabularyImageResList.sort((a, b) => {
+      // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
+      return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
+    });
+    x.vocabularyVideoResList.sort((a, b) => {
+      // Sắp xếp sao cho phần tử có primary = true được đặt lên đầu
+      return a.primary === b.primary ? 0 : a.primary ? -1 : 1;
+    });
     if (!x) {
       setValueVocabulary(null);
     } else {
@@ -426,7 +435,7 @@ const VolunterLayout = () => {
 
               <div className="record-container-button">
                 <Select
-                  options={topicInit}
+                  options={topicInit?.filter((e) => e.id !== 1)}
                   placeholder="Chọn chủ đề"
                   style={{ width: "50%" }}
                   onChange={(e, option) => {

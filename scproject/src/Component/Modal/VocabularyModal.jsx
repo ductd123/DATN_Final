@@ -468,7 +468,7 @@ const VocabularyModal = (props) => {
             primary: true,
           },
         ],
-        topicId: 1,
+        topicId: topicChose,
       }));
       const response = await apiLearning.addListVocabulary(body);
       if (response.code === 200) {
@@ -476,8 +476,12 @@ const VocabularyModal = (props) => {
         refetch();
         onCloseAdd();
         setFileList([]);
+        setTopicChose(null);
       } else {
         message.error("Thêm thất bại");
+        onCloseAdd();
+        setFileList([]);
+        setTopicChose(null);
       }
       setUploading(false);
     } else {
@@ -821,6 +825,18 @@ const VocabularyModal = (props) => {
                 ></Select>
               </TabPane>
               <TabPane tab="Thêm nhiều" key="2">
+                <Select
+                  title="Chọn chủ đề"
+                  mode=""
+                  className="mb-3"
+                  placeholder="Chọn chủ đề"
+                  style={{ width: "100%" }}
+                  options={topicInit}
+                  value={topicChose}
+                  onChange={(e) => {
+                    setTopicChose(e);
+                  }}
+                ></Select>
                 <div className="overflow-y-scroll max-h-[600px]">
                   <CustomUpload
                     listType="text"

@@ -1,6 +1,6 @@
-import { SendOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
-import { Spin } from "antd";
+import { CloseOutlined, SendOutlined } from "@ant-design/icons";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Popover, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, ContentMessage, HeaderRoom } from "../../Component";
@@ -9,11 +9,18 @@ import apiUser from "../../Services/apiUser";
 import { useSocket } from "../../hooks/useSocket";
 import { useUser } from "../../hooks/useUser";
 import "./Room.scss";
+import { EmojiIcon, ImageIcon } from "../../assets/icon";
+import EmojiPicker from "emoji-picker-react";
+import { apiUploadFile } from "../../Services/apiLearning";
+import { isImage } from "../../Layout/AdminLayout/AdminLayout";
 
 export default function Room() {
   const { userId, conversationId } = useParams();
-  const [mes, setMes] = useState("");
+  const [mes, setMes] = useState([]);
   const [messageList, setMessageList] = useState([]);
+  const [selectedFile, setSelectedFile] = useState([]);
+  const [showEmoji, setShowEmoji] = useState(false);
+
   const { user, loading } = useUser();
   const {
     socketResponse,
@@ -65,6 +72,14 @@ export default function Room() {
     }
   }, [socketResponse]);
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await apiUploadFile.uploadFile(formData);
+    setSelectedFile([...selectedFile, res]);
+  };
+
   const addMessageToList = (val) => {
     if (!val.content) return;
     setMessageList((oldMess) => [...oldMess, val]);
@@ -76,10 +91,11 @@ export default function Room() {
         contactId: user?.userId,
         content: mes,
         messageType: "TEXT",
-        mediaLocation: user?.avatarLocation,
+        mediaLocation: selectedFile?.length ? selectedFile[0] : null,
       });
 
       setMes("");
+      setSelectedFile([]);
     }
   };
 
@@ -112,26 +128,115 @@ export default function Room() {
         <div className="room__header">
           <HeaderRoom userInfo={userInfo} conversationId={conversationId} />
         </div>
-        <div className="room__content">
+        <div
+          className="room__content "
+          style={{ paddingBottom: selectedFile?.length && "80px" }}
+        >
           <ContentMessage
             messages={messageList}
             user={user}
             isTyping={isTyping}
+            userInfo={userInfo}
           />
         </div>
-        <div className="room__form">
-          <div className="form-room">
-            <input
-              type="text"
-              placeholder="Nhập tin nhắn của bạn"
-              className="form-room__input"
-              value={mes}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
-              onBlur={() => {
-                sendStopTypingEvent();
-              }}
-            />
+        <div className="fixed bottom-0  bg-white right-0 left-[356px] pt-2 pb-3">
+          <div className="flex items-center px-4 ">
+            <div className="flex items-center gap-3 mr-3">
+              <label htmlFor="file-input" className=" cursor-pointer">
+                <ImageIcon size={28} />
+              </label>
+
+              <input
+                id="file-input"
+                type="file"
+                accept="image/*, video/*"
+                onChange={handleFileChange}
+                className="form-room__file-input"
+                style={{ display: "none" }}
+              />
+            </div>
+            <div className="w-full bg-neutral-100 rounded-lg ">
+              {selectedFile?.length ? (
+                <div className="p-4 flex items-center gap-3">
+                  {selectedFile?.map((e) => (
+                    <>
+                      {!isImage(e) ? (
+                        <div className="relative">
+                          <video
+                            className="w-20 h-20 "
+                            style={{ borderRadius: "12px" }}
+                          >
+                            <source src={e} type="video/mp4" />
+                          </video>
+                          <div
+                            className="absolute top-1 -right-1 bg-white cursor-pointer"
+                            onClick={() =>
+                              setSelectedFile(
+                                selectedFile?.filter((item) => item !== e)
+                              )
+                            }
+                          >
+                            <CloseOutlined />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <img
+                            className="w-20 h-auto  "
+                            style={{ borderRadius: "12px" }}
+                            src={e}
+                            alt="Preview"
+                          />
+                          <div
+                            className="absolute -top-1 right-0 bg-white cursor-pointer"
+                            onClick={() =>
+                              setSelectedFile(
+                                selectedFile?.filter((item) => item !== e)
+                              )
+                            }
+                          >
+                            <CloseOutlined size={16} />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ))}
+                </div>
+              ) : null}
+
+              <input
+                type="text"
+                placeholder="Nhập tin nhắn của bạn"
+                className="form-room__input w-full "
+                value={mes}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                onBlur={() => {
+                  sendStopTypingEvent();
+                }}
+              />
+            </div>
+
+            <Popover
+              content={
+                <EmojiPicker
+                  onEmojiClick={(e) => {
+                    setMes([...mes, e.emoji]);
+                  }}
+                />
+              }
+              title="Emoji"
+              trigger="click"
+              placement="topRight"
+            >
+              <div
+                className="cursor-pointer ml-3 relative"
+                onClick={() => setShowEmoji(true)}
+              >
+                <EmojiIcon size={28} />
+              </div>
+            </Popover>
+
             <Button onClick={sendMessage} className="form-room__btn">
               <SendOutlined />
             </Button>

@@ -1,6 +1,8 @@
 import { UploadOutlined } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
 import {
   Button,
+  Collapse,
   Empty,
   Input,
   Modal,
@@ -10,10 +12,9 @@ import {
   Space,
   message,
 } from "antd";
-import React, { useEffect } from "react";
-import ButtonSystem from "../button/ButtonSystem";
+import React, { useEffect, useState } from "react";
 import { apiLearning } from "../../Services/apiLearning";
-import { useQuery } from "@tanstack/react-query";
+import ButtonSystem from "../button/ButtonSystem";
 
 const { TextArea } = Input;
 
@@ -50,10 +51,12 @@ const QuestionModal = (props) => {
     topicInit,
     setTopicChose,
     setContentQuestion,
-    setCurrentPage,
     onCloseAdd,
     setLoading,
   } = props;
+
+  const [currentPageImage, setCurrentPageImage] = useState(1);
+  const [currentPageVideo, setCurrentPageVideo] = useState(1);
 
   // APi lấy danh sách
   const { data: listVideoAndImage } = useQuery({
@@ -66,33 +69,54 @@ const QuestionModal = (props) => {
   });
 
   // Làm dữ liệu hiển thị
-  const flattenedData = listVideoAndImage?.flatMap((item) => {
-    const locations = [];
-    if (item.imageLocation) {
-      locations.push({
-        type: 1,
-        location: item.imageLocation,
-        content: item.content,
+  const flattenedDataImage = listVideoAndImage?.flatMap((item) => {
+    const locationsImage = [];
+
+    if (item.vocabularyImageResList) {
+      item.vocabularyImageResList?.forEach((image) => {
+        locationsImage.push({
+          type: 1,
+          location: image.imageLocation,
+          content: image.vocabularyContent,
+        });
       });
     }
-    if (item.videoLocation) {
-      locations.push({
-        type: 2,
-        location: item.videoLocation,
-        content: item.content,
+
+    return locationsImage;
+  });
+
+  const flattenedDataVideo = listVideoAndImage?.flatMap((item) => {
+    const locationsVideo = [];
+
+    if (item.vocabularyVideoResList) {
+      item.vocabularyVideoResList?.forEach((video) => {
+        locationsVideo.push({
+          type: 2,
+          location: video.videoLocation,
+          content: video.vocabularyContent,
+        });
       });
     }
-    return locations;
+
+    return locationsVideo;
   });
 
   // CHia page
   useEffect(() => {
-    const totalPages =
-      flattenedData?.length > PAGE_SIZE
-        ? Math.ceil(flattenedData?.length / PAGE_SIZE)
+    const totalPagesVideo =
+      flattenedDataVideo?.length > PAGE_SIZE
+        ? Math.ceil(flattenedDataVideo?.length / PAGE_SIZE)
         : 1;
-    setCurrentPage(Math.min(currentPage, totalPages));
-  }, [flattenedData, currentPage]);
+    setCurrentPageImage(Math.min(currentPageVideo, totalPagesVideo));
+  }, [currentPageVideo, flattenedDataVideo]);
+
+  useEffect(() => {
+    const totalPagesImage =
+      flattenedDataImage?.length > PAGE_SIZE
+        ? Math.ceil(flattenedDataImage?.length / PAGE_SIZE)
+        : 1;
+    setCurrentPageImage(Math.min(currentPageImage, totalPagesImage));
+  }, [flattenedDataImage, currentPageImage]);
 
   const handleCreateQuestion = async () => {
     setLoading(true);
@@ -143,27 +167,13 @@ const QuestionModal = (props) => {
     }
   };
 
-  return (
-    <>
-      {/* Modal hiển thị thư viện ảnh/video theo chủ đề */}
-      <Modal
-        open={openChooseVideo}
-        onCancel={() => {
-          setOpenChooseVideo(false);
-          setshowCreateQuestions(true);
-        }}
-        width={1200}
-        title="Chọn hình ảnh/video theo chủ đề"
-        centered
-        onOk={() => {
-          setOpenChooseVideo(false);
-          setshowCreateQuestions(true);
-        }}
-        zIndex={11}
-        destroyOnClose
-      >
-        <div className="">
-          {flattenedData?.length ? (
+  const items = [
+    {
+      key: "1",
+      label: "Hình ảnh",
+      children: (
+        <>
+          {flattenedDataImage?.length ? (
             <Radio.Group
               className="grid grid-cols-3 gap-3 "
               value={locationUrl}
@@ -171,8 +181,11 @@ const QuestionModal = (props) => {
                 setLocationUrl(e.target.value);
               }}
             >
-              {flattenedData
-                ?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+              {flattenedDataImage
+                ?.slice(
+                  (currentPageImage - 1) * PAGE_SIZE,
+                  currentPageImage * PAGE_SIZE
+                )
                 ?.map((item, i) => (
                   <Radio key={i} value={item.location} className="">
                     <div key={i}>
@@ -184,10 +197,55 @@ const QuestionModal = (props) => {
                           <img
                             src={item.location}
                             alt=""
-                            style={{ width: "100%", height: "auto" }}
+                            style={{ width: "50%", height: "auto" }}
                           />
                         </div>
                       )}
+                    </div>
+                  </Radio>
+                ))}
+            </Radio.Group>
+          ) : (
+            <Empty
+              style={{ width: "100%" }}
+              description={`Không có dữ liệu `}
+            />
+          )}
+          {flattenedDataImage?.length > PAGE_SIZE && (
+            <div className="flex justify-center w-full mt-4">
+              <Pagination
+                current={currentPageImage}
+                pageSize={PAGE_SIZE}
+                total={flattenedDataImage?.length}
+                onChange={(pageNumber) => setCurrentPageImage(pageNumber)}
+                showSizeChanger={false}
+              />
+            </div>
+          )}
+        </>
+      ),
+    },
+    {
+      key: "2",
+      label: "Video",
+      children: (
+        <>
+          {flattenedDataVideo?.length ? (
+            <Radio.Group
+              className="grid grid-cols-3 gap-3 "
+              value={locationUrl}
+              onChange={(e) => {
+                setLocationUrl(e.target.value);
+              }}
+            >
+              {flattenedDataVideo
+                ?.slice(
+                  (currentPageVideo - 1) * PAGE_SIZE,
+                  currentPageVideo * PAGE_SIZE
+                )
+                ?.map((item, i) => (
+                  <Radio key={i} value={item.location} className="">
+                    <div key={i}>
                       {item.type === 2 && (
                         <div className="">
                           <div className="text-xl font-semibold">
@@ -208,18 +266,49 @@ const QuestionModal = (props) => {
               description={`Không có dữ liệu `}
             />
           )}
+          {flattenedDataVideo?.length > PAGE_SIZE && (
+            <div className="flex justify-center w-full mt-4">
+              <Pagination
+                current={currentPageVideo}
+                pageSize={PAGE_SIZE}
+                total={flattenedDataVideo?.length}
+                onChange={(pageNumber) => setCurrentPageVideo(pageNumber)}
+                showSizeChanger={false}
+              />
+            </div>
+          )}
+        </>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      {/* Modal hiển thị thư viện ảnh/video theo chủ đề */}
+      <Modal
+        open={openChooseVideo}
+        onCancel={() => {
+          setOpenChooseVideo(false);
+          setshowCreateQuestions(true);
+        }}
+        width={1200}
+        title="Chọn hình ảnh/video theo chủ đề"
+        centered
+        onOk={() => {
+          setOpenChooseVideo(false);
+          setshowCreateQuestions(true);
+        }}
+        zIndex={11}
+        destroyOnClose
+      >
+        <div className="">
+          <Collapse
+            className="mt-6"
+            defaultActiveKey={["1"]}
+            items={items}
+            bordered={false}
+          />
         </div>
-        {flattenedData?.length > PAGE_SIZE && (
-          <div className="flex justify-center w-full mt-4">
-            <Pagination
-              current={currentPage}
-              pageSize={PAGE_SIZE}
-              total={flattenedData?.length}
-              onChange={(pageNumber) => setCurrentPage(pageNumber)}
-              showSizeChanger={false}
-            />
-          </div>
-        )}
       </Modal>
 
       <Modal

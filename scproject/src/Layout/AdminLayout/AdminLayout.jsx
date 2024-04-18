@@ -25,6 +25,8 @@ import LoadingComponent from "../../Component/Common/Loading/Loading";
 import MenuAdmin from "../../Component/MenuAdmin/MenuAdmin";
 import { apiLearning, apiUploadFile } from "../../Services/apiLearning";
 import blank from "../../assets/image/AvtBlank.jpg";
+import defaultvideo from "../../assets/image/defaultvideo.png";
+
 import { useUser } from "../../hooks/useUser";
 import "./AdminLayout.scss";
 
@@ -42,6 +44,12 @@ const optionStatus = [
     value: 300,
   },
 ];
+
+export function isImage(url) {
+  const extension = url?.split(".").pop().toLowerCase();
+
+  return ["jpg", "jpeg", "png", "bmp", "gif"].includes(extension);
+}
 
 const AdminLayout = () => {
   const { user } = useUser();
@@ -80,134 +88,6 @@ const AdminLayout = () => {
   const onChangeScore = (newValue) => {
     setScore(newValue);
   };
-  function isImage(url) {
-    const extension = url?.split(".").pop().toLowerCase();
-
-    return ["jpg", "jpeg", "png", "bmp", "gif"].includes(extension);
-  }
-
-  const statusEnum = [
-    {
-      id: 0,
-      value: 0,
-      label: (
-        <div style={{ display: "table" }}>
-          <div style={{ display: "table-cell", verticalAlign: "top" }}>
-            <div
-              className="dot-status"
-              style={{ border: `1px solid gray`, backgroundColor: "gray" }}
-            ></div>
-          </div>
-          <div
-            style={{ display: "table-cell", verticalAlign: "top" }}
-            className="inline-block"
-            data-tooltip="true"
-          >
-            Đang chờ xét duyệt
-          </div>
-        </div>
-      ),
-      text: (
-        <div style={{ display: "table" }}>
-          <div style={{ display: "table-cell", verticalAlign: "top" }}>
-            <div
-              className="dot-status"
-              style={{ border: `1px solid gray`, backgroundColor: "gray" }}
-            ></div>
-          </div>
-          <div
-            style={{ display: "table-cell", verticalAlign: "top" }}
-            className="inline-block"
-            data-tooltip="true"
-          >
-            Đang chờ xét duyệt
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 100,
-      value: 100,
-      label: (
-        <div style={{ display: "table" }}>
-          <div style={{ display: "table-cell", verticalAlign: "top" }}>
-            <div
-              className="dot-status"
-              style={{
-                border: `1px solid #00db00`,
-                backgroundColor: "#00db00",
-              }}
-            ></div>
-          </div>
-          <div
-            style={{ display: "table-cell", verticalAlign: "top" }}
-            className="inline-block"
-            data-tooltip="true"
-          >
-            Chờ xét duyệt
-          </div>
-        </div>
-      ),
-      text: (
-        <div style={{ display: "table" }}>
-          <div style={{ display: "table-cell", verticalAlign: "top" }}>
-            <div
-              className="dot-status"
-              style={{
-                border: `1px solid #00db00`,
-                backgroundColor: "#00db00",
-              }}
-            ></div>
-          </div>
-          <div
-            style={{ display: "table-cell", verticalAlign: "top" }}
-            className="inline-block"
-            data-tooltip="true"
-          >
-            Đã xét duyệt
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 200,
-      value: 200,
-      label: (
-        <div style={{ display: "table" }}>
-          <div style={{ display: "table-cell", verticalAlign: "top" }}>
-            <div
-              className="dot-status"
-              style={{ border: `1px solid red`, backgroundColor: "red" }}
-            ></div>
-          </div>
-          <div
-            style={{ display: "table-cell", verticalAlign: "top" }}
-            className="inline-block"
-            data-tooltip="true"
-          >
-            Từ chối
-          </div>
-        </div>
-      ),
-      text: (
-        <div style={{ display: "table" }}>
-          <div style={{ display: "table-cell", verticalAlign: "top" }}>
-            <div
-              className="dot-status"
-              style={{ border: `1px solid red`, backgroundColor: "red" }}
-            ></div>
-          </div>
-          <div
-            style={{ display: "table-cell", verticalAlign: "top" }}
-            className="inline-block"
-            data-tooltip="true"
-          >
-            Từ chối
-          </div>
-        </div>
-      ),
-    },
-  ];
 
   const columns = [
     {
@@ -369,6 +249,7 @@ const AdminLayout = () => {
       let response = await apiLearning.getTableSearchData(filter);
       if (response.data.length === 0) {
         message.warning("Không có nội dung cần tìm");
+        setDataTable([]);
       } else {
         setDataTable(response.data);
       }
@@ -551,11 +432,20 @@ const AdminLayout = () => {
                           }}
                         >
                           <div className="conversation__content">
-                            <img
-                              src={item.dataLocation || blank}
-                              alt=""
-                              className="w-14 h-14 rounded-full mr-4"
-                            />
+                            {isImage(item.dataLocation) ? (
+                              <img
+                                src={item.dataLocation || blank}
+                                alt=""
+                                className="w-14 h-14 rounded-full mr-4"
+                              />
+                            ) : (
+                              <img
+                                src={blank}
+                                alt=""
+                                className="w-14 h-14 rounded-full mr-4"
+                              />
+                            )}
+
                             <div
                               className="conversation__main"
                               style={{ width: "400px" }}
