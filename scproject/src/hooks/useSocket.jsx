@@ -43,8 +43,8 @@ export const useSocket = (conversationId, contactId) => {
   }, [socket, conversationId]);
 
   useEffect(() => {
-    // const socketBaseUrl = "https://chat-call-app.onrender.com";
-    const socketBaseUrl = "http://localhost:8017";
+    const socketBaseUrl = "https://chat-call-app.onrender.com";
+    // const socketBaseUrl = "http://localhost:8017";
 
     const s = io(socketBaseUrl, {
       query: `conversationId=${conversationId}&contactId=${contactId}`,
