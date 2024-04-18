@@ -43,7 +43,6 @@ function VideoCall() {
   const [cancelCall, setCancelCall] = useState(false);
 
   const [openVoice, setOpenVoice] = useState(false);
-  console.log("remoteUser", remoteUser);
   const dataConnection = useRef(null);
 
   const initializePeer = (id) => {

@@ -6,7 +6,6 @@ import defaultvideo from "../../assets/image/defaultvideo.png";
 import { Button, Empty, Modal, Pagination, Carousel, Select } from "antd";
 import ButtonSystem from "../../Component/button/ButtonSystem";
 import { filterOption } from "../../Component/LearningMenu/LearningMenu";
-import { apiLearning } from "../../Services/apiLearning";
 
 const PAGE_SIZE = 12;
 const CustomSlider = styled(Carousel)`

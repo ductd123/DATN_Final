@@ -196,99 +196,99 @@ const ModalAddMedia = (props) => {
 
   // Thông tin
   const items = [
+    // {
+    //   key: "1",
+    //   label: "Hiển thị chính",
+    //   children: (
+    //     <div className="py-2">
+    //       <div className="">
+    //         <div className="flex gap-3">
+    //           <div className="w-1/2">
+    //             <p
+    //               className="ant-upload-text"
+    //               style={{ margin: "10px 0 10px 0" }}
+    //             >
+    //               Ảnh minh hoạ:
+    //             </p>
+    //             <Upload
+    //               showUploadList={false}
+    //               // beforeUpload={beforeUploadImage}
+    //               accept="image/*"
+    //               customRequest={({ file }) => {
+    //                 const isImg = file.type.includes("image");
+    //                 const formData = new FormData();
+    //                 formData.append("file", file);
+    //                 if (isImg) {
+    //                   const fileReader = new FileReader();
+    //                   fileReader.onload = (e) => {
+    //                     setUrlImage(e.target.result);
+    //                   };
+    //                   fileReader.readAsDataURL(file);
+    //                   uploadMutation.mutate(formData);
+    //                 } else {
+    //                   message.error("Sai định dạng ảnh");
+    //                 }
+    //               }}
+    //             >
+    //               <Button type="primary" icon={<UploadOutlined />}>
+    //                 Chọn File
+    //               </Button>
+    //             </Upload>
+
+    //             <div className="mt-3 flex justify-center flex-col items-center relative">
+    //               {urlImage && (
+    //                 <Image
+    //                   src={urlImage}
+    //                   alt="Uploaded Image"
+    //                   className="flex justify-center items-center"
+    //                   style={{ width: 300 }}
+    //                 />
+    //               )}
+    //             </div>
+    //           </div>
+    //           <div className="w-1/2">
+    //             <p
+    //               className="ant-upload-text"
+    //               style={{ margin: "10px 0 10px 0" }}
+    //             >
+    //               Video minh hoạ:
+    //             </p>
+    //             <Upload
+    //               showUploadList={false}
+    //               customRequest={({ file }) => {
+    //                 const isVideo = file.type.startsWith("video/");
+    //                 if (!isVideo) {
+    //                   message.error("Sai định dạng video.");
+    //                 } else {
+    //                   const fileReader = new FileReader();
+    //                   fileReader.onload = (e) => {
+    //                     setFileUrl(e.target.result); // Lưu URL của file
+    //                   };
+    //                   fileReader.readAsDataURL(file); // Đọc file thành URL
+    //                 }
+    //                 const formData = new FormData();
+    //                 formData.append("file", file);
+    //                 uploadMutationVideo.mutate(formData);
+    //               }}
+    //             >
+    //               <Button type="primary" icon={<UploadOutlined />}>
+    //                 Chọn File
+    //               </Button>
+    //             </Upload>
+
+    //             <div className="mt-3 flex justify-center flex-col items-center relative">
+    //               {fileUrl && (
+    //                 <video src={fileUrl} controls /> // Hiển thị video nếu là loại video
+    //               )}
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
     {
       key: "1",
-      label: "Hiển thị chính",
-      children: (
-        <div className="py-2">
-          <div className="">
-            <div className="flex gap-3">
-              <div className="w-1/2">
-                <p
-                  className="ant-upload-text"
-                  style={{ margin: "10px 0 10px 0" }}
-                >
-                  Ảnh minh hoạ:
-                </p>
-                <Upload
-                  showUploadList={false}
-                  // beforeUpload={beforeUploadImage}
-                  accept="image/*"
-                  customRequest={({ file }) => {
-                    const isImg = file.type.includes("image");
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    if (isImg) {
-                      const fileReader = new FileReader();
-                      fileReader.onload = (e) => {
-                        setUrlImage(e.target.result);
-                      };
-                      fileReader.readAsDataURL(file);
-                      uploadMutation.mutate(formData);
-                    } else {
-                      message.error("Sai định dạng ảnh");
-                    }
-                  }}
-                >
-                  <Button type="primary" icon={<UploadOutlined />}>
-                    Chọn File
-                  </Button>
-                </Upload>
-
-                <div className="mt-3 flex justify-center flex-col items-center relative">
-                  {urlImage && (
-                    <Image
-                      src={urlImage}
-                      alt="Uploaded Image"
-                      className="flex justify-center items-center"
-                      style={{ width: 300 }}
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="w-1/2">
-                <p
-                  className="ant-upload-text"
-                  style={{ margin: "10px 0 10px 0" }}
-                >
-                  Video minh hoạ:
-                </p>
-                <Upload
-                  showUploadList={false}
-                  customRequest={({ file }) => {
-                    const isVideo = file.type.startsWith("video/");
-                    if (!isVideo) {
-                      message.error("Sai định dạng video.");
-                    } else {
-                      const fileReader = new FileReader();
-                      fileReader.onload = (e) => {
-                        setFileUrl(e.target.result); // Lưu URL của file
-                      };
-                      fileReader.readAsDataURL(file); // Đọc file thành URL
-                    }
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    uploadMutationVideo.mutate(formData);
-                  }}
-                >
-                  <Button type="primary" icon={<UploadOutlined />}>
-                    Chọn File
-                  </Button>
-                </Upload>
-
-                <div className="mt-3 flex justify-center flex-col items-center relative">
-                  {fileUrl && (
-                    <video src={fileUrl} controls /> // Hiển thị video nếu là loại video
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "2",
       label: "Thêm các video/ hình ảnh khác",
       children: (
         <div className="py-2">
@@ -348,7 +348,7 @@ const ModalAddMedia = (props) => {
           <ButtonSystem
             type="primary"
             loading={loading}
-            disabled={!imageLocations && !videoLocations}
+            disabled={!fileList?.length}
             onClick={() => {
               handleUpload();
             }}
