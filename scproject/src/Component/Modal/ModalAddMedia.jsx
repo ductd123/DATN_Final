@@ -88,13 +88,7 @@ const ModalAddMedia = (props) => {
       .map((item) => item.videoLocation);
 
     // Đóng gói upload list image
-    let bodyLitsImage = [
-      {
-        imageLocation: imageLocations,
-        primary: true,
-        vocabularyId: recordMedia.vocabularyId,
-      },
-    ];
+    let bodyLitsImage = [];
     images?.map((e) =>
       bodyLitsImage.push({
         imageLocation: e,
@@ -104,13 +98,7 @@ const ModalAddMedia = (props) => {
     );
 
     // Đóng gói list video
-    let bodyLitsVideo = [
-      {
-        videoLocation: videoLocations,
-        primary: true,
-        vocabularyId: recordMedia.vocabularyId,
-      },
-    ];
+    let bodyLitsVideo = [];
     videos?.map((e) =>
       bodyLitsVideo.push({
         videoLocation: e,
