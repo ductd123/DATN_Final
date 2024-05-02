@@ -200,21 +200,25 @@ const VocabularyModal = (props) => {
     setLoading(true);
     const data = {
       content: contentWord,
-      imageLocation: imageLocations,
-      videoLocation: videoLocations,
+      vocabularyImageReqs: [
+        {
+          imageLocation: imageLocations,
+          primary: true,
+        },
+      ],
+      vocabularyVideoReqs: [
+        {
+          videoLocation: videoLocations,
+          primary: true,
+        },
+      ],
+
       topicId: topicChose,
     };
     if (isUpdate && !isUpdateMedia) {
       return mutationUpdate.mutate({
         ...data,
         vocabularyId: ItemVocabulary.vocabularyId,
-      });
-    } else if (isUpdateMedia) {
-      return mutationUpdateMedia.mutate({
-        imageLocation: imageLocations,
-        videoLocation: videoLocations,
-        vocabularyMediumId: ItemVocabulary.vocabularyMediumId,
-        primary: ItemVocabulary.primary,
       });
     } else {
       setTopicInit([]);
