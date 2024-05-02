@@ -209,7 +209,7 @@ const ModalListMedia = ({
         hidden: hiddenImage,
       },
       {
-        title: "Hình ảnh minh hoạ chính",
+        title: "Video minh hoạ chính",
         dataIndex: "primary",
         align: "center",
         render: (value, record) => (
@@ -249,6 +249,7 @@ const ModalListMedia = ({
             <Popconfirm
               title="Bạn có chắc chắn muốn xóa hình ảnh này?"
               onConfirm={() => {
+
                 if (record.primary && record?.imageLocation) {
                   message.warning(
                     "Không thể xoá. Do đang là hình ảnh hiển thị minh hoạ chính"
@@ -258,7 +259,7 @@ const ModalListMedia = ({
                     "Không thể xoá. Do đang là video hiển thị minh hoạ chính"
                   );
                 } else {
-                  if (record?.imageLocation) {
+                  if (record?.vocabularyImageId) {
                     mutationDelImage.mutate(record.vocabularyImageId);
                   } else {
                     mutationDelVideo.mutate(record.vocabularyVideoId);
@@ -281,7 +282,7 @@ const ModalListMedia = ({
         open={showModalLstMedia}
         title={
           <div>
-            `Danh sách hình ảnh / video minh hoạ của từ{" "}
+            Danh sách hình ảnh / video minh hoạ của từ{" "}
             <span className="text-[28px] text-red-500">{record?.content}</span>`
           </div>
         }
